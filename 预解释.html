@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<!--
+    当浏览器开始解析js代码的时候，首先看当前运行环境(作用域)内带var和function，带var的变量会提前声明(预解释)但是不会赋值，带function的会提前声明并赋值。带var变量提前声明的时候并不会被赋值，但是有一个默认的nudefined值。当代码执行过后才会赋值。
+    堆栈内存： 代码运行的环境也是作用域是栈内存，而用来保存值的内存是堆内存.基本数据类型都存在栈内存里
+    //预解释只看等号左面的变量，并不会看你的值是什么
+    //我们的预解释只发生在当前作用域
+-->
+
+</body>
+</html>
+<script>
+   /* console.log(num); //undefined
+    console.log(obj);
+    console.log(sum);
+    var num = 12; //赋值
+    console.log(num); //12
+    var obj = {'name': 'tianxi', age: 30}; //对象类型
+    console.log(obj);*/
+    //console.log(haha);//??
+    // var a = function () {};
+    //预解释只看等号左面的变量，并不会看你的值是什么
+    /*function sum(num1, num2) { //当代码执行到这的时候，声明和赋值都已经结束，直接跳过
+        function haha() {
+        }; //我们的预解释只发生在当前作用域
+        var total = 0;
+        total = num1 + num2;
+    }*/
+    //在全局作用域下，加var和不加var的区别  1 是否被提前声明  2 不加var那么就是一个赋值过程，相当于给window添加了一个属性并且赋值
+    //当函数在运行的时候就会产生一个私有的作用域，并且这个作用域内的变量也是私有变量。并且这个私有变量在外访问不到，我们把这种函数运行的时候产生的私有作用域里的私有变量不受外界干扰的这种机制叫做闭包
+   //函数的运行： 1 如果有形参是形参赋值  2 预解释  3 代码逐行执行 ..
+    //区别私有变量还是全局变量：函数运行的时候，函数体内如有带var就是私有变量，如果是形参也可以理解是一个私有变量。代码在执行的时候，首先查找当前运行环境内(作用域，栈)的私有变量，如果有直接用，如果没有去上一级作用域去查找，如果有就拿来用，如果没有一直查找到顶级的window全局作用域，如果没有就报错了  not defined,我们把这种查找机制叫做作用域链
+        //console.log(total); //undefined
+         //total = 0; //
+        //console.log(window.total); //
+        /*function sum(num1, num2) { //num1 = 10,num2 = 10
+            console.log(total); //undefined
+            total = num1 + num2;
+            console.log(total); //30
+            return function (){
+                console.log('ff');
+            }
+        }
+        sum(10, 20);
+        var f = sum(19,40); //
+        f();
+        console.log(total); //0*/
+        //function b(x){} b();
+    //console.log(total);
+
+    //undefined,0,30,30 ,  //0,30,30
+
+</script>
+<script>
+
+   /* function fn(){
+        total = 100; //赋值的过程，直接赋值给window
+        // var total = 100; //这个是私有变量跟外面没半毛钱关系
+    }
+    fn();
+    console.log(total);*/
+    ////////////////////////////////////
+
+
+    var num = 12;
+    function fn(){
+
+        var num = 100;
+        return function (){
+            var x;
+            console.log(num);
+        }
+    }
+    var f = fn(); //100
+    f(); // x的变量才会被预解释
+
+   /*
+    函数运行运行时候上一级作用域只和在哪里定义有关系
+   * */
+    //12,100,undefined Error
+    /*
+    *
+    *
+    *
+    * */
+    /*var obj = {name:'haha',age:7};
+    console.log('name' in  obj);*/
+   /*
+   *    预解释的时候
+   *        1 无论条件是否成立，都会预解释
+   *        2  预解释的时候带var关键字之看等号左面
+   *        3 在全局作用域下的自执行函数不被预解释,预解释只发生在当前作用域
+   *        4 return下面的代码仍然会被预解释,但是return出来的值即使你是一个函数也不会被预解释
+   *        5
+   *
+   *
+   *
+   *
+   * */
+    //1 无论条件是否成立，都会预解释
+    console.log(total); //undefined
+    if('total' in window){
+        var total = 6;
+    }
+    console.log(total); //6,undefined.
+
+    //2  预解释的时候带var关键字之看等号左面
+    //a();
+    var a = function (){
+       alert();
+    }
+
+    //3 自执行函数不被预解释
+    !function (){
+        var b = 0;
+    }()
+
+    //4 return下面的代码仍然会被预解释,但是return出来的值即使你是一个函数也不会被预解释
+   function fn(){
+       console.log(num); //??undefined
+       return function (){
+           console.log(num);
+       }
+       alert();
+       var num = 9;
+   }
+   fn();
+
+
+
+    //5
+    foo();
+    function foo(){
+        console.log(1);
+    }
+    foo();
+    var foo = 'haha'; //代码执行到这的时候，我们原来的函数引用地址已经被破坏，并且把foo赋值一个字符串
+    foo(); //相当于让一个字符串去执行，不是函数所以报foo is not function
+    function foo(){
+        console.log(2);
+    }
+    foo();
+    //undefined,1,unKonwn,unKnown
+    //2,2,ERROR
+    //
+    //2,2,ERROR
+    //
+    //2,2,ERROR
+
+
+
+
+</script>
+
