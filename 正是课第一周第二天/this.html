@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>this</title>
+</head>
+<body>
+    <div id="div1" style="width: 100px; height: 100px; background: blue;"></div>
+</body>
+</html>
+<script>
+    /*
+    *   this 我们主要研究的是函数里的this
+    *       1 给元素绑定事件，当事件触发的时候，this就是事件触发时的元素
+     *      2 this是谁跟函数在哪里定义和在哪里执行没关系，就看调用函数的主体是谁，其实也就是看函数执行的时候"."前面是谁,this就是谁
+     *      3 自执行函数的this是window，无论在哪都是window
+     *      4 在构造函数中的this是当前实例
+     *      5 call和apply都会强制改变this。
+    * */
+    //console.log(this);
+    /*document.getElementById('div1').onclick = function (){
+        console.log(this);
+    }*/
+    function fn(){ //这是函数的定义
+        console.log(this);
+    }
+    //window.fn(); //这才是函数的执行，点前面是window.所以this就是window
+   /* var obj = {
+        fn : fn
+    }*/
+    //obj.fn(); //
+
+
+    /* var fo = {
+         x : function (){
+             console.log(this);
+             fn(); //this ==> window
+         }
+     }
+    fo.x(); //fo*/
+
+    var haha = {
+        y : (function (){
+            console.log(this);
+            return function (){
+                console.log(this);
+
+            }
+        })()
+    }
+    haha.y(); //
+
+  /*  ~function (){
+        console.log(this);
+        fn();
+    }()*/
+
+    // 一个自定义类  构造函数
+    function FE(){
+        //console.log(this);
+        this.x = 'ga';
+    }
+    FE();//当成一个函数去运行
+    var ff = new FE(); //就把FE当成一个类去运行，而fe就是FE的一个实例
+    console.log(ff);
+
+</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>点赞效果</title>
+    <style>
+        .handsome{
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px auto;
+            border: 2px solid #ccc;
+            text-align: center;
+            cursor: pointer;
+            -webkit-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="handsome">觉得我很帅的点赞 <span style="color: red;">0</span></div>
+</body>
+</html>
+<script>
+    /*
+     *
+     * */
+    var handsome = document.querySelector('.handsome');
+    var span = handsome.getElementsByTagName('span')[0];
+
+    //全局作用域不安全，我们就换成私有的
+   /* var count = 0;
+    handsome.onclick = function (){
+        count++;
+        span.innerHTML = count;
+    }
+
+    //把count换成私有作用域内的变量
+    ~function (){ //函数在运行的时候就会产生一个私有的作用域
+        var count = 0;
+        handsome.onclick = function (){
+            count++;
+            span.innerHTML = count;
+        }
+    }()
+    //
+    handsome.onclick = (function (){
+        var count = 0;
+        return function (){
+            count++;
+            span.innerHTML = count;
+        }
+    })()
+    //自定义属性
+    handsome.count = 0;
+    handsome.onclick = function (){
+        span.innerHTML = ++this.count;
+    }
+    handsome.addEventListener('click',function (){
+
+    });*/
+    handsome.ondblclick = function (){
+        //span.innerHTML = ++span.innerHTML;
+        ++span.innerHTML; //我们的++运算强制类型转换
+    }
+</script>
