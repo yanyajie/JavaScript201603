@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+
+   /*
+   *    原型 prototype
+   *        1 当我们声明了一个函数(构造函数,类)的时候，天生自带了一个prototype的属性。并且这个prototype的值也是一个对象类型的。这个对象类型值也有一个天生自带的属性叫constructor并且这个属性的值是函数(构造函数，类)本身
+   *        2 这个类的实例也会有一个叫做__proto__的天生自带的属性,并且这个属性的值也是一个对象类型的。这个值是这个实例所属类的原型.
+   *        3 每一个引用类型都有一个天生自带的属性叫__proto__,所以说我们的prototype的值也有天生自带一个__proto__的属性。并且这个属性的值也是一个对象类型，一直到我们的基类Object
+   *        4 通过类的原型添加的属性和方法都是公有的，每个实例都会自带
+   *        5 一个实例的方法在运行的时候，如果这个方法是自己私有的，那么就直接用，如果不是私有的，那么通过__proto__去所属类的原型上去查找，如果还没有就通过原型的__proto__一直查到基类的Object.如果还没有报错，如果有就直接用了。我们把这种通过__proto__查找的机制叫做原型链.
+   *
+   * */
+
+    function FE(){ //
+        this.x = 100;
+        this.y = 200;
+    }
+    FE.prototype.code = function (){ //在FE的原型上添加了一个code属性，属性值是一个函数
+        //console.log('我是通过原型添加的')
+        //console.log(this.x);
+    }
+    //console.dir(FE);
+    //var fe1 = new FE();
+    //fe1.code();  //说明成功添加了一个code的属性
+    //console.dir(fe1);
+    var fe2 = new FE();
+    //fe2.code(); //fe2.x
+
+   fe2.__proto__.codeing = function (){
+       //alert('gaga');
+   }
+   //fe2.codeing();//?????
+   var fe3 = new FE();
+   //fe3.codeing();
+
+   //fe3.codeing = function (){
+       //alert('fe3');
+   //}
+   //console.log(fe2.codeing()); //??
+   //console.dir(fe3);
+   //fe3.__proto__.__proto__ == Object.prototype
+   for(var attr in fe3){
+       if(fe3.hasOwnProperty(attr)){
+           console.log(attr);
+       }
+   }
+
+   /*
+   *
+   *   批量设置共有的属性和方法
+   * */
+   function Girl(){
+
+   }
+   Girl.prototype = { //用一个新的对象把原来的原型的地址替换了
+       constructor : Girl,
+       a : function (){},
+       b : function (){},
+       c : function (){}
+       /*push:...*/
+   }
+   Girl.prototype.a
+   Girl.prototype.b
+   Girl.prototype.c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*  //画图说明原型链查找机制 ==> hasOwnProperty
+    tab1.__proto__.fn == tab2.__proto__.fn;
+    tab1.__proto__.fn == tab2.fn; //如果你tab2是否一个私有的fn
+    tab1.__proto__.fn == Table.prototype.fn;*/
+
+
+</script>

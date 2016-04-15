@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>工厂模式</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+    * 工厂模式: 解决不能批量生产，它是一个破函数,把实现相同功能的属性拿出来放到一个函数里了，我们把这种方式也叫函数的封装。但是工厂模式不能解决实例识别的问题
+    * 面向对象：函数的封装，继承（子类继承父类的方法和属性等,祖传），多态:包括重载和重写，js中只有重写，但是却可以模拟重载.
+    * */
+    function table(){ //我们的车床
+        var obj = {};
+        obj.width = 200;
+        obj.height = 300;
+        obj.fn = function (){
+            //桌子能干啥，我也不知道
+        }
+        return obj;
+    }
+    var tab1 = table(); //相当于车床通电运行一次就给我造一个桌子,是不是要给我留下东西呀
+    tab1.fn2 = function (){
+        //烧火吧
+    }
+    var tab2 = table(); //
+
+    //new table();
+    ({}).toString == '[object Object]'; //分别代表的是数据类型和所属的类
+    [].toString == "";
+    //[1,2,3].toString() = '1,2,3' //在定义数组的toString方法的时候被重写了
+</script>
