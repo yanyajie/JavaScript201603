@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>作用域的销毁和内存释放</title>
+</head>
+<body>
+    <div id="div1" style="width: 300px; height: 300px; background: pink;">i am div1</div>
+</body>
+</html>
+<script>
+    /*
+    * 作用域销毁和内存释放问题
+    *    1 如果让一个堆内存释放掉那么就让这个堆内存没有被其他变量引用，如果函数在执行的后，函数体内的某一部分被函数体外占用，那么我们运行后返回的堆内存和运行时产生的作用域（栈内存）都不会被释放掉.如果没有被占用，浏览器会主动回收内存空间
+    *    2 函数运行的时候，在函数体内定义的匿名函数赋值给函数体外的dom元素的事件属性，内存也不会被释放掉
+    *    3 函数运行之后留下来的返回值是一个函数，立刻又被执行一次，这样是不会被立刻释放掉的。
+    *
+    *
+    * */
+    var obj = {name:'tianxi',age:30}; //这个对象的堆内存地址只要被obj这个变量引用，这个堆内存就不会被释放;
+    obj = null; //把一个空的指针赋值给obj，这样obj以前的堆内存就会被释放掉
+
+
+    var num = 12;
+    function fn(){ //fn在预解释的时候已经赋值一个堆内存
+        //var num = 100;
+        return function (){ //仍然是一个引用类型，堆内存地址xxxfff111
+            var x;
+            console.log(num);
+        }
+    }
+    var f = fn(); //是把fn运行留下来的结果赋值给f(并且我们发现return出来是一个函数,相当于把函数的引用地址赋值给f变量)，函数运行： 1 形参赋值 2 预解释  3 代码执行
+        //函数运行的时候开辟一个新的私有作用域
+    f(); //就是xxxfff111运行
+
+    ///////////////////////////////////////
+    var oDiv = document.getElementById('div1'); //通过dom获取，是一个dom对象
+    console.dir(oDiv);//
+    /*(function (j){
+        oDiv['onclick'] = function (){
+            console.log('点我a');
+            //
+            //oli[j]
+            //this
+        }
+    })(i);
+*/
+    /////////////////////////////////////
+    function test(){
+        return function (){
+            console.log(1);
+        }
+    }
+    test()();
+
+
+</script>

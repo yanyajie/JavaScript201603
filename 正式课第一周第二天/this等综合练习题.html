@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    var num = 20; //20*=3==》60 通过地30行执行fn()把window.num *= 4了。 240
+    //window.num *= 3;
+    var obj = {
+        num : 30, //120
+        fn : (function (num){ //num = 20
+            this.num *= 3; //this=>window.num*=3;
+            //console.log(num+'aa');
+            num += 20; //20+=20 = 40；//相当于当前作用域内的num变量修改成40了
+            //console.log(num+"aa");
+            var num = 45; //因为和形参是相同的，所以不被预解释,这个var在此处有和没有是一样的效果 num = 45; num+=20 ==>65
+            return function (){
+                this.num *= 4; //第30行执行的时候，我们的this是window，window.num *=4;
+                num += 20;
+                console.log(num); //65
+            }
+        })(this.num) //??this是谁window ==> window.num
+    }
+    var fn = obj.fn; //把obj.fn的引用地址告诉了fn
+    fn(); //65 xxxfff11
+    fn(); //xxxfff111
+    fn();
+    fn();
+    fn();
+    obj.fn();// this ??? 85
+    console.log(window.num,obj.num);
+    /* return function (){
+     this.num -= 30;
+     num += 15;
+     console.log(num);
+     }*/
+
+    var num = 20
+    function a(){
+        num += 20;
+    }
+    a();
+    console.log(num);
+</script>

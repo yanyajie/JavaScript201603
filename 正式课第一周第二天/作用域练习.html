@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>作用域练习</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+
+
+   // var i = 1; // i = 2; i=3
+  /*  console.log(1 + i++); //??2
+    console.log(1 + ++i); //??4*/
+
+    //console.log(1 + (i++) + (i++) + (++i) + (i++)); //10,18,12,12
+    //console.log(i); //5,5,5
+
+    /*
+    *   i++ 先运算后累加
+    *   ++i  先累加后运算
+    * */
+
+
+
+
+
+
+    function fn(){
+        var i = 3; //4 5
+        return function (n){
+            var m = 0;
+            console.log(m++);
+            console.log(n+(++i));
+
+        }
+    }
+  /*  var f = fn(); // var f = function (n){console.log(n + ++i）)}
+    f(4); //8 8 8
+    f(8); //13,13  第二次运行的时候由于上一次运行后的i被累加1，所以只要运行一次我们的i就被累加了一次，由于这个作用域没有被释放，所以每次取值都是取的最后一次被修改的值。
+
+    fn()(12); //16,18,16,16
+    fn()(26); //30,32,30,30
+    f(12) //18
+*/
+
+
+
+
+
+
+    //修改
+    function foo(i){ //i =3
+
+        return function (n){
+            console.log(n + i++); //3++
+        }
+    }
+    var f = foo(3);
+    //f = null;
+    f(4); //7,7,7,7
+    f(5); //9
+    foo(1)(2); //3
+    foo(2)(3); //5
+
+
+
+    // i++ & ++i 区别
+    /*
+    *   i++ 先拿i的值运算，然后再给本身+1
+    *   ++i 先给本身+1, 然后再运算
+    *
+    * */
+   // var i=10;
+    //console.log(1 + i++);
+    //console.log(1 + ++i);
+    //console.log(1 + (++i) + (i++) + (++i) + (i++))
+
+</script>
+
+

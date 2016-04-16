@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>单例模式</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+     * 单例模式: 就是一个破对象， 也是命名空间模式。(namespace)是js编程中最常用的模块化（？？）开发模式,在工作过程中也会经常看到.
+     * */
+    function Table() { //用function的方式去创建一个人为的一个类
+
+    }
+    var table1 = new Table(); //用实例创建的方式，创建了一个具体化的类也就是一个shi'li
+    var person = { //我自己
+        name : 'tianxi',
+        age : 30,
+        height : '175cm',
+        weight : '90kg',
+        code : function (){
+            //我有一个写代码的功能
+        },
+        change : function (){
+
+        },
+        utils:{
+
+        }
+    }
+
+    var person2  = {
+        name : 'youcheng',
+        height : '180cm',
+        wirteJs : function (){
+            //这个方法是youcheng的，但是我不一定会
+        },
+        change: function (){
+
+        }
+
+    }
+
+    var Tx = {
+        change: function (){}
+    }
+    var zy = {
+        change : function (){}
+    }
+    //person.code();
+    //person2.writeJs();
+
+
+</script>

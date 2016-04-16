@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型拓展</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    function Fn(){
+        this.x = 100;
+        this.y = 100;
+        this.getY = function (){
+            console.log(this.y);
+        }
+    }
+    //Fn.x = 100;
+    Fn.prototype = {
+        constructor : Fn,
+        y : 100,
+        getX : function (){
+            console.log(this.x); //this? f.x  //f.__proto__.x?
+        },
+        getY : function (){
+            console.log(this.y);
+        }
+    }
+    var f = new Fn(); //x = 100 y= 100 getX = function (){console.log(this.y)}
+    f.getX(); // __proto__ 去它所属类的原型上去查找
+    f.__proto__.getX();//undefied
+</script>
+
+<script>
+    Array.prototype.push = function (){
+        alert('push');
+    }
+    var a = [];
+    //a.push();
+
+    Array.prototype.quchong = function (){
+        //this ==> a [1,2,1 ,3,2,] a[a.length-1]
+        var obj = {};
+        for(var i=0; i<this.length; i++){
+            var cur = this[i];
+            if(obj[cur] == cur){
+                //this[i] = this[this.length-1]; //
+                this.splice(i,1);
+                //this.length--;
+                i--;
+                continue;
+            }
+            obj[cur] = cur;
+        }
+    }
+    var a = [1,2,3,2,1];
+    a.quchong();
+    console.log(a);
+</script>
+<script>
+    function LiLi(){
+
+    }
+    console.dir(LiLi)
+</script>
