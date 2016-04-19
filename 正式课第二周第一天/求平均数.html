@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>平均数</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+     *   求平均数： 去掉最高和最低分。然后除以
+     *
+     * */
+    //var ary = [1, 2, 3, 4, 5, 6, 3, 2, 1];
+    function avgFn (){
+        console.dir(arguments);
+        var ary = arguments;
+        //需要把这arguments这个类数组u转化为数组
+        //我是否可以自己克隆一个数组
+        //slice这个方法在执行的过程中就是相当于把slice这个函数中的this就是调用slice的实例，如果把这里的this被改变成argumets。这样arguments就可以借用slice了
+        //var ary = Array.prototype.slice/*读取slice的值，它的值是一个函数*/.call(arguments/*从这个参数开始才是给slice的*/);
+        var ary = [].__proto__.slice.apply(arguments); //不用
+        //console.log(newAry);
+        //try catch
+        ary = ary.sort(function (a,b){return a-b}); //
+    ary.shift();
+    ary.pop();
+    return (eval(ary.join('+'))/ary.length).toFixed(2); //保留两位小数
+
+    }
+    //
+    avgFn(1, 2, 3, 4, 5, 6, 3, 2, 1);
+</script>
+<script>
+    function listToArray(similarArray){
+        var ary = [];
+        for(var i=0; i<similarArray.length; i++){
+            ary[ary.length]=similarArray[i]; //push
+        }
+        return ary;
+    }
+</script>

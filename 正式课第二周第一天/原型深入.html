@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div id="div1">div
+        <p name="p" id="p">p</p>
+    </div>
+</body>
+</html>
+<script>
+    /*
+    *   dom获取元素
+    *       1 通过标签获取来的是HtmlCollection,通过标签获取来的都是HtmlCollection类的一个实例
+    *       2 所有的div都是HTMLDivElement这个类的一个实例==>HTMLElement==>Element==>Node==>EventTarget==>Object
+    *       3 getElementsByName是定义在document这个家族的方法。
+    * */
+    var p = document.getElementsByName('p'); //通过name获取来的
+    var oDiv = document.getElementById('div1');
+    var op = oDiv.getElementsByTagName('p'); //通过tag获取来的
+    console.dir(p); //p是NodeList的一个实例
+    console.dir(op);//op是HtmlCollection这个类的一个实例
+    //console.dir({});
+    //console.dir([]);
+    console.dir(oDiv);
+    //所有的div都是HTMLDivElement这个类的一个实例==>HTMLElement==>Element==>Node==>EventTarget==>Object
+    var sP = document.getElementById('p'); //通过oDiv来查找getElementsByName的属性，并且让这个属性的值去执行，传入了一个'p'作为参数
+    console.dir(sP);
+
+    // document.getElementById('p')  这个getElementById属性是不是方法也是一个函数
+    /*
+    *   函数有多种角色：
+    *       1 普通函数： 函数执行的时候就会产生一个私有的作用域，栈内存。 形参赋值 预解释 代码逐行执行  闭包 内存释放问题
+    *       2 构造函数(类): new 实例  实力！！ 构造函数中的this是当前实例 return问题
+    *       3 那么函数它自己本身是谁的实例  任何一个函数都是Function这个类的一个实例，那么任何一个函数实例都可以调用(__proto__)定义在Function这个类原型上的所有属性和方法
+    *
+    * */
+    Object.prototype.toString.call();
+    var obj = {}; // [object Object]
+    var f = new Array(); // ""
+
+
+
+
+
+
+</script>

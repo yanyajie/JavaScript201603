@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>sort深入</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+    *  sort: 函数的参数是function，这里引入回调函数概念
+    * */
+    function A(fn){
+        fn();
+    }
+    function B(){
+
+    }
+    A(B);
+
+    var a = [1,23,32,2,4,7];
+    a.sort(function (){
+        cnosole.log(a,b); //只要大于0就
+        return a -b; //如果return一个恒大于0的数就是无论怎么样都交换位置，相当于reverse
+    });
+
+    var obj = [
+        {name:'a',age:1},
+        {name:'b',age:5},
+        {name:'c',age:3},
+        {name:'d',age:4},
+        {name:'e',age:2}
+    ];
+    a.sort(function (a,b){
+        return parseFloat(a.age) - parseFloat(b.age);
+    });
+    a.sort(function (a,b){
+        return a.name.localeCompare(b.name);
+    })
+</script>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>求数组中的最大值</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+    *   1 chuan 先排序然后最后一个就是最大值
+    *   2 Math.max(1,2,4,5) 如何给我想办法：去掉数组的中括号
+    *   3 假设   回去自己试一试   假设第一个就是最大值 循环比较从索引1开始 比较，如果当前项大于最大值那么更新最大值
+    *
+    * */
+    var ary = [9,4,3,2,7,10];
+    //console.log(eval('Math.max('+/*ary.toString()*/ary.join()+')'));
+    console.log(Math.max.apply(null,ary)); //Math.max(9,4,3,2,7,10)
+
+
+</script>
