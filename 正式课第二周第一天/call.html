@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+     *    call: call这个方法是定义在Function.prototype的方法。那么我们定义任何一个函数我们都可以认为它是Function这个类的一个实例。那么就可以通过实例的__proto__属性找到所属类的原型。任何一个函数都可以调用call和apply等方法 eg: Object.prototype.toString.call(); 强制改变this关键字的
+     *    call作用：
+     *         函数实例找到call方法执行，call的执行过程中把调用call方法这个函数实例中的this都改变成call的第一个参数。接下来再把调用call方法的这个实例函数执行
+     *
+     *
+     *
+     *
+     *
+     * */
+    function fn() { //是Function这个类一个实例
+        console.log(this); //obj
+    }
+    //fn(); //?? this==>window
+    var obj = {
+        fn: fn
+    }
+    //obj.fn();//this ==> obj
+    //fn.call(obj); // 1 找到call方法并且运行  2 在运行之前把调用call方法的fn这个函数中的this都修改成call的参数，也就是obj  3 执行fn
+
+
+    //假如在Function的原型上没有定义一个call，我们自己模拟呢？？
+    Function.prototype.myCall = function (obj) {
+        //把这个函数体内的this都改成obj这个参数
+        //执行fn就是this执行
+        //console.log(this);
+        this(); //因为这个this只有在调用call方法的时候才知道具体是那个函数实例
+    }
+    //fn.call(obj); //  用obj去借用fn这个方法
+
+    //
+    function fn1() {/*console.log(1)*/
+       /* this();
+        console.log(this)*/
+        console.log(1)
+    }
+    function fn2() {
+        console.log(2)
+    }
+    fn1.call(fn2); //1 在执行的过程中把fn1中的this改成fn2然后fn1()  ==> 1
+    /*
+    *   上面的fn1.call(fn2)是改变fn1中的this
+    * */
+    (function (){}).call/*function call()*/.call.call.call.call.call(fn2);
+    /*
+    *   上面的call是改变function.__proto__.call的call方法中的this
+    * *///???2  这里的fn1只是用来读取值。通过fn1来读取Function.prototype的属性
+    //规律： 多个call就是相当于参数执行，而调用call的方法是用来读取call这个属性值的
+    //Function.prototype.call(fn1); //?? Function.prototype是一个匿名函数，但是这个函数什么也没做
+   // Function.prototype.call.call.call(fn1); //?? 1 ==> fn2.call.call.call(fn1)
+
+
+</script>

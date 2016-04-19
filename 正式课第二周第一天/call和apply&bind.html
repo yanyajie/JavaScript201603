@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+     *  call在执行的时候，call的第一个参数是用来改变this的，而从第二个参数开始都是传给调用call的函数的
+     * */
+    /*'use strict';*/ //严格模式解析代码
+    /*
+     *   严格模式: call执行的时候和非严格模式不同  没有参数：undefined  null:null  undefined:undefined，非严格模式都是window
+     *           在函数体内的arguments不随着参数变化而变化 arguments.callee  arugmetns.caller 不能用
+     *           this问题：严格模式自执行函数中的this是undefined，如果没有执行主体this也是undefined。非严格模式下都是window
+     *
+     *
+     * */
+    function sum(num1, num2) {
+        //console.log(num1 + num2);
+        //console.log(this);
+    }
+    //sum(100,200); //300 window
+    //sum.call(100,200); //从第二个参数开始是传个sum的,我们此时函数已经执行结束了
+
+    //sum.call(); //window
+    //sum.call(null); //window
+    //sum.call(undefined); //window
+    // !function (){console.log(this)}();
+    /*
+     *
+     *   apply ： 它跟call的用法是一样一样的。就是传参数的方式不相同而已
+     *           call是把从第二个参数开始一个一个传给调用call的函数主体
+     *           同样也是相当于把数组中的每一项分别传给调用apply这个方法的函数实例
+     *
+     * */
+    function sum(num1, num2) {
+        console.log(num2 + num1);
+        console.log(this);
+    }
+    //sum.apply(null,[100,200]); //apply的用法，也是把数组参数中的每一项分别传给sum的
+
+    /*
+     *   绑定 bind: 同样也是用来改变this关键字的
+     * */
+   /* var temp = sum.bind(null, 100, 200);  预处理 中间量  假设 标识变量
+    temp();*/
+    var obj = {name : 'zx'}
+    var temp = sum.bind(obj); //仅仅是改变了this，但是并没有执行 temp已经是被改变了this的函数
+    temp(100,200); //当我们需要的时候才执行呢
+
+</script>
