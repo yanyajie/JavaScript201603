@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{ margin: 0; padding: 0; }
+        .ul{ list-style: none; width: 200px; margin: 30px auto;  }
+        .ul li{ border-bottom: 1px solid #ccc; height: 30px; line-height: 30px; }
+    </style>
+</head>
+<body>
+    <ul class="ul">
+        <li>88</li>
+        <li>89</li>
+        <li>78</li>
+        <li>92</li>
+        <li>85</li>
+        <li>97</li>
+    </ul>
+    <script  src="utils.js"></script>
+    <script>
+        var oul = document.getElementsByClassName('ul')[0];
+        var oLis = document.getElementsByClassName('ul')[0].getElementsByTagName('li');
+        console.dir(oLis);
+        var ary = utils.listToArray(oLis);
+        ary = ary.sort(function (a,b){
+            return parseFloat(a.innerHTML) - parseFloat(b.innerHTML);
+        })
+        console.dir(ary);
+        var frg = document.createDocumentFragment();
+
+        for(var i=0; i<ary.length; i++){
+            frg.appendChild(ary[i]);
+        }
+        oul.appendChild(frg);
+        frg = null;
+    </script>
+<!--
+    工作中遇到的问题：
+        1 由于网页内的元素变化，并且元素改变引起的bug考虑是不是有可能是dom映射
+        2 网页内元素事件丢失考虑是不是由于innerHTML引起的bug
+-->
+
+</body>
+</html>

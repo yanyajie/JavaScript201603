@@ -5,21 +5,34 @@
     <title></title>
 </head>
 <body>
-
+    <div id="div1">
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+    </div>
 </body>
 </html>
+<script src="utils.js"></script>
 <script>
-    var utils = {
-        listToArray : function (similarAry){
-            var ary = [];
-            try {
-                ary =  ary.slice.call(similarAry)
-            }catch(e){
-                for(var i=0; i<similarAry.length; i++){
-                    ary[ary.length] = similarAry[i];
-                }
-            }
-            return ary;
-        }
+    var ops = document.getElementById('div1').getElementsByTagName('p');
+    console.log(utils.listToArray(ops));
+</script>
+<script>
+    /*
+    *   回调函数：在函数中传入一个函数参数 当完成某个动作之后要做某事
+    *   eg: 我把网页内的一个元素从左面移动到右面，然后再变成一个新颜色
+    * */
+    function b(){
+        alert('b')
+        //喝水
     }
+    function c(){
+        //泡脚
+    }
+    c.haha = 'x'; //函数本身也可以添加属性
+    console.log(c.haha);
+    a(b);
+    a(c);
 </script>

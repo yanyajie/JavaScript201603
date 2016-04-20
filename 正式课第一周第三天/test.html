@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    var num = 20;
+    var obj = {
+        num: 30,
+        k:function () {
+            var num=10;
+            return (function (num) {
+                this.num *= 3;
+                num += 20;
+                return function () {
+                    console.log(this)//
+                    this.num *= 4;
+                    num += 20;
+                    console.log(num);
+                }
+            })(this.num);
+        }
+    };
+    obj.k()/*到这的返回值相当于那个匿名函数*/(); //前面的括号运行相当于返回了一个匿名函数，就相当于这个匿名函数暴露在window下直接运行;
+    console.log(window.num, obj.num);
+</script>
+</body>
+</html>
