@@ -1,0 +1,8 @@
+*{ margin: 0; padding: 0 }
+.box{ width: 400px; margin: 30px auto; padding: 20px; border: 1px solid green; border-radius: 4px; box-shadow: 3px 3px 3px 3px pink; font-family: '微软雅黑';  }
+.box table{  }
+.box table thead { height: 30px; line-height: 30px; text-align: center; background: lightgreen; -webkit-user-select: none; }
+.box table thead th,.box table tbody td{ width: 100px; }
+.box table tbody td{ text-align: center; height: 30px; }
+.bg{ background: lightsalmon; }
+.cursor{ cursor: pointer;}

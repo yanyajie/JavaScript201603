@@ -10,33 +10,45 @@
 </html>
 <script>
     /*
-    *  sort: 函数的参数是function，这里引入回调函数概念
+    *  sort: 函数的参数是function
     * */
-    function A(fn){
-        fn();
-    }
-    function B(){
 
-    }
-    A(B);
-
-    var a = [1,23,32,2,4,7];
-    a.sort(function (){
-        cnosole.log(a,b); //只要大于0就
-        return a -b; //如果return一个恒大于0的数就是无论怎么样都交换位置，相当于reverse
-    });
-
-    var obj = [
-        {name:'a',age:1},
-        {name:'b',age:5},
-        {name:'c',age:3},
-        {name:'d',age:4},
-        {name:'e',age:2}
+   /* var a = [1,2,3];
+    a.sort(function (a,b){
+        return 1;
+    });*/
+    //console.log(a);
+    var ary = [
+        {name : '田喜',age : 29},
+        {name : '珠峰',age : 30},
+        {name : '刘杰',age : 28}
     ];
-    a.sort(function (a,b){
-        return parseFloat(a.age) - parseFloat(b.age);
+   /* ary.sort(function (a,b){
+        //a b 是里面的对象 {name : 'tx',age : 29}
+        return (a.age - b.age)*-1;
+    });*/
+    //console.log(ary);
+    //但是我们按照name去排序呢?
+    ary.sort(function (a,b){
+        return a.name.localeCompare(b.name); //用汉字排序也换成了拼音
     });
-    a.sort(function (a,b){
-        return a.name.localeCompare(b.name);
-    })
+    console.log(ary);
+    /*
+    *
+    * sort还可以排序这些属性呢
+    * */
+
+
+    var ary = [
+        {"name" : '田喜',"age" : 29},
+        {"name" : '珠峰',"age" : 30},
+        {"name" : '刘杰',"age" : 28}
+    ];
+    //给每一个属性名字都加了一个双引号，这叫JSON格式的对象,只能用双引号
+
+
+
+
+
+
 </script>

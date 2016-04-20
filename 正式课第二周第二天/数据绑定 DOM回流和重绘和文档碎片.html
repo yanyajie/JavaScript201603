@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>数据绑定以及DOM回流</title>
+    <style>
+        *{ margin: 0; padding: 0; list-style: none; }
+        .box{ width: 400px; margin: 30px auto; border: 2px solid #ccc; border-radius: 5px; padding: 20px; box-sizing: border-box; }
+        .box li { position: relative; padding-left: 20px; height: 30px; line-height: 30px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .box li span{ display: inline-block; line-height: 20px; text-align: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid darkblue; background: pink; color: darkmagenta; }
+    </style>
+</head>
+<body>
+    <div class="box J-box"  id="J-box">
+        <ul>
+            <li><span>1</span>人社部：降低养老保险缴费缴费 合并生育医疗险</li>
+            <li><span>2</span>内部矛盾公开公开公开 达赖发怒拒见“藏独”头目</li>
+            <li><span>3</span>"东莞一哥一哥"刘志庚黑色往事 曾称扫黄要有度</li>
+            <li><span>4</span>铁路运行图行图调整5月15日实施 高铁将增开“夜班车”</li>
+        </ul>
+    </div>
+</body>
+</html>
+<script src="json-bind.js"></script>
+<script>
+    //获取我们要操作的元素
+    var oDiv = document.getElementById('J-box');
+    var oUl = oDiv.getElementsByTagName('ul')[0];
+    var oLis = oDiv.getElementsByTagName('li'); //我这会获取的时候是不是新添加的
+    for(var i=0; i<oLis.length; i++){
+        oLis[i].onmouseover = function (){
+            this.style.backgroundColor = 'gray';
+        }
+        oLis[i].onmouseout = function (){
+            this.style.backgroundColor = '';
+        }
+    }
+    //添加新闻
+   /* for(var i=0; i<ary.length; i++){ //循环创建数组长度这么多元素，并且追加到ul里
+        var li = document.createElement('li');
+        //<li><span>3</span>"东莞一哥一哥"刘志庚黑色往事 曾称扫黄要有度</li>
+        li.innerHTML = '<span>'+(i+5)+'</span>'+ary[i].title ;
+        oUl.appendChild(li);
+    }*/
+    //通过appendchild这种方式添加进来的并没有把已经存在事件改变，但是引起了DOM回流
+
+    //拼接字符串的方式
+  /*  var str = "";
+    for(var i=0; i<ary.length; i++){
+        str += '<li>';
+        str += '<span>';
+        str += (i+5);
+        str += '</span>';
+        str += ary[i].title;
+        str += '</li>';
+    }*/
+    //oUl.innerHTML = oUl.innerHTML /*把oUl这个dom对象的innerHTML属性读取然后再拼接上str这个字符串*/+ str;
+    //用字符串拼接的方式只引起了一次回流，但是原来存在的元素事件或其他属性全都改变了
+
+    /*
+    *   DOM的回流和重绘：
+    *       回流：我们网页内的元素的增加和删除，元素的位置的改变都会引起我们的DOM回流
+    *       重绘：元素的背景，字体，边框的粗细等会引起DOM的重绘
+    *
+    * */
+
+    //利用文档碎片
+    var frg = document.createDocumentFragment(); //可以理解为是一个临时的容器
+    //console.dir(frg);
+    for(var i=0; i<ary.length; i++){
+        //需要先创建一个li标签
+        var li = document.createElement('li');
+        li.innerHTML = '<span>' + (i+5) + '</span>' + ary[i]['title'];
+        //把刚创建的这个li放到文档碎片frg中
+        frg.appendChild(li);
+    }
+    //把这个文档碎片加到oul中
+    oUl.appendChild(frg);
+    frg = null;
+
+    /*
+    *   DOM的动态数据绑定,dom中元素的数量和外部的数据多少联系起来，就是动态的数据绑定
+    *
+    *
+    * */
+
+
+</script>
