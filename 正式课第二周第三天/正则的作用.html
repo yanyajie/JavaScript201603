@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+    *   正则的作用：用来判断字符串是否符合规则  处理字符串
+    *       1 test 用来验证是否符合规则返回真和假 ==》 正则匹配
+    *       2 exec 用来把当前字符串中所有符合规则的字符串获取到。 用来实现正则的捕获的。 返回的是一个数组 ==》 正则捕获
+    * */
+    /*
+    *   正则的创建：var reg = /\d/;   实例创建： var reg = new RegExp('');
+    *   创建区别： 一个个总结
+    * */
+
+    var reg = /\d/;
+    console.log(reg.test('1')); //
+    console.log(reg.exec('x')); //
+    console.log(reg.exec('1')); //
+</script>
