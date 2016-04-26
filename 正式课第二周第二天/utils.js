@@ -1,22 +1,16 @@
 /**
  * Created by lucky on 2016/4/19.
  */
-/*
-*   ÔÚ¹¤×÷µÄ¹ı³ÌÖĞ£¬µ¼ÈëÆäËû¿ò¼Ü»òÕß·½·¨ĞèÒª·ÅÔÚheadÀï,Õâ¸ö¹«¹²µÄ¹¤¾ßÎÄ¼ş£¬¿ÉÄÜn¸öÈË¹²Í¬±àĞ´£¬ËùÒÔÒªÇø±ğ¿ªÀ´
-* */
-/*
-*   µ¥ÀıÄ£Ê½
-* */
 var utils = {
     listToArray : function (similarArray){
         /*
-        *   try catch jsÖĞÈİ´í
+        *   try catch js
         * */
         var a = [];
         try{
-            a = Array.prototype.slice.call(similarArray); //¸ù±¾¾Í²»Ö§³Öie7ºÍie8
+            a = Array.prototype.slice.call(similarArray);
         }catch (e){
-            alert(); //ie7 ºÍ ie8 µ¯³ö£¬
+            alert(); //ie7 å’Œ 8 å¼¹å‡º
             var a = [];
             for(var i=0; i<similarArray.length; i++){
                 a[a.length] = similarArray[i];
@@ -24,19 +18,8 @@ var utils = {
         }
         return a;
     },
-    jsonParse: function (jsonStr){ //°Ñjson¸ñÊ½×Ö·û´®×ª»¯Îªjson¶ÔÏó
+    jsonParse: function (jsonStr){
         return 'JSON' in window ? JSON.parse(jsonStr) : eval("(" + jsonStr+")");
     }
 
 }
-/*
-//»Øµ÷º¯Êı
-function a(callback){
-    //ÉÕË®
-    //ÉÕ¿ªÁË
-    if(typeof callback === 'function'){
-        callback();
-    }
-
-}
-*/

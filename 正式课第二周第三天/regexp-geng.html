@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    var reg1 = /^\d+(ab|cd|xyz)\d+$/;
+    var reg2 = /^\d+ab|cd|xyz\d+$/;
+    var str1 = '400ab500';
+    var str2 = '234ab';
+    var str3 = '1324abcd';
+    var str4 = 'cd8888ab';
+    var str5 = 'xyz999ab';
+
+    //验证邮箱
+    //你的网站的邮箱规则
+    /*
+    *   可以包括数字 字母  下划线 @ 域名 . com/net/cc/cn只能是正常的字母
+    *   '.'这个元字符匹配太多需要转义
+    *   在[]里的单个的元字符不用转义，就表示这个字母表示的本身的意思
+    * */
+    var reg =  /^[\w.]+@\w+(\.[a-z]+)?$/i
+    /*
+    *   问号的几种意义?
+    *       1 量词出现0-1次 出现在实际意义字符后边的时候是一个量词
+    *       2 贪婪 or 非贪婪   出现在量词后面的问号是修饰贪婪还是非贪婪，如果不加问号那么就是把能匹配多少都拿回来，如果加一个问号。那么是尽可能少的去匹配和捕获 /\d+?/
+    *       3 分组中的匹配不捕获也就是子正则中的匹配不捕获,那么就不会出现在exec捕获时候返回的数组中。?: 把问号和冒号放在括号的开始位置。表示不在把括号中的内容当成一个子正则。那么这个分组其实也已经取消了  /^\d(?:ab|cd|ef)\d$/
+    *       4 正向预查询和负向预查询  带条件的正则表达式 ?=  ?!负向预查询
+    *           eg: 一个字符串有连续多个数字，但是这些数字后边是字母。但是只把满足条件的数组取到，后面的字母忽略。只是一个以字幕结尾这是一个条件,但是不参与捕获      var str2 = 'adsf345qwe#'  这个不行
+    *           var  str3 = 'adfa8888aaaa'
+    *           var reg = /\d{2,}(?=[a-z]+$)/  切记$符号不要去修饰条件。正向预查询相当于加了一个条件。这个括号里根本就不参与捕获，只是这个正则成立的条件
+    *
+    * */
+
+    /*
+    *   [^a-z] 除了a-z以外的任意字符  var reg = /[^a-z]/;
+    *   \d  是0-9  \D 除了0-9之外的任意字符
+    *   \w  是[a-zA-Z0-9_]
+    *   \W  也是取非集
+    *   \s  一切不可见的字符集
+    *   \S  取反
+    *   . 除了匹配回车之外的单字符
+    *
+    *
+    *   验证重复的字符串  var reg = /(\w)/;  reg.exec()'';
+    *                    var reg = /(\w)\1+/
+    *
+    * */
+
+
+
+    /*
+    *
+    *   分组： 难点+重点
+    *       1 什么是分组
+    *       2 分组的引用
+    *       var reg = /^(\d)(\d)\1$/
+    *
+    *       用其他方式获取分组捕获的内容
+    *       var reg = /(\w)(\w)(\w)/
+    *       var str = 'abcdefghijklmn'
+    *       reg.test(str);
+    *       正则这个方法只要运行了就可以去访问RegExp.$1 - $9 当这个正则实例运行之后，如果此正则上有分组，则自动把捕获到的内容分别赋值给构造函数的$1-$9,如果不够是空字符串 如果是对象类型的找不到才是null 如果是值类型的找不到事空字符串
+    *
+    *
+    *       模式修正符
+    *           g
+    *           i
+    *           m
+    *           匹配模式ip地址
+    *           192.168.1.1
+    *           reg.exec(); 即使你加了g也没有多次都匹配回来
+    *           str.match   这个吧所有能匹配来的都匹配来的
+    *           这里有一个reg.lastIndex在作怪
+    *           str1 = 'qewrqewr8'
+    *           str2 = '4adfaasd'
+    *           因为上一次匹配的时候的lastIndex是8.下次从8开始找了。但是要用同一个reg实例
+    *           正则是尽可能少的去匹配次数，但是却在每次尽可能多的去匹配
+    *           加上了全文修饰符g每次lastIndex都会变成0，如果是验证就不要加g了。因为仅仅是为了验证而已
+    *
+    *           重点replace
+    *           var a = [];
+    *           str.replace(/\d/g,function (){
+    *               return a[arguments[0]]
+    *               arguments[0] 当前匹配结果
+    *               arguments[1]  当前匹配结果在字符串中的索引
+    *               arguments[2]  整个字符串
+    *               String.fromCharCode(64+arguments[0]/1)
+    *           })
+    *
+    *
+    *
+    *           把字符串反转的固定技巧
+    *               'abc'.replace(/(\w)(\w)(\w)/,'$3$2$1')
+    *
+    *
+    *            把不限长度的字符串反转 abcdefg
+    *            str.replace(/\w/g,function (){
+    *               找到第一个用最后一个替换掉
+    *               第一个索引位置用arguments[1]; //length-1
+    *               str.length-1-arguments[0]
+    *               return str.charAt(str.length-1-arguments[1])
+    *
+    *            })
+    *
+    *
+    *            replace实现字符串去重
+    *            var str = '88888888889999999999999997777777777777'
+    *
+    *
+    *
+    *
+    * */
+    var ary = ['a','b','c','d','e'];
+    var str = '12345';
+    str = str.replace(/\d+/g,function (){
+        //console.log(arguments);
+        //console.log(]) ;
+        return ary[arguments[1]];
+    })
+    console.log(str);
+
+    var str = '888888888888999999999999997777777777';
+    str =  str.replace(/(\d)\1+/g,function (a,b,c,d){
+        //如果正则里有了分组就不是3个参数了 是4个参数
+        //如果有分组，第一个参数是总正则匹配的记过，第二个参数是子正则匹配的结果
+        return b;
+    })
+    console.log(str)
+</script>4

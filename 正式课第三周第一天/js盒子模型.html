@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{ margin: 0; padding: 0;}
+        #div1{
+            width: 200px;
+            height: 200px;
+            margin: 40px auto;
+            border: 10px solid green;
+            padding: 20px;
+            overflow: auto;
+            opacity: .4;
+            filter: alpha(opacity=40);
+            /*
+
+            */
+           /* box-sizing:  border-box; 加上的padding要在宽度上减去 */
+        }
+    </style>
+    <!--<link rel="stylesheet" href=""/>-->
+</head>
+<body>
+<div id="div2" style="position: relative">
+    <div style="position: absolute; width: 200px; " id="div1" class="div div1">习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效习近平在网信工作座谈会上讲话  专题  漫评  这三年张德江主持会议  俞正声会见代表  刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效刘云山陕西调研2016年一季度全国网信系统行政执法工作取得新成效</div>
+</div>
+<!--<video src=""></video>-->
+<!--<audio src=""></audio>-->
+<select name="" id="df">
+    <option value=""></option>
+    <option value=""></option>
+    <option value=""></option>
+</select>
+</body>
+</html>
+<script>
+    /*
+    *   js中的盒子模型
+    *       clientHeight 高度+上下填充
+    *       clientWidth  宽度+左右填充
+    *       clientLeft  左边框宽度
+    *       clientTop   上边框宽度
+    *
+    *       offsetWidth  宽度+左右填充+左右边框  ==> clientWidth+左右边框
+    *       offsetHeight 高度+上下填充+上下边框  ==> clientHeight+上下边框
+    *       offsetLeft  当前元素距离父元素左偏移量
+    *       offsetTop  当前元素的外边框距离父级元素的内边框的上偏移量
+    *       offsetParent
+    *
+    *       scrollWidth  区别于clientWidth  内容+左填充,如果没有发生溢出就是和clientWidth相等的
+     *      scrollHeight 区别于clientHeight 内容+上填充
+     *      scrollTop
+     *      scrollLeft
+    *
+    * */
+    var oDiv = document.getElementById('div1');
+    //console.dir(oDiv);
+    //console.log(oDiv.clientHeight);
+    //console.log(oDiv.scrollHeight);
+    //console.log(oDiv.scrollTop);
+    //console.log(oDiv.scrollLeft);
+
+    /*
+    *   获取可视窗口：document.documentElement.clientHeight || document.body.clientHeight
+    *   是不是可以加到我们的untils
+    *
+    * */
+
+    /*
+    *   通过元素的style属性只能获取行内样式,但是我们一般不把样式写在行内
+    *   获取元素的浏览器计算后的样式
+    * */
+    function getCss(curEle){ //返回了那个样式对象
+        if(window.getComputedStyle){ //如果在window下存在一个getComputedStyle的属性，那么我就认为支持这个方法
+            return window.getComputedStyle(curEle,null); //null参数是伪类
+        }else{ //ie低版本
+            return curEle.currentStyle;
+        }
+    }
+    //我想获取到具体的某一个属性
+    function getCss(curEle,attr){
+        if(/MSIE (?:6|7|8)/.test(window.navigator.userAgent)){
+            return curEle.currentStyle[attr];
+        }
+        return window.getComputedStyle(curEle,null)[attr];
+    }
+    //需要规避复合值的问题 margin padding
+    //把带获取到带单位的把单位去掉  px em pt rem deg
+    function getCss(curEle,attr){
+        //处理带单位的问题
+        var reg = /^(-?\d+\.?\d+)(?:px|em|pt|deg|rem)$/;
+        var val = null;
+        if(/MSIE (?:6|7|8)/.test(window.navigator.userAgent)){
+            debugger
+            //这里处理filter的滤镜问题  alpha(opacity=40);
+
+            if(attr === 'filter'){
+
+                //alpha(opacity=40)
+                val = curEle.currentStyle[attr];
+                var reg1 = /^alpha\(opacity=(\d+(\.\d+)?)\)/;
+                return reg1.test(val) ?  RegExp.$1/100 : 1;
+            }else{
+                val = curEle.currentStyle[attr];
+            }
+
+        }else{
+            val = window.getComputedStyle(curEle,null)[attr];
+        }
+        return reg.test(val)? parseFloat(val)  :val  ; //如果正则验证通过，寿命返回值是带单位的，那么我们就要人为去掉这个单位。否则不变
+    }
+    getCss(oDiv,'opacity');
+
+    
+
+</script>

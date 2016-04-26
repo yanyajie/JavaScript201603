@@ -36,7 +36,9 @@ function bindDate(){ //动态绑定数据
         var cur = res[i]; //cur每次循环时候的那个当前对象，也就是当前的那一组数据
         for (var key in cur){ //通过属性的个数循环创建列。每一个单元的html就是当前这个对象的属性值
             var td = document.createElement('td');
-            td.innerHTML = cur[key]; //把cur[key]这个从数据中读到的属性值赋值给这个列的innerHTML
+            //处理性别这个列的innerHTML显示不正确问题，男女问题，如果分不清自己if else去
+            key === 'sex' ?  td.innerHTML =  cur[key] == 0 ? '女' :  '男'   :td.innerHTML = cur[key];
+             //把cur[key]这个从数据中读到的属性值赋值给这个列的innerHTML
             tr.appendChild(td);
         }
         frg.appendChild(tr);
@@ -61,25 +63,50 @@ changeColor();
 *   点击年龄实现排序
 * */
 function sort(){ //做到我们的排序了，按照你当前点击的表头为依据排序
-    //假如我当前点击的是年龄，那么是不是需要按照年龄来排序
-
-    var ary = utils.listToArray(bodyTrs); //
-    ary.sort(function (a,b){
-        //return
+    //如果想用sort方法，首先要保证是一个数组。点击的时候给tbody里的行排列。所以先把tbody下的rows这个类数组转化为数组
+    console.log(this);
+    //需要处理每次点击过后不能把排序标识恢复问题
+    for(var j=0; j<ths.length; j++){
+        if(ths[j] != this){
+            ths[j].sortFlag = -1;
+        }
+    }
+    var that = this;
+    var ary = utils.listToArray(bodyTrs);
+    this.sortFlag *= -1;
+    ary = ary.sort(function (a,b){ //给数组排序，dom映射关系
+        //a 和 b 此时分别代表的什么？ 分别代表上下两行
+        //而我们排列是按照每行里面所有列这个集合的中点击的那一列的innerHTML的内容去排列。被忘了把innerHTML获取来的字符串转化成数字
+        return (parseFloat(a.cells[that.index].innerHTML) - parseFloat(b.cells[that.index].innerHTML))*that.sortFlag; //排列倒叙如果每次在sort执行的时候，把return这个值乘以-1就ok
+        //还要判断是不是名字，如果当前列是名字，通过localeCompare
     });
+    //把排好序的数组利用数据绑定重新放回到tbody里
+    var frg = document.createDocumentFragment(); //先创建一个文档碎片
+    for(var i=0; i<ary.length; i++){ //循环把已经拍好序的数组的每一项(行)appedn到这个文档碎片中
+        frg.appendChild(ary[i]);
+    }
+    tbody.appendChild(frg);
+    frg = null;
 }
 
 /*
-*   绑定点击事件
+*   给表头的每一列绑定点击事件,点击的时候按照当前列排序
 * */
-var cursorThs = tab.getElementsByClassName('cursor'); //我以后要把带cursor这个class的表头都可以做到点击排序。以后拓展多列点击的时候，直接加一个cursor这个类就ok了
-for(var i=0; i<cursorThs.length; i++){ //给每一个带cursor这个class的头都绑定点击排序事件
-    var cur = cursorThs[i];
-    cur.onclick = function (){ //点击事件发生
-        //this ??? 是你当前点击表头单元格
-        sort.call(this); //这个this是你当前点击的元素
-    }
+for(var i=0; i<ths.length; i++){
+    var cur = ths[i];
 
+    cur.index = i; //给每一个表头的列添加一个自定义属性，用来保存索引。因为点击的时候需要tbody里的行里的列按照这个索引的innerHTML去排序
+    cur.sortFlag = -1;
+    if(cur.className == 'cursor'){ //只给带小手的绑定事件
+        cur.onclick = function (){
+            //这里的this是你点击事件发生时候那个元素
+            /*
+            *   当每次点击事件发生时执行sort这个方法，sort方法中的this是window。但是我们排序要当前点击的表头排序。所以需要在sort方法中能取到点击元素的这个this ==> call
+            * */
+            sort.call(this); //点击的时候排序就ok
+            changeColor();
+        }
+    }
 }
 
 
