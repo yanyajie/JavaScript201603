@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft Yahei';
+        }
+        .box{
+            width: 400px;
+            margin: 30px auto;
+            border: 1px solid green;
+            padding: 5px;
+        }
+        .box p{
+            line-height: 30px;
+        }
+        .box p:before{
+            display: block;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            content: 'before haha';
+            background: green;
+        }
+        .box p:after{
+            display: block;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            content: 'haha after';
+            background: yellow;
+        }
+        .clearFix{
+            zoom: 1;
+        }
+        .clearFix:after{
+            width: 0;
+            height: 0;
+            display: block;
+            content: '';
+            overflow: hidden;
+            clear: both;
+        }
+        ul{
+            list-style: none;
+            margin: 20px auto;
+            width: 300px;
+            border: 2px solid black;
+            padding: 10px;
+        }
+        ul li{
+            float: left;
+            width: 100px;
+            height: 100px;
+            background: darkmagenta;
+        }
+        ul li:nth-child(3n+1){ /*ogg*/
+            background: red;
+        }
+        ul li:nth-child(3n+2){ /*even*/
+            background: dimgray;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="div1" class="box" >
+        <p>欢迎来到珠峰培训</p>
+    </div>
+    <ul class="clearFix">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+</html>
+<script>
+    var oDiv = document.getElementById('div1');
+    window.getComputedStyle(oDiv,null);
+    /*
+    *   如何处理伪类问题： 包括：hover active visited before after
+    * */
+    var p = document.getElementById('div1').getElementsByTagName('p')[0];
+    console.log(window.getComputedStyle(p,'before').content);
+    console.log(window.getComputedStyle(p,'before').width);
+</script>

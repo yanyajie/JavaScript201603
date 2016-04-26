@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1" style=" width: 100px; height: 100px; background: green;"></div>
+</body>
+</html>
+<script>
+    /*
+     *    继承: 子类继承父类的属性或者方法
+     *
+     * */
+
+    /*
+     *   原型链继承  把父类的私有和公有的方法都变成了子类的公有 ps:通过子类实例是可以修改父类的方法和属性,这种继承方式也是我们工作中比较常用的一种继承方式
+     * */
+    //var oDiv = document.getElementById('div1');
+   // console.dir(oDiv);
+   /* function A() {
+        var x = 100;
+        this.x = 100;
+    }*/
+    //A();//???
+    //new A()
+   /* A.prototype.getX = function () {
+        console.log(this.x);
+    }
+
+    function B() {
+
+    }*/
+    // A的一个实例才可以使用A原型上的方法
+    //var b = new B(); //实例化B这个类
+    //B.prototype = new A(); //??? B的原型指向A的实例
+    //B.prototype.constructor = B; //由于修改了B的原型导致了自带的constructor属性丢失，所以我们需要人为添加
+    //var b = new  B();
+    //console.dir(b); //?? A类的方法对于B类的实例是公有的还是私有的？？
+
+    //var a = new A();
+    //a.getX();
+    //b.__proto__/*实例A*/.__proto__/*A的原型*/.getX = 'haha';
+    //var a = new A();
+    //a.getX(); //??
+
+
+    /*
+    *
+    *   call 继承   把父类私有的属性变成子类私有属性
+    * */
+    /*function A(){
+        this.x = 200; //相当于把A这个类的this改成b。 ==> b.x = 100;
+    }
+    A.prototype.getX = function (){
+        console.log(this.x);
+    }
+
+    function B(){
+        A.call(this); //this是b，也就是当前实例。把A函数中的this修改成当前的实例，然后执行A。
+    }
+
+    var b = new B();
+    console.dir(b);*/
+
+    /*
+    *   冒充对象继承  把父类的私有的+公有的，都变成了子类私有的
+    *
+    * */
+  /*  function A(){
+        this.x = 100;
+    }
+    A.prototype.getX = function (){
+        console.log(this.x);
+    }*/
+    //for in 遍历可以遍历实例的私有属性，也可以遍历人为添加的公有属性
+    /*var k= new A();
+    for (var key in k){
+        //hasOwnProperty  可枚举
+        console.log(key)
+    }*/
+   /* function B(){
+        var obj = new A();
+        for(var key in obj){
+            this[key] = obj[key]; //把父类实例的所有属性和方法同时赋值给b一份
+        }
+        obj = null;
+    }
+    var b = new B();
+    console.dir(b);*/
+
+    /*
+    *   混合继承  原型+call
+    *
+    * */
+
+   /* function C(){
+        this.x = 200;
+    }
+
+    C.prototype.getX = function (){
+        console.log(this.x);
+    }
+    D.prototype = new C(); //把C的私有的和公有的都变成D的公有的
+    D.prototype.constructor = D; //补全constructor属性
+    function D(){
+        C.call(this); //call继承 把C的私有属性变成D的私有属性
+    }
+    var d = new D();
+    console.dir(d);*/
+
+    /*
+    *   中间类继承
+    *
+    * */
+
+    function E(){
+        this.x = 100;
+    }
+    E.prototype.getX = function (){
+        console.log(this.x);
+    }
+    function F(){
+
+    }
+    F.prototype.__proto__ = E.prototype; //E.prototype.__proto__ == Object.prototype
+    var f = new F();
+    console.dir(f);
+
+
+
+</script>
