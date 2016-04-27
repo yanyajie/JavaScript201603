@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href=""/>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    /*
+    *   1 css link
+    *   2 js src
+    *   3 dom bom ECMAScript 通过dom获取来的元素是对象数据类型的，对象数据类型的我就可以在它身上添加属性，(自定义属性);
+    *         dom获取元素的常用方法:
+    *             1 id 是唯一的。表单元素的name  大小写问题 如果元素获取不到的返回值是null
+    *             2 className 不兼容 返回的是类数组 length 具体到某一个需要加索引
+    *             3 tagName 获取的是一组元素，具体到某一个需要加索引
+    *             4 byName
+    *             5 querySelector  1个
+    *             6 querySelectorAll  querySelector('#id') .className
+    *             7 document.documentElement
+    *             8 document.body
+    *             9 document.documentElement.clientWidth||document.body.clientWidth
+    *             dom里的关系属性
+    *               节点类型： nodeType  nodeName         nodeValue
+    *                          1 3 8 9  大写标签名 #text   null 内容
+    *               1 childNodes 所有子节点 节点不一定是元素 text comment
+    *               2 children 所有元素子节点  是不是可以模拟这个方法：从childnodes里挑 ==> 判断nodeType ==> 放到一个空数组里
+    *               3 parentNode 父节点
+    *               4 previousSibling  Element??不兼容  ==> 模拟  while
+    *               5 nextSibling
+    *               6 fistChild
+    *               7 lastChild
+    *             方法：
+      *             1 document.createElement
+       *            2 appendChild 添加末尾 父级调用 参数：你要添加的元素
+       *            3 insertBefore(你要添加的元素，插入到谁前面)  insertAfter
+       *            4 removeChild 删除
+       *            5 cloneNode  克隆
+       *            6 replaceChild  替换
+       *          设置属性
+       *            1 setAttribute('属性名','属性值')
+       *            2 getAttribute
+       *            3 removeAttribute
+       *
+       *          文档碎片  文档碎片的创建  临时容器 为了避免多次回流
+       *           DOM 回流  添加 删除 位置变化 都需要浏览器重新计算渲染
+       *           DOM 重绘   样式改变等
+       *           DOM 映射   对应表格排序去理解
+       *
+       *           innerHTML 相当于把里面的文档结构重新赋值，原来的事件等都丢失
+       *                   99乘法表  字符串拼接
+        *          innerText  和innerHTML的区别
+    *
+    *     bom 是浏览器相关的操作 window
+    *           页面的重新加载
+    *
+    *
+    *     ECMAScript
+    *          变量：命名规范
+    *          数据类型：基本 number string boolean null undefined 这里注意null和undefined的区别 null的用法  undefined总结在哪里出现过
+    *                    引用  Object  function 注意到这是一个地址，内存空间的地址 ， 引用数据类型的赋值过程==> 最后才是把地址赋值给变量
+    *                   number parseInt parseFloat isNaN Number()
+    *                   boolean  ! !! Boolean  = == ===
+    *                   var a = [];  赋值过程一定要看本质，尤其赋值一个引用和函数的时候，要特别注意
+    *                   自身布尔运算 和 比较   条件判断里的条件 判断这个元素是否存在
+    *                   对象 == 对象  两个地址
+    *                   对象  == 字符串  对象 ==> 字符串 Object.prototype.toString();
+    *                   null == undefined
+    *                   null & undefined 和其他都不相等
+    *                   其他等号两边转换数字
+    *
+    *                   string
+    *                       charAt(索引)  验证码
+    *                       charCodeAt ASCII 验证你输入是否是汉字
+    *
+    *                       substr(n,m)   从索引n截取m个
+    *                       substring(n,m) 从索引n到m，不包含m
+    *                       slice(n,m)  支持负数索引，相当于+length
+    *
+    *                       toUpperCase
+    *                       toLowerCase
+    *
+    *                       indexOf 返回值是索引 MSIE 8.0
+    *                       lastIndexOf -1的问题
+    *
+    *                       split 和join对应
+    *                       replace(old,new)  用正则g   函数的返回值
+    *                       match 和正则对应着用
+    *                       localeCompare
+    *
+    *                       模板引擎  数组join
+    *
+    *                    引用:
+    *                       {}
+      *                     {属性名:属性值}  JSON eval('('+str+')')
+    *                       属性名不存在但是你仍然要获取是undefined
+     *                       添加属性  对象.属性名 = 属性值(可以是任意数据类型吧)
+     *                       修改：原来有的就是修改
+     *                       查询： 对象.属性名
+     *                       删除： delete 对象.属性名
+     *                       对象属性还有另外一种添加方式['str'] 变量 for in
+     *
+     *                      每一个对象都有一个天生自带的__proto__
+     *
+     *                      []
+     *                      push
+     *                      pop
+     *                      shift
+     *                      unshift
+     *                      splice
+     *                      slice
+     *                      sort
+     *                      reverse
+     *                      concat
+     *                      join
+     *                      toString
+     *                      indexOf
+     *                      lastIndexof
+     *                      forEach
+     *                      Map
+     *
+     *                      Date 日期
+     *                          new Date();  参数: 如果传了一个时间格式的字符串参数，就是把这个字符串参数转化为一个时间格式的对象
+     *                          getFullYear
+     *                          getMonth 0-11
+     *                          getDate 日
+     *                          getDay 星期 0-6
+     *                          getHours
+     *                          getMinutes
+     *                          getSeconds
+     *                          毫秒 getMilliSeconds??
+     *                          getTime 距离1970年1.1 00 00  ms数
+     *
+     *                          倒计时
+     *
+        *
+     *                      Math
+     *                          Math.abs
+     *                          Math.ceil
+     *                          Math.floor
+     *                          Math.round
+     *                          Math.random
+     *                          Math.max
+     *                          Math.min
+     *                          n-m
+     *                          Math.round(Math.random()*(m-n)+n);
+     *
+     *                      RegExp
+     *                          匹配字符串和捕获字符串 test exec
+     *                          match replace split配合一起使用
+     *                          元字符
+     *                          修饰符 g全文匹配 i忽略大小写 m多行
+     *                          量词 * ? + {n} {n,m} {n,}
+     *                          ?: ?=
+     *                          [^] 或  |或者 ()分组  ^ $ 转义 .
+     *                          \d \w \s \b ...
+     *                          RegExp.$
+     *                          lastIndex
+     *
+     *                      定时器
+     *                          window.setTimeout(函数，时间间隔) 1次
+     *                          window.setInterval(fn,time);
+     *                          返回值：代表定时器的数字 var timer
+     *                          清除定时器
+     *                          window.clearTimeout(timer)
+     *                          window.clearInterval(timer)
+     *                          //定时器是异步,不阻塞代码运行
+     *
+     *              基本和引用区别：一个是值(栈) 一个是地址(堆)==>可以被多个变量引用，相当于公有的。所以都可以改这个内存里存放的属性或者值
+     *
+     *              if else
+     *              switch case
+     *              三元运算符  ?  :  注意下：多层嵌套
+     *               &&  ==》 if
+     *               开关灯  ===>  通过背景色深入理解引用数据类型
+     *
+     *               for 一般知道循环的次数  length
+     *               while 一般用来知道循环结束的条件  previousElementSibling
+     *               for in 遍历对象  ==> 在prototype上我们自己定义也能遍历出来  hasOwnProperty isEnumerable 可枚举
+     *
+     *
+     *               function 函数  实名函数和匿名函数  函数也是一个堆内存地址的引用
+     *               求和的sum函数
+     *               1 形参  实参  arguments  arguments.length arguments.callee caller
+     *               2 参数没传在函数体内是一个undefined  参数是不是也可以是一个对象：解决了参数的顺序问题
+     *               3 函数的返回值： return 如果没有return默认是undefined
+     *               4 函数的运行： 1 形参赋值  2 预解释(变量提声) 3 代码执行
+      *              5 函数的形参是不是相当于声明了一个私有变量在函数体内
+      *
+      *              案例： 隔行变色 %  开关灯  99乘法表 (双循环) 选项卡(自定义属性,this的问题。事件触发) 数组去重 冒泡排序 快速 插入 递归 .....              var a = [1,2,3,3,2,1]
+      *              对象去重法
+      *              {1:1}
+      *
+      *              预解释  作用域 作用域链 闭包  this 各种各样的内存 内存释放  函数执行  各种模式  单例 工厂 原型 构造函数  继承  call apply  表格排序  正则表达式  盒子模型
+      *
+      *              预解释:
+      *                 只要提供了运行环境就会产生作用域  全局作用域window ??释放只有网页关闭的时候，如果把变量声明在全局作用域内永远都不会被释放
+      *                 函数的运行环境是栈内存，基本数据类型也存在栈内存中
+      *                 1 不管条件是否成立都会被预解释(ps:不同浏览器，甚至不同版本会有差异)
+      *                 2 自执行函数不会被预解释
+      *                 3 return 的值如果是一个函数不会被预解释，但是如果是一个自执行函数，要先执行自运行函数，然后把执行后的结果return
+      *                 4 return 下面的代码虽然不被执行但是却要预解释
+      *                 5 var a = function (){} 这个function是不被预解释的
+      *                 6 预解释只发生在当前作用域。我们看是否用function包起来
+      *
+      *
+      *              var和function预解释的区别
+         *                1 带var的只声明并没有赋值，当代码执行到赋值这一行的时候才赋值 360面试题：形参和变量重名num,那个var num这个var可有可无。
+         *                2 function 既声明又赋值 当代码执行到的时候直接跳过
+         *
+             *       函数执行： 函数的执行首先会开辟一个新的供函数运行空间，并且这个空间(作用域)是私有的。在这个作用域内的所有的变量也是私有的。在外界是访问不到的，我们把这种保护私有变量不受外界干扰的机制就叫闭包
+             *
+             *       函数执行步骤： 形参赋值   变量提声  代码执行
+             *
+             *       作用域释放问题：
+             *          1  函数在执行的时候，函数中的某一个部分被函数外的变量或者函数外的元素的事件属性占用。 函数运行中的一个堆内存被占用
+             *          2   元素的事件属性占用一个函数运行的放回结果，ps:return 的这个值。一定是一个引用类型
+             *          3  函数的返回值是一个函数然后立即执行，属于暂时不被释放
+         *
+         *              for(var i=0; i<lis.length; i++){
+         *                  // 0 1 2
+          *                 (function (i){
+         *                     olIS[i].onclick = function (){
+         *                         tab(i);
+         *                     }
+     *                      })(i)
+     *                  } 人为造一个闭包就为了把这个索引i保存下来
+     *
+     *                  this:
+     *                  1 事件：给元素绑定事件，当事件触发的时候。this是当前元素
+     *
+     *                  2 函数执行过程中：我们只看函数执行时候的调用主体，我们可以理解为'.'前面是谁，this就谁
+     *                  3 构造函数中的this是当前实例
+     *                  4 自运行函数中的this是window，无论这个自运行函数在哪
+     *                  5 call apply可以强制改变this
+     *
+     *                  单例模式: 破对象  nameSpace 命名空间 相对独立的
+     *                  var obj = {get: function (){}}
+     *                  var obj1 = {get: function (){}}
+     *
+     *                  工厂模式: 封装一个函数
+     *                  function x(){
+     *                      var obj = {};
+     *                      obj.......
+     *                      给这个对象添加属性或者方法
+     *                      return obj;
+     *                  }
+     *
+     *                  构造函数模式  类  实例概念
+     *                  function Table(){} //我这个Table当作一个类处理
+     *                  函数三种角色： 1 普通函数执行  2 构造函数 new  3 对象==>Function 这个类的一个实例 __prot__的属性 ==>Function.prototype ==> call apply bind 方法 bind: 有返回值   var temp = fn.bind();  temp();
+     *
+     *                  Table.prototype 是一个堆内存 ==>  __prot__ ==》 Object.prototype  ==> hasOwnProperty toString
+     *
+     *                  原型链 ：
+     *                  HtmlDivElement ==> HtmlElement ==> Element ==> Node ==> EventTarget ==> Object
+     *
+     *                  原型：
+     *                      任何一个实例都可以通过__proto__属性，查到到自己所属类的原型,在原型上定义的方法都是公有的。有一个默认的属性 constructor ==> 类本身
+     *
+     *                  继承：
+     *                      //原型继承
+     *                     B.prototype = new A(); // 父类的公有+私有  == 子类公有
+     *                     call继承
+     *                     function B(){
+     *                        A.call(this); 私有的 ==》 私有的
+     *                     }
+     *
+     *                     //冒充对象继承
+     *
+     *                     function A(){
+     *                        this.x = 100;
+     *                     }
+     *                     function B(){
+     *                        var temp = new A(); //temp是一个A的实例
+         *                    for (var key in temp){ //key = x
+         *                          this[key] = temp[key] //读取这个属性的值，并且把读取过来的值，赋值给b一个属性
+         *                    }
+     *                     }
+     *                     var a = new A(); //a是A的实例
+     *                      var b = new B(); //x
+     *
+     *
+     *                      混合继承  call+原型
+     *
+     *                      B.prototype.__proto__ = A.prototype //本来应该指向Object.prototype，但是我却让它指向了A的原型，A的原型也原型，也有一个__proto__。也会指向Object.prototype
+     *                      b.__proto__.__proto__ = A.prototype
+     *
+     *
+     *                      call & apply
+     *
+     *                      1 区别 : 求最大值 充分利用apply的数组是一个一个传参数
+     *
+     *                      2 fn1.call.call.call.call (fn2);
+     *                        fn1.call(fn2)
+     *                        function fn1(){ console.log(1)}
+     *                        function fn2(){ console.log(2)}
+     *
+     *
+     *
+     *                      表格排序:
+     *                          1  静态表格  table thead tr th tbody tr td
+     *                          2  排序是换行的顺序
+     *                          3  数据动态绑定
+     *                          4 获取数据
+     *                          5 Ajax  new XMLHttpRequest()  open('什么样的方式，get,post','去哪拿，接口'，同步异步)  false  监听 onreadystatechange 4 200 取货成功  send发车
+     *                          6 把数据文档碎片 添加tbody
+     *                          7 单击表头排序  表头绑定事件 sort
+     *                          8 this问题 call改变this
+     *                          9 sort(function (this)) 和外面的还不一样 var that = this
+     *                          ps: 获取表格的时候cells rows tBodies
+     *                              男女问题
+     *                              升序降序问题
+     *                              恢复默认升序问题
+     *                              姓名
+     *
+         *
+         *                     盒子模型：13个属性
+     *
+     *
+     *
+     *
+     *
+    *
+    *
+    *
+     *
+    *
+    *
+    *
+    *
+    *
+    * */
+</script>

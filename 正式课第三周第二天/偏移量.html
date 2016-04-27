@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #outer{
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            padding: 50px;
+            border: 10px solid #000;
+            background: bisque;
+            box-sizing: border-box;
+        }
+        #inner{
+            width: 200px;
+            height: 200px;
+            padding: 50px;
+            background: blue;
+            border: 10px solid #000000;
+            box-sizing: border-box;
+        }
+        #center{
+            width: 50px;
+            height: 50px;
+            border: 5px solid #000000;
+            padding: 10px;
+            background: yellow;
+            box-sizing: border-box;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="outer" style="position: relative;">
+        <div id="inner" style="position: relative;">
+            <div id="center"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var outer = document.getElementById('outer');
+    var inner = document.getElementById('inner');
+    var center = document.getElementById('center');
+    console.log(outer.offsetLeft)
+    console.log(inner.offsetLeft)
+    console.log(center.offsetLeft)
+    function offset(ele){ //等同于jquery中的offset方法实现页面中任意一个元素距离body的偏移
+        //在标准的ie8中，获取的offsetTop和offsetLeft已经把父级参照物的边框已经算到内了，所以我们不需要自己在单独加边框了
+        var offsetParent = ele.offsetParent;
+        var left = null, top = null;
+        left+=ele.offsetLeft;
+        top+=ele.offsetTop;
+        while(offsetParent){
+            if(window.navigator.userAgent.indexOf('MSIE 8')<0){
+                left+=offsetParent.clientLeft;
+                top+=offsetParent.clientTop;
+            }
+            left+=offsetParent.offsetLeft;
+            top+=offsetParent.offsetTop;
+            offsetParent = offsetParent.offsetParent;
+        }
+        return {l:left,t:top}
+    }
+    console.log(offset(center).l);
+</script>
