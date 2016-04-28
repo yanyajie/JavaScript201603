@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>图片延迟加载</title>
+    <style>
+        *{ margin: 0; padding: 0; }
+        .banner{ width: 300px; height: 200px; margin: 1500px auto; border: 2px solid #999; background: url("images/load.jpg") no-repeat center ; margin-top: 1500px;  }
+        .banner img{ display: block; width: 100%; height: 100%; }
+    </style>
+    <link rel="stylesheet" href=""/>
+</head>
+<body>
+    <div id="banner" class="banner">
+        <img src="" trueSrc="images/6.jpg"  alt=""/>
+    </div>
+</body>
+</html>
+<script src="utils.js"></script>
+<script>
+    //getAttribute
+    // setAttribute
+    // removeAttribute
+    /*
+    *   图片延迟加载
+    * */
+    //获取元素
+    var banner = document.getElementById('banner');
+    var img = banner.getElementsByTagName('img')[0];
+    /*window.setTimeout(function (){
+        img.src = img.getAttribute('trueSrc'); //把图片的src属性重新赋值为真实的图片资源路径
+    },1000);*/
+    /*
+    *   优化： 1 减少请求数量  2 雪碧图  3 打包压缩  4 压缩 5 图片延迟加载
+    * */
+    //足够的margin
+
+    window.onscroll = function (){ //当鼠标滚轮的时候判断需要加载的图片是否已经完全进入到可视窗口内
+        var winBottomDisBodyTop = utils.getWin('clientHeight')/*获取窗口的高度*/+ utils.getWin('scrollTop');/*窗口滚出去的高度*/ //窗口底部距离body顶部的距离
+        //如果这个距离大于图片（盒子的高度+图片盒子距离body顶部的距离） 说明这个图片已经完全进入到可视窗口内
+        var imgBoxBottomDisBodyTop = img.parentNode.offsetHeight + utils.offset(img.parentNode).top;
+        console.log(winBottomDisBodyTop - imgBoxBottomDisBodyTop ); //图片完全进入到可视窗口内，这个差就是大于0的
+        if(winBottomDisBodyTop - imgBoxBottomDisBodyTop > 0 ){
+            //img.src = img.getAttribute('trueSrc');
+        }
+        //我们发现如果图片资源是无效的，我们却还要赋值给图片的src属性就会有一个图片加载失败的标志。所以我们在赋值src属性之前要做图片有效性的验证
+        //那么我们就创建一个临时的img
+        if(winBottomDisBodyTop - imgBoxBottomDisBodyTop > 0 ){
+            if(img.isLoadSuccess){
+                return;
+            }
+            var tempImg = new Image(); //这就创建了一个图片对象
+            //var img = document.createElement('img');
+            tempImg.src = img.getAttribute('trueSrc'); //??我让一个临时的img去加载我的真实图片资源，无论加载是否成功都不会对我网页内的真实img有影响
+            tempImg.onload = function (){ //当图片加载成功的时候,说明我的真实资源路径是有效的
+                img.src= this.src;
+                tempImg = null;
+            }
+            img.isLoadSuccess = true;
+        }
+
+    }
+
+</script>
