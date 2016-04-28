@@ -96,10 +96,10 @@
             debugger
             //这里处理filter的滤镜问题  alpha(opacity=40);
 
-            if(attr === 'filter'){
+            if(attr === 'opacity'){
 
                 //alpha(opacity=40)
-                val = curEle.currentStyle[attr];
+                val = curEle.currentStyle['filter'];
                 var reg1 = /^alpha\(opacity=(\d+(\.\d+)?)\)/;
                 return reg1.test(val) ?  RegExp.$1/100 : 1;
             }else{

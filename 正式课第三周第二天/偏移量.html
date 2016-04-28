@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{ margin: 0; padding: 0; }
+        #outer{position: relative; width: 200px; height: 200px; margin: 30px auto; padding: 50px;
+        background: deeppink; border: 10px solid #999;  }
+        #middle{position: relative; width: 80px; height: 80px; background: green; border: 10px solid #999; padding: 50px; }
+        #inner{ width: 60px; height: 60px; border: 10px solid #999; background: darkblue; }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="middle">
+            <div id="inner"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    /*
+    *   offsetLeft 和 offsetTop 的问题  offsetParent
+    * */
+    var inner = document.getElementById('inner');
+    console.log(inner.offsetParent,inner.parentNode,inner.offsetLeft); //
+    var middle = document.getElementById('middle');
+    console.log(middle.offsetParent,middle.parentNode,middle.offsetLeft);
+    var outer = document.getElementById('outer');
+    console.log(outer.offsetParent,outer.parentNode,outer.offsetLeft);
+    //offsetParent 和 parentNode 完全不是一回事,我们的offsetParent取决你元素的相对位置
+    function offset(ele){ //只要存在offsetParent我们就尝试把offsetParent的边框和它的offsetLeft加上，一直到body不存在offsetParent（body的offsetParent是null）为止。我们知道截至的条件，所以使用while循环
+        var eleLeft = ele.offsetLeft; //当前元素的offsetLeft
+        var eleTop = ele.offsetTop; //当前元素的offsetTop
+        var eleParent = ele.offsetParent;
+        var left = null;
+        var top = null;
+        left +=eleLeft;
+        top += eleTop;
+        while(eleParent){  //存在父级相对位置参照物
+            //console.log(eleParent);
+            /*
+            *  ps: ie8中会有一个问题如果在ie8中就不加父级的边框了。因为已经加过了。
+            *  判断我的当前浏览器是不是ie8   1 可以用正则 test MSIE 8.0   2 字符串
+            *  中的indexOf MSIE 8.0 判断 -1. window.navigator.userAgent
+            * */
+            left += eleParent.clientLeft/*父级参照物的边框*/+eleParent.offsetLeft;
+            top += eleParent.clientTop/*父级参照物的上边框*/+eleParent.offsetTop;
+            eleParent = eleParent.offsetParent;//??
+        }
+        return {left:left,top:top};
+    }
+    console.log(offset(inner));
+
+
+</script>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{ margin: 0; padding: 0; }
+
+        html,body{ width: 100%; height: 300%; background: linear-gradient(to right bottom, #0001ff 0, #9bff83 10%, #ff44b5 20%, #1600ff 30%, #000000 40%, #ff0500 50%, #ffffff 60%, #ff0500 70%, #ffffff 80%, #000000 100%);
+            font-family: 'Microsoft Yahei'; font-weight: bold; }
+        .link{ display: none; text-decoration: none; width: 50px; height: 50px; border: 2px solid #999; border-radius: 100%; line-height: 50px; text-align: center; background: orangered; position: fixed; right: 30px; bottom: 30px; opacity: .5; }
+        .link:hover{ opacity: .9; }
+    </style>
+</head>
+<body>
+    <!--锚点-->
+    <!--<div id="id" style="height: 30px; position: relative; left: 0; top: 500px; background: black;"></div>-->
+    <!--href="javascript:void 0" 可以阻止a链接的默认行为-->
+    <!--<a href="#id"  class="link">Top</a>--> <!--默认行为-->
+    <a href="javascript: void 0"  class="link" id="link">Top</a> <!--默认行为-->
+</body>
+</html>
+<script src="utils.js"></script>
+<script>
+    /*
+    *   js盒子模型只有scrollTop和scrollLeft是可读写。
+    * */
+    // 获取这个a链接按钮
+    var aLink = document.getElementById('link');
+    aLink.onclick = function (){
+        /*document.body.scrollTop = 0;*/
+        var duration = 500; //要在500ms内完成运动效果
+        var distance = utils.getWin('scrollTop'); //滚出去的部分就是要运动的距离
+        var interval = 10;
+        var step = (distance/duration)/*1ms跑多远*/*interval;//我们每驱动一定时器就跑step这么远
+        var timer = window.setInterval(function (){
+            if(utils.getWin('scrollTop') <= 0){ //定时器就清除掉了
+                window.clearInterval(timer);
+                //已经回到了顶部，为了下次的onscroll事件仍然需要被出发，显示按钮需要把已经移除的事件再添加上
+                window.onscroll = showBtn; //把丢失的事件重新注册
+                return;
+            }
+            var srcollTop = utils.getWin('scrollTop');
+            srcollTop -= step; //每次在原有的基础上减去步长
+            utils.getWin('scrollTop',srcollTop);
+            console.log(utils.getWin('scrollTop')); //虽然达到了回到顶部的效果，但是我们的定时器却仍然在运行。所以别忘记清掉定时器
+        },interval);
+
+        window.onscroll = null; //当我点击发生的时候，为了避免由于scroll事件引起的按钮显示问题，可以先人为的移除事件
+        this.style.display = 'none'; //这里的消失效果，如果不加断点根本就看不到，在回到顶部的过程中又触发了window.onscroll事件，而这个事件是处理按钮显示的
+    }
+    //默认让按钮隐藏，当滚轮超过一屏的时候让按钮显示
+    window.onscroll = showBtn;
+
+    function showBtn(){ //浏览器会在单位时间内不断的捕捉 频率 frequency
+        //console.log('你已经触发了滚轮事件');
+        //判断你滚轮滚出去了多少
+        var winScrollTop = utils.getWin('scrollTop'); //获取了浏览器已经滚出去高度
+        var screenHeight = utils.getWin('clientHeight');
+        //console.log(winScrollTop-screenHeight);
+        if(winScrollTop-screenHeight > 0){ //滚出的部分已经超过了一屏
+            aLink.style.display = 'block';
+        }
+    }
+
+</script>
