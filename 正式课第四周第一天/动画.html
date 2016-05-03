@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 100px;
+            height: 100px;
+            background: green;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="box"></div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script>
+    /* var oBox = document.getElementById('box');
+     var duration = 2000;
+     var maxLeft = utils.getWin('clientWidth') - oBox.offsetWidth;
+     var minLeft = 0;
+     var interval = 10; //时间间隔
+     var step = (maxLeft/duration)*interval;//步长 单位ms数的偏移量乘以时间间隔
+     var timer = window.setInterval(function (){
+     //首先获取当前的偏移量
+     var curLeft = utils.getCss(oBox,'left');
+     if(curLeft >= maxLeft){
+     window.clearInterval(timer);
+     //oBox.style.left = maxLeft + 'px';
+     utils.setCss(oBox,'left',maxLeft);
+     return;
+     }
+     //我们要把获取来的偏移量加上步长
+     curLeft += step;
+     //console.log(curLeft)
+     //把已经累加好的值重新赋值给样式才能生效
+     //oBox.style.left = curLeft + 'px';
+     utils.setCss(oBox,'left',curLeft);
+     },interval);*/
+
+
+
+    //换一种匀速运动的方式
+    /*
+     var oBox = document.getElementById('box');
+     var duration = 2000; //从起点运动到终点的总时间
+     var target = utils.getWin('clientWidth') - oBox.offsetWidth; //窗口的宽度-盒子宽度
+     var begin = utils.getCss(oBox,'left');
+     var change = target - begin; //我们需要运动的距离终点-起点
+     var time = 0; //null
+     var interval = 10;
+     */
+
+    /*花费的时间/总时间 = /!*我已经运动的距离*!/（当前的位置-起点）/总距离;*/
+    /*
+     *   curLeft = begin + (time/duration)*change;
+     * */
+
+    /*
+     function linear(t,b,c,d){  //t = time, b = begin, c = change, d = duration
+     return b + (t/d)*c;
+     // t*c/d+b;
+     }
+
+     var timer = window.setInterval(function (){
+     time += interval;
+     if(time >= duration){ //话费的时间已经超过了总时间，证明已经到达终点。那么我们就清空定时器，然后把终点的值赋值个当前位置
+     window.clearInterval(timer);
+     utils.setCss(oBox,'left',target); //这里需要把终点的值赋值，因为如果是透明度等即使超过了也不会对元素有影响，但是如果是宽度或者偏移越界会对当前运动的元素有影响
+     return;
+     }
+     var curLeft = linear(time,begin,change,duration); //元素当前的位置
+     utils.setCss(oBox,'left',curLeft);
+     },interval);
+     */
+
+    //以前一直在规定时间，我不需要时间了，只要你运动到终点我就结束，我不在乎你花费多久
+    /*
+     var oBox = document.getElementById('box');
+     var target = utils.getWin('clientWidth') - oBox.offsetWidth; //终点
+     var step = 20; //每次按照5的这个步长去累加,跟时间就没关系了
+     */
+    /*
+     var timer = window.setInterval(function (){
+     var curLeft = utils.getCss(oBox,'left');
+     if(curLeft+step >= target){  //越界判断，以后在写js动画的过程中，我们要特别注意越界判断还有别忘记清空该清的定时器
+     window.clearInterval(timer);
+     utils.setCss(oBox,'left',target);
+     return;
+     }
+     curLeft += step;
+     utils.setCss(oBox,'left',curLeft);
+     },10);
+     */
+
+    //如何用setTimeout 去模拟
+    var oBox = document.getElementById('box');
+    var target = utils.getWin('clientWidth') - oBox.offsetWidth; //终点
+    var step = 20; //每次按照5的这个步长去累加,跟时间就没关系了
+    var timer = null; //因为这个timer是全局的所以你下一次仍然能访问这个全局变量
+    function move() {  //为了在setTimeout结束的时候继续调用==》启动一个新的定时器
+        window.clearTimeout(timer); //在下一次启动定时器之前把上一次的清空
+        var curLeft = utils.getCss(oBox, 'left'); //获取当前的位置
+        if (curLeft + step >= target) { //过界判断，越界判断的时候要先加步长
+            utils.setCss(oBox, 'left', target);
+            return;
+            //curLeft是不是仅仅代表一个基本数据类型
+            /* var num = 14;
+             var target = 16;
+            num = target;*/
+
+        }
+        curLeft += step;
+        utils.setCss(oBox, 'left', curLeft);
+        timer = window.setTimeout(arguments.callee, 10); //每执行一次move方法都启动了一个新的定时器,每次再执行完move方法之后，由于定时器只执行一次，我们要人为的去再重新启动一个新的定时器来保证第二次运动
+    }
+    move();
+    //window.setTimeout(move,10);
+
+
+</script>

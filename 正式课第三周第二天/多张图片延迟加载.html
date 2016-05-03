@@ -16,6 +16,14 @@
             width: 60px;
             height: 60px;
             background: url("images/default.jpg") no-repeat center;
+            background-size: cover; /*覆盖*/
+        }
+        ul li>div:nth-child(1) img{
+            display: none;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            filter: alpha(opacity=0);
         }
         ul li>div:last-child{
             padding: 5px;
@@ -40,10 +48,10 @@
     </style>
 </head>
 <body>
-    <ul>
+    <ul id="newsList">
         <li>
-            <div class="left"><img src="" alt=""/></div>
-            <div class="right">
+            <div><img src="" alt=""/></div>
+            <div>
                 <h2>标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</h2>
                 <p>描述描述描述描述描述描述描述描述描述描述描述</p>
             </div>
@@ -55,6 +63,100 @@
     </ul>
 </body>
 </html>
+<script src="utils.js"></script>
 <script>
+    /*获取数据*/
+    //ajax
+    var jsonData = null; //这会还没有数据
+    var oUl = document.getElementById('newsList');
+    var imgList = oUl.getElementsByTagName('img'); //数据还没做呢
+    ~function (){
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','jsonData.txt?_'+Math.random(),false); //同步获取 可以避免浏览器的缓存问题，上一次获取来的数据，如果下一次地址没变我默认从本地缓存读取。不在去服务器去请求了 url ? 问号后面的是参数集合 集合和集合用&符号分开 ?set=1 &weight=80
+        xhr.onreadystatechange = function (){
+            if(xhr.readyState == 4 && xhr.status == 200){ // reg = /^2\d{2}$/  304 开头代表你从本地缓存读取过来的   404  5开头代表服务端错误
+                //jsonData = xhr.responseText; //
+                jsonData = utils.jsonParse(xhr.responseText); //把文本转化为json格式的对象
+            }
+        }
+        xhr.send(null); //发送
+    }();
+    console.log(jsonData); //成功获取到数据
+
+    //数据绑定，把json中的数据，我们这次用字符串拼接的方式动态绑定
+    ~function (){
+        if(jsonData){ //首先判断我们数据已经成功获取
+            //循环拼接ul里面的字符串
+            var str = '';
+            for(var i=0; i<jsonData.length; i++){
+                var cur = jsonData[i];
+                str += '<li>';
+                    str += '<div><img src="" trueSrc="' + cur.img +  '" /></div>';
+                    str += '<div><h2>'+ cur.title +'</h2><p>'+ cur.desc+'</p></div>';
+
+                str += '</li>';
+            }
+            oUl.innerHTML = str; //把拼接好的字符串赋值给列表的innerHTML
+        }
+    }();
+
+    //图片延迟加载  首先先实现单张图片延迟加载
+    function imgDelayLoad(curImg){ //??这个函数要被用多少次，jsonData.length
+        //
+        if(curImg.isLoad){
+            return;
+        }
+        var tempImg = new Image();
+        tempImg.src = curImg.getAttribute('trueSrc'); //临时的图片就去加载真是的图片资源了
+        tempImg.onload = function (){
+            curImg.src = this.src; //说明已经加载成功了，我们这个图片的资源路径是有效的。
+            curImg.style.display = 'block';
+            tempImg = null;
+        }
+        curImg.isLoad = true; //只要你曾经加载过，不管是否成功我都没有必要去加载第二次了
+    }
+
+    //多张图片延迟加载
+    // 首先获取我们所有的图片集合
+    function allImgDelay(){
+        for(var i=0; i<imgList.length; i++){
+            //给每一个图片延迟加载
+            var curImg = imgList[i];
+            if (curImg.isLoad) continue; //优化 曾经加载过的图片就不需要再延迟加载了
+            var browerBottomDisBodyTop = utils.getWin('clientHeight') + utils.getWin('scrollTop'); //浏览器底部距离body顶端
+            var imgParentBottomDisBodyTop = utils.offset(curImg.parentNode).top + curImg.parentNode.offsetHeight;  //图片父亲容器底部距离body顶端
+            if(browerBottomDisBodyTop>imgParentBottomDisBodyTop){ //判断这个图片是否已经出现在了浏览器的可视窗口内, 我们要判断img这个图片的parentNode
+                imgDelayLoad(curImg); //分别多次调用单个图片延迟加载
+                fadeIn(curImg); //淡入的方式
+            }
+
+        }
+    }
+    window.setTimeout(allImgDelay,1000); //第一屏图片延迟加载,第一屏已经完全出现在可视窗口内，所以就需要图片延迟加载
+    window.onscroll = allImgDelay; //滚轮的时候也需要图片延迟加载
+    //处理多张
+    function fadeIn(curImg){ //淡入
+        var duration = 1000; //这么长的时间间隔完成淡入效果
+        var target = 1; //淡入效果变化的透明度区间，从0运动到1
+        var interval = 10; //执行定时器的时间间隔
+        var step = (target/duration)*interval; //每一次执行定时器需要加上的步长
+        var timer = window.setInterval(function (){
+            if(curOpacity >= target){ //说明已经运动到了终点，停止定时器
+                window.clearInterval(timer);
+                //赋值终点的动作 把target的值赋值给当前元素的样式
+                return;
+            }
+            debugger;
+            var curOpacity = utils.getCss(curImg,'opacity'); //赋值之前需要先获取，因为要在当前的基础上去累加步长
+            curOpacity += step;
+
+            curImg.style.opacity = curOpacity; //把已经累加好的重新赋值给样式这样才能有每次淡入一点的效果
+            curImg.style.filter = 'alpha(opacity='+ curOpacity*100+ ')'; //兼容问题的处理
+
+        },interval);
+
+    }
+
+
 
 </script>

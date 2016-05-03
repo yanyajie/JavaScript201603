@@ -55,10 +55,11 @@ var utils = {
         return document.documentElement[attr] || document.body[attr];
     },
     getCss: function (curEle, attr) {
-        //
+        //处理带单位的问题
         var reg = /^(-?\d+(\.\d+)?)(?:px|em|pt|deg|rem)$/;
         var val = null;
         if (/MSIE (?:6|7|8)/.test(window.navigator.userAgent)) {
+
             //这里处理filter的滤镜问题  alpha(opacity=40);
             if (attr === 'opacity') {
                 //alpha(opacity=40)
@@ -68,9 +69,54 @@ var utils = {
             }
             val = curEle.currentStyle[attr];
         } else {
-           val =   attr === 'opacity' ?   window.getComputedStyle(curEle,null)[attr]/1 : window.getComputedStyle(curEle,null)[attr];
+            val = (attr == 'opacity' ? window.getComputedStyle(curEle, null)[attr] / 1 : window.getComputedStyle(curEle, null)[attr]);
         }
         return reg.test(val) ? parseFloat(val) : val; //如果正则验证通过，寿命返回值是带单位的，那么我们就要人为去掉这个单位。否则不变
+    },
+    //要想给元素设置值，只能设置行内样式的值。通过元素.style设置
+    setCss: function (ele, attr, value) {
+        if (attr == 'opacity') { //处理透明度
+            // window.navigator.userAgent.indexOf('MSIE') >= 0
+            if (/MSIE (?:6|7|8)/.test(window.navigator.userAgent)) {
+                ele.style['filter'] = 'alpha(opacity=' + value * 100 + ')';
+            } else {
+                ele.style.opacity = value;
+            }
+            return;
+        }
+        //float的问题也需要处理 cssFloat styleFloat
+        if (attr === 'float') {
+            ele.style['cssFloat'] = value;
+            ele.style['styleFloat'] = value;
+            return;
+        }
+        var reg = /^(width|height|left|top|right|bottom|(margin|padding)(Top|Bottom|Left|Right)?)$/;
+        //判断你传进来这个value是否带单位，如果带单位了我就不加了
+        // 5px
+        if (reg.test(attr)) { //验证通过就证明是width等值
+            if (!isNaN(value)) { //不带单位的我就加
+                value += 'px';
+            }
+        }
+        ele.style[attr] = value;
+    },
+    setGroupCss: function (ele, obj) {
+        //首先保证obj是一个对象
+        /*
+         if(!Object.prototype.toString.call(obj) == '[object Object]'){
+         return;
+         }
+         */
+        //我嫌弃这个有点长
+        obj = obj || 0; //如果没传要做处理
+        if (obj.toString() != '[object Object]') {
+            return;
+        }
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                this.setCss(ele, key, obj[key]);
+            }
+        }
     }
 
 

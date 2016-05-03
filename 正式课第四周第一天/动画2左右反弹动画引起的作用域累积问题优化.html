@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{margin: 0; padding: 0;}
+        #div1{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            left: 500px;
+            top: 0;
+        }
+        .button{
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            background: yellow;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">
+
+    </div>
+    <div style="margin-top: 150px">
+        <input id="leftBtn" class="button" type="button" value="left"/>
+        <input id="rightBtn" class="button" type="button" value="right"/>
+    </div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script>
+    var oDiv = document.getElementById('div1');
+    var leftBtn = document.getElementById('leftBtn');
+    var rightBtn = document.getElementById('rightBtn');
+    var maxLeft = utils.getWin('clientWidth') - oDiv.offsetWidth;
+    var minLeft = 0;
+    var interval = 10;
+    var step = 5;
+    //var timer = null;
+    /*function move(target){
+        window.clearTimeout(timer);
+        var curPosi = utils.getCss(oDiv,'left');
+        if(target  > curPosi){
+            if(curPosi + step > target){
+                utils.setCss(oDiv,'left',maxLeft);
+                window.clearTimeout(timer);
+                return;
+            }
+            curPosi += step;
+            utils.setCss(oDiv,'left',curPosi);
+        }else if(target < curPosi){
+            if(curPosi - step < target){
+                utils.setCss(oDiv,'left',minLeft);
+                window.clearTimeout(timer);
+                return;
+            }
+            curPosi -= step;
+            utils.setCss(oDiv,'left',curPosi);
+        }else{
+
+        }
+        timer = window.setTimeout(function (){
+            move(target);
+        },interval);
+    }*/
+    leftBtn.onclick = function (){
+        move(minLeft);
+    }
+    rightBtn.onclick = function (){
+        move(maxLeft);
+    }
+    //我们发现每次执行定时器里的匿名函数函数然后执行move方法的时候，用target参数都需要到最外层的父级作用域去查找。优化
+    function move(target){
+        //var timer = null; 如果放在这里就会有动画的累积问问题，同时执行两个动画的问题,但是放在全局的又不安全,那么我们就放在自定义属性身上。
+        _move();
+        function _move(){
+            window.clearTimeout(oDiv.timer);
+            var curPosi = utils.getCss(oDiv,'left');
+            if(target  > curPosi){
+                if(curPosi + step > target){
+                    utils.setCss(oDiv,'left',maxLeft);
+                    window.clearTimeout(timer);
+                    return;
+                }
+                curPosi += step;
+                utils.setCss(oDiv,'left',curPosi);
+            }else if(target < curPosi){
+                if(curPosi - step < target){
+                    utils.setCss(oDiv,'left',minLeft);
+                    window.clearTimeout(timer);
+                    return;
+                }
+                curPosi -= step;
+                utils.setCss(oDiv,'left',curPosi);
+            }else{
+                return;
+            }
+            oDiv.timer = window.setTimeout(_move,interval);
+        }
+    }
+
+</script>

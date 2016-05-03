@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{margin: 0; padding: 0;}
+        #box{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            left: 500px;
+            top: 0;
+            opacity: 1;
+            filter: alpha(opacity = 100);
+        }
+
+    </style>
+</head>
+<body>
+<div id="box">
+
+</div>
+<a href="http://tool.css-js.com">http://tool.css-js.com</a>
+<div style="margin-top: 150px">
+</div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script src="../tween.js"></script>
+<script>
+    var oBox = document.getElementById('box');
+/*
+    zhufengAnimate(oBox,{left:1000,top:500,opacity:0.5, width:50,height:50},1000);
+*/
+    //购物车效果
+
+    //当动画结束以后我要把盒子变成蓝色
+    zhufengAnimate(oBox, {left: 1000, top: 500, opacity: 0.5, width: 50, height: 50}, 1000, 1,function () {
+        utils.setCss(this, 'background', 'blue');
+    });
+</script>
