@@ -229,5 +229,5 @@
     }
     //可以用return返回出来个一个对象，或者直接赋值给window
     window.zhufengAnimate = move;
-    
+
 }();

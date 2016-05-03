@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="841a9c76-f481-4030-acf9-554867e3d2ba" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第三周第二天/jsonData.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tween.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/使用tween库完成多方向动画.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/动画1.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/动画2左右反弹动画引起的作用域累积问题优化.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/多方向匀速动画.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/多方向运动.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/正式课第四周第一天/左右方向.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/正式课第三周第二天/utils.js" afterPath="$PROJECT_DIR$/正式课第三周第二天/utils.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tween.js" afterPath="$PROJECT_DIR$/tween.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils.js" afterPath="$PROJECT_DIR$/utils.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/正式课第三周第二天/.idea/workspace.xml" afterPath="$PROJECT_DIR$/正式课第三周第二天/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/正式课第三周第二天/多张图片延迟加载.html" afterPath="$PROJECT_DIR$/正式课第三周第二天/多张图片延迟加载.html" />
     </list>
     <ignored path="正式课.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,11 +67,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="utils.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/utils.js">
           <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.42465752">
+              <caret line="71" column="62" selection-start-line="71" selection-start-column="62" selection-end-line="71" selection-end-column="62" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.js" pinned="false" current-in-tab="false">
+        <entry file="file://E:/utils.js">
+          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
+              <caret line="251" column="48" selection-start-line="251" selection-start-column="14" selection-end-line="251" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -99,11 +99,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tween.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tween.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tween.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6815069">
-              <caret line="231" column="4" selection-start-line="231" selection-start-column="4" selection-end-line="231" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
               <folding>
                 <element signature="e#38#6991#0" expanded="false" />
               </folding>
@@ -160,11 +160,11 @@
         <option value="$PROJECT_DIR$/使用tween库完成多方向动画.html" />
         <option value="$PROJECT_DIR$/正式课第四周第一天/使用tween库完成多方向动画.html" />
         <option value="$PROJECT_DIR$/正式课第三周第二天/多张图片延迟加载.html" />
-        <option value="$PROJECT_DIR$/utils.js" />
         <option value="$PROJECT_DIR$/正式课第四周第一天/动画.html" />
         <option value="$PROJECT_DIR$/正式课第四周第一天/左右方向.html" />
         <option value="$PROJECT_DIR$/正式课第四周第一天/多方向运动.html" />
         <option value="$PROJECT_DIR$/tween.js" />
+        <option value="$PROJECT_DIR$/utils.js" />
       </list>
     </option>
   </component>
@@ -311,7 +311,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13318452" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
@@ -653,30 +653,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/正式课第四周第一天/多方向匀速动画.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/utils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="309" column="25" selection-start-line="309" selection-start-column="25" selection-end-line="309" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/正式课第四周第一天/动画1.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.1709559">
@@ -713,11 +689,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tween.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6815069">
-          <caret line="231" column="4" selection-start-line="231" selection-start-column="4" selection-end-line="231" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
           <folding>
             <element signature="e#38#6991#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/正式课第四周第一天/多方向匀速动画.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="251" column="48" selection-start-line="251" selection-start-column="14" selection-end-line="251" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42465752">
+          <caret line="71" column="62" selection-start-line="71" selection-start-column="62" selection-end-line="71" selection-end-column="62" />
+          <folding />
         </state>
       </provider>
     </entry>

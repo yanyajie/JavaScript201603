@@ -56,7 +56,7 @@ var utils = {
     },
     getCss: function (curEle, attr) {
         //处理带单位的问题
-        var reg = /^(-?\d+(\.\d+)?)(?:px|em|pt|deg|rem)$/;
+        var reg = /^-?\d+(\.\d+)?(?:px|em|pt|deg|rem)?$/;
         var val = null;
         if (/MSIE (?:6|7|8)/.test(window.navigator.userAgent)) {
 
@@ -69,7 +69,7 @@ var utils = {
             }
             val = curEle.currentStyle[attr];
         } else {
-            val = (attr == 'opacity' ? window.getComputedStyle(curEle, null)[attr] / 1 : window.getComputedStyle(curEle, null)[attr]);
+            val =  window.getComputedStyle(curEle, null)[attr];
         }
         return reg.test(val) ? parseFloat(val) : val; //如果正则验证通过，寿命返回值是带单位的，那么我们就要人为去掉这个单位。否则不变
     },
