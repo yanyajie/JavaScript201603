@@ -1,10 +1,15 @@
-~function (){
+~function () {
+   /* var effect = { //è¿™ä¸€ç»„å¯¹è±¡é‡Œéƒ½æ˜¯å­˜æ”¾å¦‚ä½•å»è®¡ç®—å½“å‰ä½ç½®çš„å…¬å¼
+        linear:function (t,b,c,d){//å®šä¹‰ä¸€ä¸ªåŒ€é€Ÿè¿åŠ¨æ•ˆæœ
+            return b + (t/d)*c;
+        }
+    }*/
     var zhufengEffect = {
-        //ÔÈËÙ
+        //åŒ€é€Ÿ
         Linear: function (t, b, c, d) {
             return c * t / d + b;
         },
-        //Ö¸ÊıË¥¼õµÄ·´µ¯»º¶¯
+        //æŒ‡æ•°è¡°å‡çš„åå¼¹ç¼“åŠ¨
         Bounce: {
             easeIn: function (t, b, c, d) {
                 return c - zhufengEffect.Bounce.easeOut(d - t, 0, c, d) + b;
@@ -27,7 +32,7 @@
                 return zhufengEffect.Bounce.easeOut(t * 2 - d, 0, c, d) * .5 + c * .5 + b;
             }
         },
-        //¶ş´Î·½µÄ»º¶¯
+        //äºŒæ¬¡æ–¹çš„ç¼“åŠ¨
         Quad: {
             easeIn: function (t, b, c, d) {
                 return c * (t /= d) * t + b;
@@ -42,7 +47,7 @@
                 return -c / 2 * ((--t) * (t - 2) - 1) + b;
             }
         },
-        //Èı´Î·½µÄ»º¶¯
+        //ä¸‰æ¬¡æ–¹çš„ç¼“åŠ¨
         Cubic: {
             easeIn: function (t, b, c, d) {
                 return c * (t /= d) * t * t + b;
@@ -57,7 +62,7 @@
                 return c / 2 * ((t -= 2) * t * t + 2) + b;
             }
         },
-        //ËÄ´Î·½µÄ»º¶¯
+        //å››æ¬¡æ–¹çš„ç¼“åŠ¨
         Quart: {
             easeIn: function (t, b, c, d) {
                 return c * (t /= d) * t * t * t + b;
@@ -72,7 +77,7 @@
                 return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
             }
         },
-        //Îå´Î·½µÄ»º¶¯
+        //äº”æ¬¡æ–¹çš„ç¼“åŠ¨
         Quint: {
             easeIn: function (t, b, c, d) {
                 return c * (t /= d) * t * t * t * t + b;
@@ -87,7 +92,7 @@
                 return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
             }
         },
-        //ÕıÏÒÇúÏßµÄ»º¶¯
+        //æ­£å¼¦æ›²çº¿çš„ç¼“åŠ¨
         Sine: {
             easeIn: function (t, b, c, d) {
                 return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
@@ -99,7 +104,7 @@
                 return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
             }
         },
-        //Ö¸ÊıÇúÏßµÄ»º¶¯
+        //æŒ‡æ•°æ›²çº¿çš„ç¼“åŠ¨
         Expo: {
             easeIn: function (t, b, c, d) {
                 return (t == 0) ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
@@ -114,7 +119,7 @@
                 return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
             }
         },
-        //Ô²ĞÎÇúÏßµÄ»º¶¯
+        //åœ†å½¢æ›²çº¿çš„ç¼“åŠ¨
         Circ: {
             easeIn: function (t, b, c, d) {
                 return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
@@ -129,7 +134,7 @@
                 return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
             }
         },
-        //³¬¹ı·¶Î§µÄÈı´Î·½»º¶¯
+        //è¶…è¿‡èŒƒå›´çš„ä¸‰æ¬¡æ–¹ç¼“åŠ¨
         Back: {
             easeIn: function (t, b, c, d, s) {
                 if (s == undefined) s = 1.70158;
@@ -147,7 +152,7 @@
                 return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
             }
         },
-        //Ö¸ÊıË¥¼õµÄÕıÏÒÇúÏß»º¶¯
+        //æŒ‡æ•°è¡°å‡çš„æ­£å¼¦æ›²çº¿ç¼“åŠ¨
         Elastic: {
             easeIn: function (t, b, c, d, a, p) {
                 if (t == 0) return b;
@@ -177,57 +182,69 @@
         }
     };
 
-    function move(curEle,target,duration,effect,callback){ //ÈÃÄÇ¸öÔªËØÔË¶¯
+    /**
+     *
+     * @param curEle éœ€è¦è¿åŠ¨çš„å…ƒç´ 
+     * @param target Objecctéœ€è¦è¿åŠ¨çš„ç»ˆç‚¹
+     * @param duration éœ€è¦è¿åŠ¨çš„æ—¶é—´é—´éš”
+     */
+    function move(curEle, target, duration,effect,callback) { //é©±åŠ¨å…ƒç´ è¿åŠ¨çš„ //target{width:100,left:50}
+        // time change  interval
+        var time = null;
+        var interval = 10;
+        var begin = {}; //é€šè¿‡ä½ ä¼ å…¥æ¥targetçš„ç»´åº¦æ¥ç¡®å®šbeginæœ‰å¤šå°‘ä¸ªç»´åº¦
+        //begin = {width:defalut,height:defalut}
+        var change = {};
         var tempEffect = zhufengEffect.Linear;
         if(typeof effect == 'number'){
-            switch (effect) {
-                case 0:
-                    tempEffect = zhufengEffect.Linear;
-                    break;
+            switch (effect){
                 case 1:
-                    tempEffect = zhufengEffect.Bounce.easeIn;
+                   tempEffect = zhufengEffect.Bounce.easeIn;
                     break;
                 case 2:
-                    tempEffect = zhufengEffect.Quart.easeInOut;
+                    tempEffect = zhufengEffect.Elastic.easeInOut;
             }
+            //var a = ['Elastic','easeIn'] ==> zhufengEffect[a[0]][a[1]]
         }else if(effect instanceof Array){
-            tempEffect = effect.length >=2? zhufengEffect[effect[0]][effect[1]] : zhufengEffect[effect[0]];
-        }else if(typeof effect == 'function'){ //ÓÃÀ´×ö»Øµ÷º¯Êı
+            //var a = ['Elastic','easeIn'] ==> zhufengEffect[a[0]][a[1]]
+        }else{ //ä¸æ˜¯æ•°å­—ä¹Ÿä¸æ˜¯æ•°ç»„
             callback = effect;
         }
 
-
-        //¸ù¾İtarget»ñÈ¡Ã¿Ò»¸ö·½ÏòµÄÆğÊ¼ÖµºÍ×Ü¾àÀë
-        //Ê×ÏÈÇå³ı¶¨Ê±Æ÷
-        window.clearInterval(curEle.zhufengTimer);
-        var begin = {};
-        var change = {};
-        var time = 0;
-        var interval = 10;
-        for (var key in target){
+        for(var key in target){ //æˆ‘ä»¬éœ€è¦é€šè¿‡targetçš„ç»´åº¦ï¼ˆå±æ€§å¤šå°‘ï¼‰,æ¥æŸ¥æ‰¾æˆ‘ä»¬beginçš„å±æ€§ï¼Œå¦‚æœä¸æ˜¯targetçš„å±æ€§ï¼Œæˆ‘ä»¬è¿™ä¸ªç»´åº¦å°±æ²¡æœ‰å¿…è¦è·å–äº†ã€‚
             if(target.hasOwnProperty(key)){
-                begin[key] = utils.getCss(curEle,key);
-                change[key] = target[key] - begin[key];
+                //é€šè¿‡targetçš„ç»´åº¦ç»™beginæ·»åŠ ç»´åº¦
+                begin[key] = utils.getCss(curEle,key);//begin{width:100,left:0}
+                change[key] = target[key] - begin[key]; //change:{width:å·®,left:å·®}
             }
         }
-        curEle.zhufengTimer = window.setInterval(function (){
-            time += interval;
-            if(time >= duration){ //µ½´ïÄ¿±ê
-                window.clearInterval(curEle.zhufengTimer);
+        //ä»¥ä¸Šæˆ‘ä»¬åªæ˜¯è·å–äº†åŠ¨ç”»éœ€è¦çš„ä¸€äº›æ¡ä»¶ï¼Œt,b,c,d
+
+        //æ¥ä¸‹æ¥æˆ‘ä»¬éœ€è¦å»å¼€å¯å®šæ—¶å™¨å¹¶ä¸”å®ŒæˆåŠ¨ç”»
+        curEle.timer = window.setInterval(function (){
+            // 1 è¶Šç•Œåˆ¤æ–­  2 è®¾ç½®æ¯ä¸ªç»´åº¦çš„å€¼
+            time += interval; //é€šè¿‡èŠ±è´¹æ—¶é—´çš„å¢é•¿æ¥é©±åŠ¨å¯¹åº”æ—¶é—´çš„èµ°è¿‡çš„è·ç¦»
+            //éœ€è¦åˆ†åˆ«å¤„ç†æ¯ä¸€ä¸ªç»´åº¦,targeté‡Œé¢çš„ç»´åº¦éƒ½éœ€è¦å¤„ç†
+            if(time>=duration){
+                window.clearInterval(curEle.timer);
+                //æˆ‘ä»¬è¿˜è¦èµ‹å€¼åˆ°targetç»ˆç‚¹
                 utils.setGroupCss(curEle,target);
-                typeof callback == 'function' && callback.call(curEle); //»Øµ÷º¯ÊıÅĞ¶Ï
+                //æˆ‘ä»¬çš„åŠ¨ç”»å·²ç»ç»“æŸäº†
+                if(typeof callback == 'function'){
+                    callback.call(curEle);
+                }
                 return;
             }
-            //Ã»µ½´ïÄ¿±ê,·Ö±ğ»ñÈ¡Ã¿¸ö·½Ïò£¬È»ºó²¢ÇÒÉèÖÃ
-            for(var key in target){
-                if(target.hasOwnProperty(key)){
-                    var curPosi = tempEffect(time,begin[key],change[key],duration);
-                    utils.setCss(curEle,key,curPosi);
+            for(var k in target){
+                if(target.hasOwnProperty(k)){
+                    //è¿™é‡Œæ‰€æœ‰èƒ½éå†å‡ºæ¥çš„ç»´åº¦éœ€è¦å¤„ç†
+                    var curPosi = tempEffect(time,begin[k],change[k],
+duration); //è·å–å•ä¸ªç»´åº¦çš„å€¼
+                    utils.setCss(curEle,k,curPosi/*ç»´åº¦*//*ç»´åº¦çš„å€¼*/);
                 }
             }
         },interval);
     }
-    //¿ÉÒÔÓÃreturn·µ»Ø³öÀ´¸öÒ»¸ö¶ÔÏó£¬»òÕßÖ±½Ó¸³Öµ¸øwindow
-    window.zhufengAnimate = move;
 
+    window.zhufengAnimate = move;
 }();

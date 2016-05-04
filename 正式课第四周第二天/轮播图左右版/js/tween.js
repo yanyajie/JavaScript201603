@@ -191,7 +191,7 @@
                     tempEffect = zhufengEffect.Quart.easeInOut;
             }
         }else if(effect instanceof Array){
-            tempEffect = effect.length >=2? zhufengEffect[effect[0]][effect[1]] : zhufengEffect[effect[0]];
+            tempEffect = effect >=2? zhufengEffect[effect[0]][effect[1]] : zhufengEffect[effect[0]];
         }else if(typeof effect == 'function'){ //用来做回调函数
             callback = effect;
         }

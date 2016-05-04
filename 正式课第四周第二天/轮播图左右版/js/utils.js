@@ -100,7 +100,7 @@ var utils = {
         }
         ele.style[attr] = value;
     },
-    setGroupCss: function (ele, obj) {  //批量设置样式属性
+    setGroupCss: function (ele, obj) {
         //首先保证obj是一个对象
         /*
          if(!Object.prototype.toString.call(obj) == '[object Object]'){
@@ -108,7 +108,7 @@ var utils = {
          }
          */
         //我嫌弃这个有点长
-        obj = obj || '0'; //如果没传要做处理保证我们的程序不报错误
+        obj = obj || 0; //如果没传要做处理
         if (obj.toString() != '[object Object]') {
             return;
         }
