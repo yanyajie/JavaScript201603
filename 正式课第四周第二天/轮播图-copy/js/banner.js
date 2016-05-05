@@ -167,7 +167,7 @@
         zhufengAnimate(inner,{left: -step*1000},500,2);
         focusAlign();
     }
-      
+
     rightBtn.onclick = autoMove;
 
 
