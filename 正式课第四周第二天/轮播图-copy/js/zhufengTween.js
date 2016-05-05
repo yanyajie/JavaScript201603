@@ -219,9 +219,10 @@
             }
         }
         //以上我们只是获取了动画需要的一些条件，t,b,c,d
-
+        window.clearInterval(curEle.timer);
         //接下来我们需要去开启定时器并且完成动画
         curEle.timer = window.setInterval(function (){
+
             // 1 越界判断  2 设置每个维度的值
             time += interval; //通过花费时间的增长来驱动对应时间的走过的距离
             //需要分别处理每一个维度,target里面的维度都需要处理
