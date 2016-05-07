@@ -31,7 +31,7 @@ function animate(ele,obj,duration,callback){
 		var target=obj[attr]
 		var begin=animate.getCss(ele,attr);
 		var change=target-begin;
-		change===0
+		
 		if(change){//判断一下此方向的运动距离有效，不为0		
 			oBegin[attr]=begin;
 			oChange[attr]=change;
@@ -39,6 +39,14 @@ function animate(ele,obj,duration,callback){
 		}
 	}//for in 循环结束
 	if(!flag)return;//如果各个方向的运动距离都是0，则结束动画的执行
+	
+	/*
+	//如果在条件或循环语句后边只有一行JS表达式，则花括号是可以省略的。花括号的作用是把多行JS表达式打包成一行，如果只有一行JS表达式，则没必要使用花括号了
+	for(var i=0;i<9;i++)
+		for(var j=0;j<9;j++)
+			alert(i+j);
+				
+	*/
 	
 	var interval=15;
 	var times=0;
