@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:150px; left:150px; background:red; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+//时间完成了一半，距离走完一半，
+var duration=600;//由用户指定的,完成动画所需的总时间
+var interval=15;//单步的时间，其实这是个常量
+var times=0;//当前运动消耗的时间,这个变量是不断的变化的，每当动画执行一次，times就累加一次interval
+
+//和距离、位置相关的量
+var target=900;//动画最后的终点是900px,最终的终点是900，但需要运动的距离未必是900,关键看起点是那儿（begin）
+var begin=ele.offsetLeft;
+var change=target-begin;//终点-起点才是运动的距离
+
+/*
+当前消耗的时间/规定的总时间=当前走过的距离/总距离 
+当前消耗的时间/规定的总时间*总距离=当前走过的距离
+
+当前的位置=当前走过的距离+起始位置
+当前的位置=当前消耗的时间/规定的总时间*总距离+起始位置
+
+*/
+function step(){
+	times+=interval;
+	//由于此动画是规定时间的动画，所以times不能超过规定的总时间duration
+	
+	if(times<=duration){
+		//用<=比较，十万年会多浪费一度电
+		ele.style.left=times/duration*change+begin+"px";
+	}else{
+		//如果times大于或等于duration，则强制让此元素停在终点
+		ele.style.left=target+"px";
+		clearInterval(timer);
+	}
+	//setTimeout(step,interval);
+}
+
+var timer=setInterval(step,interval);
+
+
+</script>
+

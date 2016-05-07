@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:150px; left:150px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px;">右</div>
+
+</body>
+</html>
+<script>
+function getCss(ele,attr){
+	
+}
+
+var ele=document.getElementById("div1");
+function animate(ele,attr/*运动的方向*/,target,duration){
+	clearInterval(ele.timer);
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,attr);
+	var change=target-begin;
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			ele.style[attr]=times/duration*change+begin+"px";
+		}else{
+			ele.style[attr]=target+"px";
+			clearInterval(ele.timer);
+		}
+	}
+	ele.timer=setInterval(step,interval);
+	
+}
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		return parseFloat(ele.currentStyle[attr]);	
+	}
+}
+
+ele.onclick=function(){
+	animate(this,"left",900,1600);	
+}
+left.onclick=function(){
+	animate(ele,"left",0,1600);	
+}
+right.onclick=function(){
+	animate(ele,"left",1000,1600);
+}
+</script>
+

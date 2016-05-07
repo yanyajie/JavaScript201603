@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:50px; left:50px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px;">右</div>
+</body>
+</html>
+<script>
+function getCss(ele,attr){
+	
+}
+
+var ele=document.getElementById("div1");
+function animate(ele,attr/*运动的方向*/,target,duration,fnCallback){
+	clearInterval(ele.timer);
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,attr);
+	var change=target-begin;
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			ele.style[attr]=times/duration*change+begin+"px";
+		}else{
+			ele.style[attr]=target+"px";
+			clearInterval(ele.timer);
+			
+			ele.timer=null;//如果定时器的任务已经完成了，则应该把ele.timer也设为Null，方便以ele.timer做为判断的依据，来判断动画是否在运动中
+			
+			//把动画结束后要执行的代码，运行在这里（回调方法）
+			//ele.style.backgroundColor="black";
+			if(typeof fnCallback =="function"){
+				//fnCallback();
+				//回调方法在执行的时候，this会指向当前运动的这个元素
+				fnCallback.call(ele);	
+			}
+		}
+	}
+	ele.timer=setInterval(step,interval);
+	
+}
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		return parseFloat(ele.currentStyle[attr]);	
+	}
+}
+
+
+//需求是：如果停止则启动动画，如果动画正在执行则停止动画。即在启和停之间切换
+left.onclick=function(){
+	if(ele.timer){//如果为true则表示它的执行动画
+		clearInterval(ele.timer);//执行完这一句之后，ele.timer的值一定要有没有呢？清除的是ele.timer所代表的那个队列里的任务，而并非把ele.timer的值给设为null了。所以：当clearInterval执行完成之后，队列里的任务被停止了（ele.timer代表的那个任务被停止了），ele.timer上的值还是存在的
+		
+		//必须要手动的把ele.timer设为null，才会把ele.timer的值清掉
+		ele.timer=null;
+		//为什么要把ele.timer设为null？是为了把这个ele.timer做为判断的依据
+		
+	}else{//不为true表示动画没有执行
+			animate(ele,"left",1100,1600);
+	}
+}
+setTimeout(fn1,10000);
+setTimeout(fn2,400);
+setTimeout(fn3,12000);
+</script>
+

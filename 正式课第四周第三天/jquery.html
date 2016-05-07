@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>jquery</title>
+    <style>
+        *{ margin: 0; padding: 0; }
+        .c1{ width: 200px; height: 200px; background: green; margin: 30px auto; }
+    </style>
+</head>
+<body>
+    <!--
+        1 操作dom 神器
+        2 兼容性不用考虑
+        3 移动端jquery  jquerymobile
+        常用： 1 选择器  dom的操作 $
+               2 常用方法： addClass  removeClass  css attr(一般用于操作自定义属性) prop(一般用来操作自带的内置属性,更常用于表单元素的操作)
+               3 工具： jQuery.ajax({ $.ajax
+                    type: 'get',
+                    url: 'asdf/asdf.tex',
+                    async: true,false
+                    data: json,
+                    success: fn,
+                    error: fn
+               });
+               4 $.callback();  //回调函数
+
+
+    -->
+    <div class="c1 c2" trueSrc="img/1.jpg"></div>
+    <input type="radio" checked />
+    <input type="checkbox" checked/>
+    <div class="c1 c2" trueSrc="img/1.jpg"></div>
+</body>
+</html>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+    console.log(document.querySelectorAll('.c1'));
+    console.log($('.c1')); //用jquery方式获取来的元素就是一个jquery对象，只有jquery对象才可以调用jqeruy的方法
+
+   /* function $(){}
+    var a = new $;*/
+    //var c1 = $('.c1');
+    //c1.css({width:300});
+
+    //var c1 = document.querySelectorAll('.c1'); //原生的dom方法
+    var $c1 = $('.c1'); //如果我获取的是一个jquery对象，一般可以在变量名字之前添加一个美元符。来区分当前对象是dom对象还是jquery对象
+    $c1.css({width:500}); //把通过原生js获取来的dom对象包装成一个jquery对象
+    // 1 直接通过类名字获取  $('.className')
+    // 2 通过id             $('#id')
+    // 3 标签名             $('tagName')
+    $c1.css({"width":"500","height":"500"}).hide(500).show(500);
+
+    function fn1 (val){ console.log ("fn1&&" + val) }
+    function fn2(val){ console.log("fn2&&" + val) }
+
+    var callback = $.Callbacks(); //声明了一个回调函数集合
+    callback.add(fn1); //往这个集合里添加了一个方法
+    callback.add(fn2); //又添加了一个
+     //[fn1,fn2]
+    callback.fire(100); //执行回调集合里的函数，并且把参数传进去了
+    console.log(jQuery('.c1').siblings());
+    $c1.click(function (){
+        $(this).css('background','red');
+    });
+
+    $c1.on('mouseover',function (){
+        $(this).css('background','yellow');
+    });
+    $c1.on('mouseover',function (){
+        $(this).css('width','800px');
+    });
+
+
+    //$c1.off('mouseover');
+
+    //选项卡  ： $('.tab li').on('mouseover',function(){
+    //     $(this).addClass('active').siblings().removeClass('active');
+    //
+    //
+    // })
+
+    //动画: hide() show() fadeIn() fadeOut() slideUp() slideDown() stop() finish() animate()
+
+    //$().animate();
+
+    //遍历
+    $.each(["a","b","c"],function(index,item){
+        //console.log(a,b);
+    });
+    $('.c1').each(function (){
+        console.log($(this).html("adsf")); // html方法如果没有参数就是读取，如果有参数就是设置
+
+    });
+
+    //children('div')
+
+    //面试偶尔会问  如果拓展jquer有插件
+    $.extend({
+        aa : function (){
+            confirm("aa");
+        }
+
+    })
+
+    //$.aa();
+
+    $.fn.extend({    //$.protoyype = $.fn   $ = jQuery
+        bb : function (){
+            alert('bbbbbbbbb');
+        }
+    })
+    $().bb();
+
+</script>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 100px;
+            height: 100px;
+            background: green;
+            position: absolute;
+            left: 500px;
+            top: 0;
+        }
+        #left,#right{
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            background: yellowgreen;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<div id="box"></div>
+<div style="margin: 120px 0 0 400px">
+    <input id="left" type="button" value="Left"/>
+    <input  id="right" type="button" value="right"/>
+
+</div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script>
+    var oBox = document.getElementById('box');
+    var leftBtn = document.getElementById('left');
+    var rightBtn = document.getElementById('right');
+    var maxLeft = utils.getWin('clientWidth') - oBox.offsetWidth;
+    var minLeft = 0;
+    var step = 5;
+    //var timer = null;
+
+    leftBtn.onclick = function (){
+        move(minLeft);
+    }
+    rightBtn.onclick = function (){
+        move(maxLeft);
+    }
+
+    function move(target){ //target参数： 如果target大于当前的盒子的位置，那么我就认为盒子向右运动   目标值 > 当前位置 ，否者向左
+        //判断你传进来的参数和我当前的位置做比较
+        // 首先获取当前left值
+        window.clearTimeout(oBox.timer); //因为每次点击按钮的时候都会执行新的定时器，我们需要把上一次的定时器清掉.这样就解决了我们的动画由于向左和向右同时进行而产生的动画累积问题
+        var curLeft = utils.getCss(oBox,'left');
+        if(target>curLeft){ //向右
+            if(curLeft + step >= target){
+                utils.setCss(oBox,'left',target);
+                window.clearTimeout(oBox.timer);
+                return;
+            }
+            curLeft += step;
+            utils.setCss(oBox,'left',curLeft);
+        }else if(target < curLeft){ //left
+            if(curLeft - step <= target){
+                utils.setCss(oBox,'left',target);
+                window.clearTimeout(oBox.timer);
+                return;
+            }
+            curLeft -= step;
+            utils.setCss(oBox,'left',curLeft);
+        }else{
+            return;
+        }
+        //timer = window.setTimeout(move(target),10); //只要在定时器里需要传参数，那么我们就需要给它包一层
+        oBox.timer = window.setTimeout(function (){ //在元素身上添加了一个自定义属性，用来保存定时器的返回值
+            move(target); //当前作用域没有一个target变量
+        },10);
+    }
+
+
+
+
+    //由于多次执行动画定时器的作用域累计问题，这个问题如何优化呢？就是由于我们的定时器在执行的过程中需要一个tareget参数，我们才包了一个匿名函数。如果这个参数要是不用传就解决了这个问题
+    function move(target){
+       /* var timer = null;*/ //把timer放在这是没有办法清掉上一次动画产生的累积问题
+        window.clearTimeout(oBox.timer);
+        _move();
+        function _move(){
+            var curLeft = utils.getCss(oBox,'left');
+            if(target>curLeft){
+                if(curLeft + step >= target){
+                    utils.setCss(oBox,'left',target);
+                    window.clearTimeout(oBox.timer);
+                    return;
+                }
+                curLeft += step;
+                utils.setCss(oBox,'left',curLeft);
+            }else if(target < curLeft){
+                if(curLeft - step <= target){
+                    utils.setCss(oBox,'left',target);
+                    window.clearTimeout(oBox.timer);
+                    return;
+                }
+                curLeft -= step;
+                utils.setCss(oBox,'left',curLeft);
+            }else{
+                return;
+            }
+            oBox.timer = window.setTimeout(_move,10); //封装了一个小的函数，就为了避免在这个定时器执行的时候需要传一个target的参数。这样就避免了传参数。就不会由于运行匿名函数而产生的作用域不被释放的问题
+        }
+    }
+
+
+
+
+
+
+    /*
+    *   动画应该注意的几点：
+    *       1 没用的定时器要及时清理
+    *       2 判断越界的时候要加上step
+    *       3 定时器保存在运动元素的自定义属性身上
+    *       4 在执行定时器的时候别忘了优化，定义一个_move，用来优化定时器执行匿名函数产生的作用域累积问题
+    *
+    * */
+
+
+
+</script>

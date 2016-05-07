@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            top: 50px;
+            left: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="box" id="box">
+
+    </div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script>
+    function linear(t,b,c,d){
+        return b + (t/d)*c;
+    }
+
+    var oBox = document.getElementById('box');
+    var beginLeft = utils.getCss(oBox,'left');
+    var beginTop = utils.getCss(oBox,'top');
+    var targetLeft = 1000;
+    var targetTop = 500;
+    var changeLeft = targetLeft - beginLeft;
+    var changeTop = targetTop - beginTop;
+    var time =0;
+    var duration = 1000;
+    var interval = 10;
+    oBox.timer = window.setInterval(function (){
+        time += interval;
+        if(time >= duration){
+            window.clearInterval(oBox.timer);
+            utils.setCss(oBox,'left',targetLeft);
+            utils.setCss(oBox,'top',targetTop);
+            return;
+        }
+        var curLeft = linear(time,beginLeft,changeLeft,duration);
+        var curTop = linear(time,beginTop,changeTop,duration);
+        utils.setCss(oBox,'left',curLeft);
+        utils.setCss(oBox,'top',curTop);
+    },interval);
+    //批量设置css
+</script>

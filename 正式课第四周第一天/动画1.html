@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{margin:0; padding: 0;}
+        #box{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+</html>
+<script src="../utils.js"></script>
+<script>
+
+/*
+    var oBox = document.getElementById('box');
+    var duration = 2000;
+    var maxLeft = utils.getWin('clientWidth') - oBox.clientWidth;
+    var interval = 10;
+    var step = (maxLeft/duration)*interval;
+    var timer = setInterval(function (){
+        var left = utils.getCss(oBox,'left');
+        if(left >= maxLeft){
+            window.clearInterval(timer);
+            return;
+        }
+        left += step;
+        oBox.style.left = left + 'px';
+    },interval);
+*/
+
+    //第二种匀速运动的方式
+/*
+    var oBox = document.getElementById('box');
+    var duration = 2000;
+    var target = utils.getWin('clientWidth') - oBox.offsetWidth;
+    var begin = utils.getCss(oBox,'left');
+    var change = target - begin;
+    var interval = 10;
+    var time = null ;
+    var timer = window.setInterval(function (){
+        time += interval;
+        if(time >= duration){
+            window.clearInterval(timer);
+            oBox.style.left = target + 'px';
+            return;
+        }
+        oBox.style.left = begin + (time/duration)*change + 'px';
+    },interval);
+*/
+
+    //我不规定时间了，就规定每一步走多远，走到终点为止
+/*
+    var oBox = document.getElementById('box');
+    var target = utils.getWin('clientWidth') - oBox.offsetWidth;
+    var step = 5;
+    var interval = 10;
+    var timer = window.setInterval(function (){
+        var curLeft = utils.getCss(oBox,'left');
+        if(curLeft + step >= target){ //边界判断
+            utils.setCss(oBox,'left',target);
+            window.clearInterval(timer);
+            return;
+        }
+        curLeft += step;
+        utils.setCss(oBox,'left',curLeft);
+    },interval);
+*/
+
+    //使用递归思想用setTimeout模拟
+    var oBox = document.getElementById('box');
+    var target = utils.getWin('clientWidth') - oBox.offsetWidth;
+    var step = 5;
+    var interval = 10;
+    var timer = null;
+    function move(){
+        window.clearTimeout(timer); //别忘记了清除上一次留下来的定时器
+        var curLeft = utils.getCss(oBox,'left');
+        if(curLeft + step >= target){
+            utils.setCss(oBox,'left',target);
+            return;
+        }
+        curLeft += step;
+        utils.setCss(oBox,'left',curLeft);
+        timer = window.setTimeout(arguments.callee,interval);
+    }
+    move();
+
+</script>

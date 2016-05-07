@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:50px; left:50px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+</body>
+</html>
+<script>
+function getCss(ele,attr){
+	
+}
+
+var ele=document.getElementById("div1");
+function animate(ele,attr/*运动的方向*/,target,duration,fnCallback){
+	clearInterval(ele.timer);
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,attr);
+	var change=target-begin;
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			ele.style[attr]=times/duration*change+begin+"px";
+		}else{
+			ele.style[attr]=target+"px";
+			clearInterval(ele.timer);
+			//把动画结束后要执行的代码，运行在这里
+			//ele.style.backgroundColor="black";
+			if(typeof fnCallback =="function"){
+				//fnCallback();
+				//回调方法在执行的时候，this会指向当前运动的这个元素
+				fnCallback.call(ele);	
+			}
+		}
+	}
+	ele.timer=setInterval(step,interval);
+	
+}
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		return parseFloat(ele.currentStyle[attr]);	
+	}
+}
+
+function toRight(){
+	animate(this,"left",1000,900,toBottom);
+}
+function toBottom(){
+	animate(this,"top",500,900,toLeft);
+}
+function toLeft(){
+	animate(this,"left",50,900,toTop);
+}
+function toTop(){
+	animate(this,"top",50,900,toRight);
+}
+
+ele.onclick=toRight;
+
+</script>
+

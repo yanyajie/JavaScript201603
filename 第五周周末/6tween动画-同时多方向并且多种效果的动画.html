@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:50px; left:50px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px; opacity:0.5; filter:alpha(opacity=50)">右</div>
+</body>
+</html>
+<script src="tween.js"></script>
+<script>
+var ele=document.getElementById("div1");
+ele.onclick=function(){
+	animate(this,{left:900},1600);	
+}
+
+</script>
+

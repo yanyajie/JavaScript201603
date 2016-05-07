@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href=""/>
+    <style>
+        *{margin: 0; padding: 0;}
+        #box{ width: 100px; height: 100px; background: red; position: absolute; left: 0; top: 0; }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+</html>
+<script src="../utils.js">
+</script>
+<script src="../zhufengTween.js">
+</script>
+<script>
+    //获取这个盒子
+    var oBox = document.getElementById('box');
+    /*var duration = 2000;
+    var time = null;
+    var interval = 10;
+    var target = {left: 500,top:500};
+    var leftChange = target.left - 0;
+    var topChange = target.top - 0;
+    function linear(t,b,c,d){
+        return b + (t/d)*c;
+    }*/
+   /* var timer = window.setInterval(function (){
+        time += interval;
+        if(time >= duration){
+            window.clearInterval(timer);
+            /!*utils.setCss(oBox,'left',leftTarget);
+            utils.setCss(oBox,'top',topTarget);
+            utils.setCss(oBox,'top',topTarget);*!/
+            utils.setGroupCss(oBox,target);
+            return;
+        }
+        var curLeft = linear(time,0,leftChange,duration);
+        var curTop = linear(time,0,topChange,duration);
+        //要运动到这个位置
+      /!*  utils.setCss(oBox,'left',curLeft);
+        utils.setCss(oBox,'top',curTop);
+       *!/
+        utils.setGroupCss(oBox,{left:curLeft,top:curTop});
+    },interval);*/
+    zhufengAnimate(oBox,{width:300,height:200,left:300,top:300,opacity:0.5},5000,function (){
+        this.style.background = 'green';
+        //curEle.style.background = 'green';
+    });
+
+</script>
