@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:150px; left:150px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px;">右</div>
+
+</body>
+</html>
+<script>
+function getCss(ele,attr){
+	
+}
+
+var ele=document.getElementById("div1");
+function animate(ele,attr/*运动的方向*/,target,duration,fnCallback){
+	clearInterval(ele.timer);
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,attr);
+	var change=target-begin;
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			ele.style[attr]=times/duration*change+begin+"px";
+		}else{
+			ele.style[attr]=target+"px";
+			clearInterval(ele.timer);
+			//把动画结束后要执行的代码，运行在这里
+			//ele.style.backgroundColor="black";
+			if(typeof fnCallback =="function"){
+				//fnCallback();
+				//回调方法在执行的时候，this会指向当前运动的这个元素
+				fnCallback.call(ele);	
+			}
+		}
+	}
+	ele.timer=setInterval(step,interval);
+	
+}
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		return parseFloat(ele.currentStyle[attr]);	
+	}
+}
+
+
+//当动画结束的时候，背景变为黑色
+
+//逻辑相同，都是动画结束后背景变为黑色，但是由于是给三个不同的元素换变景，结果导致相同的逻辑要写三个同不的function
+function changeColor1(){
+	this.style.backgroundColor="black";	
+}
+/*
+function changeColor2(){
+	left.style.backgroundColor="black";	
+}
+
+function changeColor3(){
+	right.style.backgroundColor="black";	
+}
+*/
+ele.onclick=function(){
+	animate(this,"left",900,1600,changeColor1);	
+	
+	//异步的模式
+	//this.style.backgroundColor="black";
+}
+//烧水，扫地，打电话，泡方便面，洗澡，这些事，不是在同一个队列中执行，则是异步模式
+
+//浏览器是典型的异步模式：DOM树，外链的图片，CSS，JS
+left.onclick=function(){
+	animate(this,"left",1000,1600,changeColor1);	
+}
+right.onclick=function(){
+	animate(this,"left",0,1600,changeColor1);
+}
+
+
+/*
+	总结思考
+	什么是回调函数？什么情况下会用到回调函数？在上边的animate方法中，为什么在处理回调函数是要写成fnCallback.call(ele)
+
+*/
+</script>
+
