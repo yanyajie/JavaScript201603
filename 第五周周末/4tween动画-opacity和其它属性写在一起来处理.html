@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:50px; left:50px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px; opacity:0.5; filter:alpha(opacity=50)">右</div>
+</body>
+</html>
+<script>
+//fadeInOUt，淡入淡出的效果
+//1、不加px单位；2、IE中有兼容问题，不支持opacity属性
+function animate(ele,attr,target,duration){
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,attr);	
+	var change=target-begin;
+	
+	clearInterval(ele.timer);
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			var val=times/duration*change+begin;
+			/*
+			if(attr=="opacity"){
+				ele.style.opacity=val;	
+				ele.style.filter="alpha(opacity="+val*100+")";
+			}else{
+				ele.style[attr]=val+"px";
+			}
+			*/
+			animate.setCss(ele,attr,val);
+		}else{
+			/*
+			if(attr=="opacity"){
+				ele.style.opacity=target;
+				ele.style.filter="alpha(opacity="+target*100+")";
+			}else{
+				ele.style[attr]=target+"px";
+			}
+			*/
+			animate.setCss(ele,attr,target);
+			clearInterval(ele.timer);
+			ele.timer=null;
+		}
+	}
+	
+	ele.timer=window.setInterval(step,interval);
+	
+};
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		if(attr=="opacity"){
+			var val=ele.currentStyle.filter;
+			//"alpha(opacity=50)";//匹配到这样的一个字符串，然后把这个字符串中的数字部分拿到
+			var reg=/alpha\(opacity=(\d+(?:\.\d+)?)\)/;
+			if(reg.test(val)){
+				return RegExp.$1/100;
+			}else{
+				//如果没有给IE中的不透明度赋值，则上边的正则为false
+				return 1;//如果没有给不透明度赋值，则应该把默认值1返回
+			}
+			//方法没有返回值，则此方法执行结束后留下一个undefined。即：没有返回值的方法返回的是undefined
+		}else{
+			return parseFloat(ele.currentStyle[attr]);
+		}		
+	}
+}
+
+animate.setCss=function(ele,attr,val){
+		if(attr=="opacity"){
+			ele.style.opacity=val;
+			ele.style.filter="alpha(opacity="+val*100+")";
+		}else{
+			ele.style[attr]=val+"px";
+		}
+}
+
+var ele=document.getElementById("div1");
+ele.onclick=function(){
+	animate(this,"opacity",0,1600);	
+}
+left.onclick=function(){
+	animate(this,"width",800,1600);	
+}
+
+right.onclick=function(){
+	animate(this,"top",500,1600);
+}
+</script>
+

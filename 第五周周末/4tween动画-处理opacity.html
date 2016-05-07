@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:50px; left:50px; background:red; }
+#left,#right{width:100px; height:100px; position:absolute; top:310px; left:0px; background:blue; }
+</style>
+</head>
+
+<body>
+<div id="div1"></div>
+<div id="left" style="">左</div>
+<div id="right" style="background:green; left:200px;">右</div>
+</body>
+</html>
+<script>
+//fadeInOUt，淡入淡出的效果
+//1、不加px单位；2、IE中有兼容问题，不支持opacity属性
+function animate(ele,target,duration){
+	var interval=15;
+	var times=0;
+	
+	var begin=animate.getCss(ele,"opacity");	
+	var change=target-begin;
+	
+	clearInterval(ele.timer);
+	
+	function step(){
+		times+=interval;
+		if(times<duration){
+			ele.style.opacity=times/duration*change+begin;	
+		}else{
+			ele.style.opacity=target;
+			clearInterval(ele.timer);
+			ele.timer=null;
+		}
+	}
+	
+	ele.timer=window.setInterval(step,interval);
+	
+};
+
+animate.getCss=function(ele,attr){
+	if(window.getComputedStyle){
+		return parseFloat(window.getComputedStyle(ele,null)[attr]);	
+	}else{
+		return parseFloat(ele.currentStyle[attr]);	
+	}
+}
+var ele=document.getElementById("div1");
+ele.onclick=function(){
+	animate(this,0,1600);	
+}
+left.onclick=function(){
+	animate(ele,1,1600);	
+}
+
+</script>
+
