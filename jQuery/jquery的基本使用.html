@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+li{ width:100px; background:green; margin:10px;}
+</style>
+</head>
+
+<body>
+<ul>
+	<li>0</li>
+    <li>1</li>
+    <li id="li2">2</li>
+    <li class="li3">3
+    	<ul>
+        	<li>孙子</li>
+        </ul>
+    </li>
+    <li>4</li>
+    <li>5</li>
+
+
+</ul>
+</body>
+</html>
+<script src="jquery-1.9.1.js"></script>
+<script>
+//JavaScript query,主要是用来操作DOM的，查找和操作
+//1、选择器
+/*$("#li2").animate({width:800},1000);
+$(".li3").css({width:500,height:200,background:"blue"}).css("font-size","48px");
+$("li:not(#li2,.li3)").hide(1600);*/
+//相邻的第一个弟弟元素
+//$("#li2+li").css({width:500,height:200,background:"blue"})
+$("#li2").next();
+//所有的弟弟元素
+$("#li2").nextAll();
+$("#li2~li").css({width:500,height:200,background:"blue"});
+$("ul>li");//获得ul的所有的子元素li
+$("ul").children("li");
+
+
+$("ul li");//获得ul的所有后代元素
+$("ul").find("li");//
+
+
+
+</script>
