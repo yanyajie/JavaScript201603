@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#container{ width:1000px; height:300px; margin:10px auto; background:#9FF; position:relative;}
+#container div{ background-image:url(banner1.jpg);}
+</style>
+</head>
+
+<body style="height:2000px;">
+<img src="banner1.jpg" height="300" width="1000">
+<div id="container"></div>
+</body>
+</html>
+<script src="tween.js"></script>
+<script>
+var rows=3;
+var cols=10;
+var h=container.offsetHeight/rows;//小盒子的高=大盒子的高/小盒子的行数
+var w=container.offsetWidth/cols;
+var a=[];
+for(var i=0;i<rows*cols;i++){
+	var ele=document.createElement("div");
+	with(ele.style){
+		width=w+"px";
+		height=h+"px";
+		position="absolute";
+		backgroundColor="green";
+				
+		var l=w*(i%cols)+"px";
+		var t=h*Math.floor(i/cols)+"px";
+		ele.l=parseInt(l);//把它们的target保存在自定义属性l和t上
+		ele.t=parseInt(t);
+		left=-400+"px";
+		if(Math.floor(i/cols)===0){
+			top=-200+"px";	
+		}else if(Math.floor(i/cols)===1){
+			top=t;
+		}else if(Math.floor(i/cols)===2){
+			top=parseInt(t)+200+"px";
+		}
+		backgroundPosition="-"+l+" -"+t;	
+	}
+	container.appendChild(ele);	
+	a.push(ele);
+}
+
+document.documentElement.onclick=function(){
+	for(var i=0;i<a.length;i++){
+		;(function(i){
+		var ele=a[i];
+		window.setTimeout(function(){
+			animate(ele,{top:ele.t,left:ele.l},700,3);	
+		},i%cols*200);
+		})(i);
+	}
+}
+</script>

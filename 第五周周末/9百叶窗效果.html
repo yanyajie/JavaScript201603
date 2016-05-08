@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#container{ width:1000px; height:300px; margin:10px auto; background:#9FF; position:relative;}
+#container div{ background-image:url(banner1.jpg);}
+</style>
+</head>
+
+<body>
+<img src="banner1.jpg" height="300" width="1000">
+<div id="container"></div>
+</body>
+</html>
+<script>
+var rows=3;
+var cols=10;
+var h=container.offsetHeight/rows;//小盒子的高=大盒子的高/小盒子的行数
+var w=container.offsetWidth/cols;
+for(var i=0;i<rows*cols;i++){
+	var ele=document.createElement("div");
+	with(ele.style){
+		width=w+"px";
+		height=h+"px";
+		position="absolute";
+		backgroundColor="green";
+		//每个盒子的坐标是：left是它的width*列号，top是它的height*行号
+		//如何计算出来一个盒子的行号和列号呢？
+		
+		/*
+		0 ，1 ，2 ，3 ，4 ，5 ，6 ，7 ，8 ，9
+		10，11，12，13，14，15，16，17，18，19
+		20，21，22，23，24，25，26，27，28，29
+		i%cols==列号
+		Math.floor(i/cols);行号
+		
+		*/
+		
+		var l=w*(i%cols)+"px";
+		var t=h*Math.floor(i/cols)+"px";
+		left=l;
+		top=t;
+		backgroundPosition="-"+l+" -"+t;	
+	}
+	container.appendChild(ele);	
+}
+
+</script>

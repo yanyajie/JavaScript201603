@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#content{ height:400px; width:800px; margin:100px auto; position:relative; background:lightGreen;}
+#content .number{ width:50px; background:red; position:absolute; bottom:0; font-size:28px; text-align:center;}
+</style>
+</head>
+
+<body>
+<div id="content">
+
+
+</div>
+</body>
+</html>
+<script src="tween.js"></script>
+<script>
+var a=[3,9,4,7,2,5,8,6];
+for(var i=0;i<a.length;i++){
+	var ele=document.createElement("div");
+	ele.className="number";
+	ele.id="number"+a[i];
+	ele.innerHTML=a[i];
+	ele.style.height=a[i]*10+"px";
+	ele.style.left=(ele.posi=i*50+50*i)+"px";
+	content.appendChild(ele);
+}
+var step=0;
+for(var i=0;i<a.length-1;i++){
+	for(var j=0;j<=a.length-1-i;j++){
+		
+		if(a[j]>a[j+1]){
+			
+			
+			;(function(n1,n2){
+				var ele1=document.getElementById("number"+n1);
+				var ele2=document.getElementById("number"+n2);
+				
+				window.setTimeout(function(){
+					animate(ele1,{left:ele2.posi},700);
+					animate(ele2,{left:ele1.posi},700);
+					var temp=ele2.posi;
+					ele2.posi=ele1.posi;
+					ele1.posi=temp;
+					
+				},step*2000);
+				
+			})(a[j],a[j+1]);
+			var temp=a[j];
+			a[j]=a[j+1];
+			a[j+1]=temp;
+			step++;
+				
+		}
+		
+	}
+	
+}
+
+</script>

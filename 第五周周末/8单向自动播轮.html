@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#outer{ width:500px; height:250px; position:relative; margin:100px auto; overflow:hidden;}
+#inner{ width:2500px; height:250px; position:absolute; left:-500px; top:0;}
+#inner div{ width:500px; height:250px; float:left; background:blue; font-size:98px; text-align:center; line-height:250px; color:white;}
+#btn{ margin:0; padding:0; list-style:none; width:260px; height:30px; text-align:center; line-height:30px; position:absolute; right:30px; bottom:30px;   }
+#btn li{height:30px; width:30px; margin:0 10px; background:gold; float:left; font-size:16px; font-weight:bold; -webkit-user-select:none; cursor:pointer; border-radius:50%;}
+#btn li.current{ background:white; color:blue;}
+
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<div id="inner">
+    	<div >一</div>
+        <div style="background:green;" >二</div>
+        <div style="background:red" >三</div>
+        <div style="background:black" >四</div>
+        <div style="background:yellow" >五</div>
+    </div>
+	<ul id="btn">
+    	<li>1</li><li class="current">2</li><li>3</li><li>4</li><li>5</li>
+    </ul>
+</div>
+</body>
+</html>
+<script src="tween.js">
+</script>
+<script>
+var oInner=document.getElementById("inner");
+var oLis=document.getElementById("btn").getElementsByTagName("li");
+
+for(var i=0;i<oLis.length;i++){
+	var oLi=oLis.item(i);
+	oLi.i=i;
+	oLi.onclick=function(){
+		animate(oInner,{left:this.i*-500},700);
+		selectBtn(this.i);
+	}
+}
+
+function selectBtn(n){	
+	for(var i=0;i<oLis.length;i++){
+	oLis[i].className="";
+	}
+	oLis[n].className="current";
+}
+
+var step=1;//当前默认显示的图片是第几张
+function autoMove(){
+	step++;
+	if(step>=5){
+		step=0;
+	}
+	animate(oInner,{left:step*-500},700);
+	selectBtn(step);
+}
+
+window.setInterval(autoMove,2000);
+</script>
+

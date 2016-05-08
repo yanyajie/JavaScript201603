@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#outer{ width:500px; height:250px; position:relative; margin:100px auto; overflow:hidden;}
+#inner{ width:2500px; height:250px; position:absolute; left:-500px; top:0;}
+#inner div{ width:500px; height:250px; float:left; background:blue; font-size:98px; text-align:center; line-height:250px; color:white;}
+#btn{ margin:0; padding:0; list-style:none; width:260px; height:30px; text-align:center; line-height:30px; position:absolute; right:30px; bottom:30px;   }
+#btn li{height:30px; width:30px; margin:0 10px; background:gold; float:left; font-size:16px; font-weight:bold; -webkit-user-select:none; cursor:pointer; border-radius:50%;}
+#btn li.current{ background:white; color:blue;}
+
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<div id="inner">
+    	<div >一</div>
+        <div style="background:green;" >二</div>
+        <div style="background:red" >三</div>
+        <div style="background:black" >四</div>
+        <div style="background:yellow" >五</div>
+        <div >一（冒牌）</div>
+        <!-- step到5的时候，已经就到了最后一张了，如果step累加到6，相当于从0到1（相当于从第一张走到第二张，这时候需要处理一下：把坐标切换到0，然后step设为1） 
+        原来是五张图片，现在是六张图片，需要把inner放的胖一点
+         -->
+    </div>
+	<ul id="btn">
+    	<li>1</li><li class="current">2</li><li>3</li><li>4</li><li>5</li>
+    </ul>
+</div>
+</body>
+</html>
+<script src="tween.js">
+</script>
+<script>
+var oInner=document.getElementById("inner");
+var oLis=document.getElementById("btn").getElementsByTagName("li");
+
+var oDiv=oInner.getElementsByTagName("div").item(0);
+oInner.style.width=oInner.offsetWidth+oDiv.offsetWidth+"px";
+//oInner.appendChild(oDiv.cloneNode(true));
+
+//当点击事件触发的时候，则停止自动播轮，停五秒，五秒之后，从当前的图片再往下继续轮播,当自动轮播的时候间隔时间是两秒
+for(var i=0;i<oLis.length;i++){
+	var oLi=oLis.item(i);
+	oLi.i=i;
+	oLi.onclick=function(){
+		animate(oInner,{left:this.i*-500},700);
+		selectBtn(this.i);
+		clearInterval(autoTimer);//防止autoMove出现运行积累
+		step=this.i;//使当前点击的i和自动播放的step同步
+		autoTimer=setTimeout(function(){//防止autoMove的自动运行出现积累，把定时的返回值赋给autoTimer，
+			autoTimer=setInterval(autoRight,2000);
+		},3000);
+	}
+}
+
+function selectBtn(n){	
+	if(n==oLis.length)n=0;
+	for(var i=0;i<oLis.length;i++){
+	oLis.item(i).className="";
+	}
+	//oLis[n].className="current";//如果一个对象的属性没有，则这个属性的值是undefined
+	
+	oLis.item(n).className="current";//如果一个方法应该有返回值，但是它找不到返回值，则返回null
+}
+
+var step=1;//当前默认显示的图片是第几张
+function autoRight(){
+	step--;
+	if(step<0){
+		oInner.style.left=-2500+"px";
+		step=4;
+	}
+	animate(oInner,{left:step*-500},700);
+	selectBtn(step);
+}
+
+var autoTimer=window.setInterval(autoRight,2000);
+</script>
+
