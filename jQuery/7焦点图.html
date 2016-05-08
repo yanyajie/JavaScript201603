@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#outer{ width:500px; height:250px; position:relative; margin:100px auto; overflow:hidden;}
+#inner{ width:2500px; height:250px; position:absolute; left:0px; top:0;}
+#inner div{ width:500px; height:250px; float:left; background:blue; font-size:98px; text-align:center; line-height:250px; color:white;}
+#btn{ margin:0; padding:0; list-style:none; width:260px; height:30px; text-align:center; line-height:30px; position:absolute; right:30px; bottom:30px;   }
+#btn li{height:30px; width:30px; margin:0 10px; background:gold; float:left; font-size:16px; font-weight:bold; -webkit-user-select:none; cursor:pointer; border-radius:50%;}
+#btn li.current{ background:white;}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<div id="inner">
+    	<div >一</div>
+        <div style="background:green;" >二</div>
+        <div style="background:red" >三</div>
+        <div style="background:black" >四</div>
+        <div style="background:yellow" >五</div>
+    </div>
+	<ul id="btn">
+    	<li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+    </ul>
+</div>
+</body>
+</html>
+<script src="jquery-1.9.1.js">
+</script>
+<script>
+$("#btn>li").click(function(e) {
+	var i=$(this).index();
+    $("#inner").stop().animate({left:i*-500},1700,"easeOutBounce");
+	//$(this).addClass("current").siblings().removeClass("current");
+	selectBtn(i);
+	
+	clearInterval(autoTimer);
+	step=i;
+	autoTimer=setTimeout(function(){
+		autoTimer=setInterval(autoMove,2000);
+	},3000);
+	
+});
+
+var step=0;
+function autoMove(){
+	step++;
+	if(step>4){
+		step=0;	
+	}
+	$("#inner").animate({left:step*-500},700);
+	//按钮的选中切换背景样式
+	//$("#btn>li").eq(step).addClass("current").siblings().removeClass("current");
+	selectBtn(step)
+}
+var autoTimer=setInterval(autoMove,2000);
+
+function selectBtn(n){
+	$("#btn>li").eq(n).addClass("current").siblings().removeClass("current");
+}
+</script>
+

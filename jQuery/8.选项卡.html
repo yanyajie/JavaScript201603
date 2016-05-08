@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .tab li{list-style: none; display: inline-block;width: 80px;height: 30px;line-height: 30px;;text-align: center}
+    .divs{width: 500px;height: 200px;}
+    .divs div{width: 500px;height: 200px;float: left;display: none;border: 1px solid red}
+    li.select{ background: greenyellow;color: #dddddd}
+    .divs div.select{display: block}
+</style>
+<body>
+<div class="tab">
+    <ul class="lis">
+        <li class="select">卡1</li>
+        <li>卡2</li>
+        <li>卡3</li>
+    </ul>
+    <div class="divs">
+        <div class="select">卡1</div>
+        <div>卡2</div>
+        <div>卡3</div>
+    </div>
+</div>
+<div class="tab">
+    <ul class="lis">
+        <li class="select">卡1</li>
+        <li>卡2</li>
+        <li>卡3</li>
+    </ul>
+    <div class="divs">
+        <div class="select">卡1</div>
+        <div>卡2</div>
+        <div>卡3</div>
+    </div>
+</div>
+<div class="tab">
+    <ul class="lis">
+        <li class="select">卡1</li>
+        <li>卡2</li>
+        <li>卡3</li>
+    </ul>
+    <div class="divs">
+        <div class="select">卡1</div>
+        <div>卡2</div>
+        <div>卡3</div>
+    </div>
+</div>
+<script src="jquery-1.9.1.js"></script>
+<script>
+   $(".lis>li").click(function(){
+	   /*
+	   this;//是一个原生的DOM对象，需要把一个DOM的原生对象包装成jQuery对象之后，才可以使用jQuery里的方法。这是一个把原生JS对象转换为jQuery对象的过程
+	   //要注意体会jQuery的链式写法：每一个方法都返回了一个jQuery实例，这个实例上包含了要操作的DOM元素
+	   $(this).addClass("select").siblings().removeClass("select");
+	   //并非所有的jQuery方法都可以写成链式写法，比如
+	   var index=$(this).index();//index返回的不是jQuery对象，而是一数字，则不能写成jQuery链式风格
+	   $(this).parent().next().children("div").eq(index).addClass("select").siblings().removeClass("select");
+	   */
+	   var index=$(this).index();
+	   
+	   //$(this).addClass("select").siblings().removeClass("select").parent().next().children().removeClass("select").eq(index).addClass("select");
+	   var oLi=$(this);
+	   oLi.addClass("select");
+	   var siblings=oLi.siblings();
+	   siblings.removeClass("select");
+	   var oDivs=oLi.parent().next().children();
+	   var oDiv=oDivs.eq(index);
+	  
+	   oDivs.removeClass("select");
+	   oDiv.addClass("select");
+	   	   
+   });
+</script>
+</body>
+</html>
