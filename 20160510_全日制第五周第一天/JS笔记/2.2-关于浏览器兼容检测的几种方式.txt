@@ -1,0 +1,38 @@
+1、try catch ->在try中执行我们的代码,如果在执行的过程中发生了异常信息,我们在catch中写代替的执行方案
+前提:不兼容的情况下,执行对应的代码,需要发生异常错误才可以检测到
+弊端:不管是否兼容,都要先执行不兼容的代码,相对来说浪费一些性能
+
+2、利用是否为这个对象的一个属性,来检测是否兼容
+例如:window.getComputedStyle,在标准浏览器中兼容,window有getComputedStyle这个属性,我们获取的属性值是一个[function];而在IE6~8中是不兼容的,window下没有getComputedStyle这个属性,我们获取的属性值是undefined;
+    1)第一种写法
+    if(typeof window.getComputedStyle==="function"){
+       //兼容
+    }else{
+       //不兼容
+    }
+
+    2)第二种写法
+    if(window.getComputedStyle){
+       //兼容
+    }else{
+       //不兼容
+    }
+
+    3)第三种写法(我个人比较喜欢这种,在性能上提升了那么一丢丢)
+    if("getComputedStyle" in window){
+       //兼容
+    }else{
+       //不兼容
+    }
+
+3、我们已知在哪些浏览器不兼容了,那么我们只需要单独的检测浏览器类型,然后在进行特殊的处理即可
+   navigator.userAgent ->获取当前浏览器的版本信息
+
+
+
+
+
+
+
+
+
