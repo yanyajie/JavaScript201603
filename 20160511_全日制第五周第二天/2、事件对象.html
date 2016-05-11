@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            margin: 800px auto;
+            width: 100px;
+            height: 100px;
+            background: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+
+    //->给元素的某个行为绑定方法,当行为触发的时候,执行对应的绑定方法;
+    //->行为触发的时候不仅仅把方法执行了,而且浏览器还默认的给这个方法传递了一个参数值 ->"事件对象":鼠标事件对象(MouseEvent)、键盘事件对象
+    //->在IE6~8浏览器中,方法执行的时候并没有给形参e赋值,e的值是undefined;我们使用window.event来获取;
+    oDiv.onclick = function (e) {
+        //->MouseEvent:记录了当前鼠标触发这个点相关信息的一个对象数据类型值 ->页面中只有一个鼠标,触发一次记录最新的值,最新的值会把原来的记录的值给覆盖掉,所以当前行为触发的时候我们获取的永远是最新的鼠标操作信息,和在哪个元素上触发是没有任何的关系的
+        e = e || window.event;
+
+        //->e.type:当前的行为类型 ->"click"
+        //->e.clientX/e.clientY:当前的鼠标触发这个点距离当前窗口左上角的X/Y轴的坐标
+
+        //->不兼容,需要处理兼容的
+        //->e.target:事件源,当前行为是在哪个元素上触发的,那么事件源就是谁
+        //e.target = e.target || e.srcElement;
+
+        //->e.pageX/e.pageY:当前鼠标触发这一点距离BODY左上角的X/Y轴坐标值
+        //e.pageY = e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop));
+        //e.pageX = e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft));
+
+        //->e.preventDefault:阻止默认行为
+        //e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        //->e.stopPropagation:阻止事件的冒泡传播
+        //e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+        console.log(e);
+    };
+
+    //->给当前元素的点击行为绑定一个方法,当行为触发的时候执行对应的方法 ->以下写法属于DOM0级事件绑定,只能给一个元素的某个行为绑定一个方法,绑定的其它方法会把前面的替换掉 ->原理：元素对象的私有的属性只能存储一个值
+    //    oDiv.onclick = function () {
+    //        console.log(1);
+    //    };
+    //    oDiv.onclick = function () {
+    //        console.log(2);
+    //    };
+
+
+</script>
+</body>
+</html>
