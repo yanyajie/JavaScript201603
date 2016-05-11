@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<!--
+  多线程:PHP、JAVA、.NET、C#... (同步)
+  单线程:JS (异步)
+
+  1、JS是单线程的,一次只能处理一件事情,只有当前事情完成后才可以做下一件事情 ->但是JS为了优化任务队列和性能,提供了一些异步编程模式:把一些需要等带一段时间才会处理的事情放在"等待的任务队列中",在此等待期间,不闲着,继续执行主任务队列中的事情,只有当主任务队列中的事情做完了,再能闲下来看看哪个等待的任务到时间了,在执行对应的任务
+-->
+<script type="text/javascript">
+    //->所有的定时器都是异步编程:设置一个定时器,设定一个等待的时间,首先把这件事情放在等待的任务队列中,继续执行下面的事情,当下面的事情都完成了,在返回头看等待的队列中是否有到时间的,有的话执行,没有的话继续等
+    //->注意:只有当主任务队列中的事情都结束了,我们才会返回头看等待的任务队列,也就是我们定时器设置1000ms后执行,但是不一定过1000ms就执行,可能更晚
+    //    var count = 0;
+    //    window.setTimeout(function () {
+    //        count++;
+    //        console.log(count);//->2) 1
+    //    }, 1000);
+    //    console.log(count);//->1) 0
+
+    //->定时器等待时间写0也不是立即执行,每个浏览器都有一个最小的等待时间(谷歌5~6ms IE10~13ms)
+    //    var count = 0;
+    //    window.setTimeout(function () {
+    //        count++;
+    //        console.log(count);//->->2) 1
+    //    }, 0);
+    //    console.log(count);//->1) 0
+
+
+    //    var count = 0;
+    //    window.setTimeout(function () {
+    //        count++;
+    //        console.log(count);
+    //    }, 0);
+    //    console.log(count);//->1) 0
+    //    while (1) {
+    //        //->遇到了一个死循环,主任务队列永远结束不了,那么等待任务队列中的所有方法都不会在执行了
+    //    }
+
+    //    var count = 0;
+    //    window.setTimeout(function () {
+    //        count = 100;
+    //        console.log(count);//4:100
+    //    }, 1000);
+    //    window.setTimeout(function () {
+    //        count = 10;
+    //        console.log(count);//->3:10
+    //    }, 0);
+    //    console.log(count);//->1:0
+    //    for (var i = 0; i < 10000000; i++) {
+    //        //->循环的时间肯定小于1000ms,但是也肯定大于5ms
+    //    }
+    //    count++;
+    //    console.log(count);//->2:1
+
+    //    var count = 0;
+    //    window.setTimeout(function () {
+    //        count = 100;
+    //        console.log(count);//->3:100
+    //    }, 5);
+    //    window.setTimeout(function () {
+    //        count = 10;
+    //        console.log(count);//->4:10
+    //    }, 0);
+    //    console.log(count);//->1:0
+    //    for (var i = 0; i < 10000000; i++) {
+    //        if (i === (10000000 - 1)) {
+    //            alert("哈哈哈");
+    //        }
+    //    }
+    //    count++;
+    //    console.log(count);//->2:1
+
+
+    //->所有的事件绑定都是异步编程的
+    //->我们使用Ajax或者JSONP请求数据的时候一般都使用异步编程
+    //->Async JavaScript And Xml
+    //->回调函数也是异步编程
+
+    //    var data = null;
+    //    var xhr = new XMLHttpRequest;
+    //    xhr.open("get", "data.txt?_=" + Math.random(), true);//->false:当前的请求是同步请求 true:当前的请求是异步请求
+    //    xhr.onreadystatechange = function () {
+    //        if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)) {
+    //            data = xhr.responseText;
+    //            console.log("ok");//->2:ok
+    //        }
+    //    };
+    //    xhr.send(null);
+    //
+    //    console.log(data);//->1:null
+
+    function ajax(callback) {
+        var xhr = new XMLHttpRequest;
+        xhr.open("get", "data.txt?_=" + Math.random(), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)) {
+                callback && callback(xhr.responseText);
+            }
+        };
+        xhr.send(null);
+    }
+
+    ajax(function (data) {
+        console.log(data);
+    });
+    console.log("ok");
+</script>
+</body>
+</html>

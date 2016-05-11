@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>回调函数</title>
+</head>
+<body>
+<script type="text/javascript">
+    //->arguments.callee:当前的函数本身
+    //->arguments.callee.caller:当前函数是在哪执行的->在全局作用域下执行,值是null;
+    //    function A(){
+    //        console.log(arguments.callee.caller);//->fn
+    //    }
+    //    function fn(){
+    //        A();
+    //    }
+    //    fn();
+
+    //    "use strict";//->使用JS严格模式,禁止使用arguments.callee/arguments.callee.caller
+    //    function A(){
+    //        console.log(arguments.callee.caller);
+    //    }
+    //    function fn(){
+    //        A();
+    //    }
+    //    fn();
+    //->Uncaught TypeError: 'caller', 'callee', and 'arguments' properties may not be accessed on strict mode functions or the arguments objects for calls to them
+
+    //回调函数:把一个函数B当做一个值传递给另外一个函数A,在A执行的时候,根据需求在A中的任何一个位置把函数B执行一到多次
+    //->在A中的任何位置执行B都可以,一切根据需求来制定即可
+    //->在A中可以执行零到多次B
+    //->回调函数模式中,我们传递进去的那个函数在执行的时候,一般情况下里面的this都是window
+    //->我们可以使用call/apply来强制改变回调函数B中的this指向
+    //->不仅仅可以改变this,而且还可以给回调函数B传递参数值
+    //->不仅仅可以传递参数中,而且还可以接收回调函数B执行完成的返回值
+    //    function A(callback) {//->callback=xxxfff000
+    //        //->typeof callback === "function" ? callback() : null;
+    //        for (var i = 0; i < 5; i++) {
+    //            //callback && callback();//->B方法中的this是window,和obj没啥关系
+    //            //callback && callback.call(obj);//->我们可以使用call/apply来强制改变回调函数中的this指向
+    //            //callback && callback.call(obj, 100, 200);
+    //            var total = callback.call(obj, 100, 200);
+    //            console.log(total);
+    //        }
+    //        //->arguments.callee.name:当前的函数名
+    //        //->arguments.callee.length:当前函数形参的个数
+    //        console.log(arguments.callee.name);
+    //    }
+    //    //->xxxfff000
+    //    function B(num1, num2) {
+    //        //num1->100 num2->200
+    //        console.log(arguments.callee.name, this);
+    //        return num1 + num2;
+    //    }
+    //    var obj = {age: 100, B: B};//->obj.B=xxxfff000
+    //
+    //    A(obj.B);//->xxxfff000
+
+
+    //2、关于内置的回调函数机制
+    //    var ary = [1, 2, 32, 2, 1, 4, 2, 3, 1];
+    //    //->sort方法中的this->ary
+    //    //->回调函数(匿名函数)中的this->window
+    //    Array.prototype.mySort = function (callback) {
+    //        //this->我要操作的那个数组
+    //        for (var i = 0, len = this.length - 1; i < len; i++) {
+    //            if (typeof callback === "function") {
+    //                var cur = this[i];
+    //                var nex = this[i + 1];
+    //                var res = callback.call(this, cur, nex);
+    //                console.log(res);
+    //            }
+    //        }
+    //        //->数组中有几项,我们就把回调函数callback执行length-1次
+    //        //->每一次执行把数组中的当前项和它的后一项传递给callback
+    //        //->让callback中的this变为当前操作的数组
+    //        //->接收callback的返回值,并且把返回的结果输出
+    //    };
+    //    ary.mySort(function (a, b) {
+    //        return a - b;
+    //    });
+
+
+    //    window.setTimeout(function(){
+    //
+    //    },1000);
+    //    str.replace(/\d+/,function(){
+    //
+    //    });
+
+    //    var ary = [12, 23, 34];
+    //->forEach:用来遍历数组中的每一项的,原来的数组不会发生改变
+    //->一般第一个参数值是一个匿名回调函数,第二个参数可以不写,不写,回调函数中的this指向window;如果写的话,写的是谁那么匿名回调函数中的this就指向谁
+    //    var newAry = ary.forEach(function (item, index, input) {
+    //        //->item:数组中当前项
+    //        //->index:当前项的索引
+    //        //->input:原始数组
+    //        console.log(item, index, this);//->this默认是window
+    //        return 100;
+    //    });
+    //->forEach方法不支持返回值,回调函数中写return也没用,整个方法最后的返回值是undefined ->newAry=undefined
+
+    //->map:在forEach基础上,回调函数支持返回值,返回的是啥,相当于把当前数组的这一项替换成啥,但是原来的数组不变,只是返回一个新的改变后的数组;
+    //    var newAry = ary.map(function (item, index) {
+    //        return item * 10;
+    //    });
+
+    //->不管是我们的map/forEach在IE6~8下不兼容,我们自己处理兼容
+    Array.prototype.myForEach = function myForEach(callback, context) {
+        context = context || window;
+        //->兼容的话使用内置的方法
+        if ("forEach" in Array.prototype) {
+            this.forEach(callback, context);
+            return;
+        }
+        //->不兼容在自己写循环来实现
+        for (var i = 0, len = this.length; i < len; i++) {
+            if (typeof callback === "function") {
+                callback.call(context, this[i], i, this);//->this[i]当前遍历的这一项 i当前项的索引 this是原有数组,并且把回调函数中的this处理为context
+            }
+        }
+    };
+    //->思考:写一个myMap的方式实现map的兼容处理?
+
+
+    var ary = [12, 23, 34];
+    ary.myForEach(function (item, index, input) {
+        console.log(item, index);
+    }, ary);
+</script>
+</body>
+</html>
