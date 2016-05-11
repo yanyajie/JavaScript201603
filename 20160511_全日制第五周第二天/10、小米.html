@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/index.css"/>
+</head>
+<body>
+<div class="content">
+    <ul class="nav" id="nav">
+        <li class="navLi bg">
+            <span>手机 平板 电话卡</span>
+
+            <div class="detail">
+                <ul class="detailList">
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="navLi bg">
+            <span>手机 平板 电话卡</span>
+
+            <div class="detail">
+                <ul class="detailList">
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                    <li>
+                        <span>小米手机5</span>
+                        <a href="">选购</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript">
+    var nav = document.getElementById("nav"), navList = utils.children(nav, "li");
+    for (var i = 0; i < navList.length; i++) {
+        var curLi = navList[i];
+        curLi["curDetail"] = utils.lastChild(curLi);
+
+        //->如果想每一个详细信息都是顶头对齐,需要动态设置top值
+        curLi["curDetail"].style.top = -(i * 40) + "px";
+
+        curLi.onmouseover = function () {
+            this["curDetail"].style.display = "block";
+        };
+        curLi.onmouseout = function () {
+            this["curDetail"].style.display = "none";
+        };
+    }
+</script>
+</body>
+</html>
