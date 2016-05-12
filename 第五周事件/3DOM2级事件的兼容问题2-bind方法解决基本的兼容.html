@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ height:100px; background:red;}
+</style>
+</head>
+
+<body>
+<div id="div1">div1</div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+function fn1(){alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){//第二次执行的时候执行移除，到第三次的时候生效
+		//this.removeEventListener("click",fn3,false);
+		unbind(ele,"click",fn3);
+		//不能把上一行代码中的ele换成this
+	}
+	alert(3);}
+function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+bind(ele,"click",fn1);
+bind(ele,"click",fn2);
+bind(ele,"click",fn3);
+bind(ele,"click",fn4);
+bind(ele,"click",fn5);
+bind(ele,"click",fn6);
+bind(ele,"click",fn7);
+bind(ele,"click",fn8);
+bind(ele,"click",fn9);
+bind(ele,"click",fn10);
+bind(ele,"click",fn11);
+bind(ele,"click",fn12);
+function bind(ele,type,handler){//handler直译为句柄，方法名，方法引用的意思
+	if(ele.addEventListener){
+		ele.addEventListener(type,handler,false);	
+	}else if(ele.attachEvent){
+		ele.attachEvent("on"+type,handler);
+	}
+	
+}
+
+	function unbind(ele,type,handler){
+		if(ele.removeEventListener){
+			ele.removeEventListener(type,handler,false);
+		}else if(ele.detachEvent){
+			ele.detachEvent("on"+type,handler);
+		}
+	}
+
+</script>

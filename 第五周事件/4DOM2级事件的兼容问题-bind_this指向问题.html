@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ height:100px; background:red;}
+</style>
+</head>
+
+<body>
+<div id="div1">div1</div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+function fn1(){
+	this.innerHTML="点过"+n;
+	alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){//第二次执行的时候执行移除，到第三次的时候生效
+		//this.removeEventListener("click",fn3,false);
+		unbind(this,"click",fn3);//
+		unbind(this,"click",fn2);
+		//不能把上一行代码中的ele换成this
+		//执行bind的时候，第一次fnTemp是fn1的变形
+		//				第二次fnTemp是fn2的变形
+		//				第三次fnTemp是fn3的变形
+	}
+	alert(3);}
+function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+bind(ele,"click",fn1);
+bind(ele,"click",fn2);
+bind(ele,"click",fn3);
+/*bind(ele,"click",fn4);
+bind(ele,"click",fn5);
+bind(ele,"click",fn6);
+bind(ele,"click",fn7);
+bind(ele,"click",fn8);
+bind(ele,"click",fn9);
+bind(ele,"click",fn10);
+bind(ele,"click",fn11);
+bind(ele,"click",fn12);*/
+var fnTemp=null;
+function bind(ele,type,handler){//handler直译为句柄，方法名，方法引用的意思
+	if(ele.addEventListener){
+		ele.addEventListener(type,handler,false);	
+	}else if(ele.attachEvent){
+		
+		//1、事件触发的时候handler方法执行
+		//2、让handler方法里的this指向ele
+		
+		//记好一个原则：如果是解决this关键字的指向，则记好用call或apply方法
+		
+		//以下的处理方式已经就可以实现让事件触发的时候，handler里的this指向ele了。如果就是解决仅仅是解决this关键字关键，已经就解决了
+		
+		//即可以把fnTemp保存下来，还要保证fnTemp的安全，还要把多次变形得成的fnTemp都可以保存下来，并且在unbind里还可以识别出来当前这个fnTemp是由那个方法变形而来
+		//ele.abindclick=[];//自定义属性
+		//if(!ele.abindclick){
+			/*ele[handler]
+			ele[fn1]
+			ele["fn1"]
+			fn1=function(){};
+			fn2=function(){};*/
+		if(!ele["abind"+type]){
+			//这个自定义属性的命名规则是：abind是属性的前缀，click是属性的区分符
+			//ele.click
+			//为什么要用click来命名呢？把绑定在不同事件类型上的方法，以事件类型做为命名的依据来定义不同的数组，来保存不同的事件上的方法。
+			//但是我们又不能直接用事件类型作属性，容易和系统属性引起冲突，所以才在它前面加个前缀（为了让属性名变长，降低冲突的机率）
+			//ele[type]=[];
+			
+			ele["abind"+type]=[];	
+		}
+		var fnTemp=function(){handler.call(ele);};
+		fnTemp.photo=handler;//photo"照片"，保存着它原来的面貌
+		ele["abind"+type].push(fnTemp);
+		ele.attachEvent("on"+type,fnTemp);
+	}
+	
+}
+
+	function unbind(ele,type,handler){
+		if(ele.removeEventListener){
+			ele.removeEventListener(type,handler,false);
+		}else if(ele.detachEvent){
+			var a=ele["abind"+type];
+			//a里的第i项可能就是handler变形而来
+			//a[i]==handler
+			//现在需要一个机制,能识别出a[i]是由handler变形来的
+			if(a){
+				for(var i=0;i<a.length;i++){
+					if(a[i].photo==handler){
+						ele.detachEvent("on"+type,a[i]);
+						return;	
+					}
+				}
+			}
+			//ele.detachEvent("on"+type,fnTemp);
+		}
+	}
+
+</script>
