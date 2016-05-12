@@ -1,0 +1,52 @@
+﻿[招聘类的]
+拉钩网：http://www.lagou.com/
+猎聘网：http://www.liepin.com/
+
+[电商类的]
+京东：http://www.jd.com/
+美丽说：http://www.meilishuo.com/
+蘑菇街：http://www.mogujie.com/
+淘宝/天猫：https://www.taobao.com/
+
+[企业展示]
+小米：http://www.mi.com/
+百度：https://www.baidu.com/
+猎豹：http://www.liebao.cn/ (http://m.liebao.cn/)
+
+[微博类的]
+QQ空间：http://user.qzone.qq.com/
+新浪微博：http://weibo.com/
+
+[视频类的]
+腾讯视频：http://v.qq.com/
+爱奇艺：http://www.iqiyi.com/
+乐视体育：http://www.lesports.com/
+时光网：http://www.mtime.com/
+
+
+
+  除了以上参考的网址，也可以自己选自己喜欢的网址来做；各小组组长，今天开始给我统计本组组员做哪些项目，明天早上上课前发给我，只有任课讲师同意开始做了，开始去做就可以了；每个人都要独立的完成一套项目才可以，并且一个组的项目不能重复
+
+
+要求：
+1)一个项目至少两个页面：首页、(详情页、登录/注册页)
+2)HTML(5)+CSS(3)+JavaScript来做,不得使用任何的类库或者插件,如果需要使用的话,那么就做两套:纯原生的一版，jQuery一版
+
+
+时间：
+  从今天开始就去做基本的布局结构吧，等到第五周结束后，开始写JS和实现对应的操作效果，等到第七周结束后，开始把页面中所有的数据结合NODEJS一起，做数据处理和绑定
+  在正式课第九周(当周的周二)各小组长把本组的项目收集，交给老师，对于不做项目的，不允许去听NODEJS，拉回来跟着下一期重听
+
+
+全日制第一组
+  xxx->腾讯视频->http://v.qq.com/
+  ...
+
+
+
+
+
+
+
+
+

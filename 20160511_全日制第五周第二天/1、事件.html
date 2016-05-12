@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            margin: 20px auto;
+            width: 100px;
+            height: 100px;
+            background: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+
+    //1、什么叫做事件?
+    //->事件就是一个操作或者一个行为,在或者就是一件事情
+    //    oDiv.onclick
+    //    oDiv.onmouseover
+    //    window.setTimeout(function(){},1000);//->NODE是事件驱动的
+
+    //->行为本身
+    //->浏览器默认提供的那些天生自带的行为都有哪些?
+    //click、mouseover(mouseenter)、mouseout(mouseleave)、mousemove、mousedown、mouseup、mousewheel(鼠标滚轮滚动行为)、keydown、keyup、keypresss、focus(文本框获取光标)、blur(文本框失去光标)、load、unload、scroll、resize...
+
+    //->事件绑定:给当前元素的某一个行为绑定方法,当行为触发的时候,执行对应的方法
+    //    oDiv.onclick=function(){
+    //
+    //    };
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            position: relative;
+            margin: 50px auto;
+            width: 300px;
+            height: 300px;
+            background: green;
+        }
+
+        #mark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<div id="box"></div>
+
+<script type="text/javascript">
+    var oBox = document.getElementById("box");
+    var boxOffset = offset(oBox);
+
+    function computedPosition(e) {
+        e = e || window.event;
+        e.pageX = e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft));
+        e.pageY = e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop));
+
+        var curL = e.pageX - boxOffset.left + 5;
+        var curT = e.pageY - boxOffset.top + 5;
+
+        var mark = document.getElementById("mark");
+        if (mark) {
+            mark.style.top = curT + "px";
+            mark.style.left = curL + "px";
+        }
+    }
+
+    //->onmouseenter/onmouseover的区别
+    //->1)onmouseenter不存在冒泡传播的行为,也就是子元素的onmouseenter行为触发,父亲元素的onmouseenter行为不触发;但是onmouseover存在冒泡传播;
+    //->2)从容器的子元素滑到父亲元素中,父级元素的onmouseover会被重复的触发,而父元素的onmouseenter不会被重复的触发
+    oBox.onmouseenter = function (e) {
+        var mark = document.createElement("div");
+        mark.id = "mark";
+        this.appendChild(mark);
+        computedPosition(e);
+    };
+
+    //    oBox.onmouseover = function (e) {
+    //        var mark = document.createElement("div");
+    //        mark.id = "mark";
+    //        this.appendChild(mark);
+    //
+    //        mark.onmouseover = function (ev) {
+    //            ev = ev || window.event;
+    //            ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+    //        };
+    //
+    //        computedPosition(e);
+    //    };
+
+    oBox.onmousemove = computedPosition;
+
+    oBox.onmouseleave = function (e) {
+        var mark = document.getElementById("mark");
+        if (mark) {
+            this.removeChild(mark);
+        }
+    };
+
+    //->offset:获取当前元素距离BODY的偏移量
+    function offset(curEle) {
+        var l = curEle.offsetLeft, t = curEle.offsetTop, p = curEle.offsetParent;
+        while (p) {
+            if (navigator.userAgent.indexOf("MSIE 8") < 0) {
+                t += p.clientTop;
+                l += p.clientLeft;
+            }
+            t += p.offsetTop;
+            l += p.offsetLeft;
+            p = p.offsetParent;
+        }
+        return {top: t, left: l};
+    }
+</script>
+</body>
+</html>
