@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<div id="div1">div1</div>
+1、如果只是为了解决this的问题，只需一行代码：
+	var fnTemp=function(){handler.call(ele)}
+2、但如果要移除handler方法，则需要把fnTemp保存下来，并且在unbind方法里可以认出它来：要认出fnTemp就是handler变形来的
+3、避免重复绑定的问题
+</body>
+</html>
+<script>
+function fn1(){
+	this.innerHTML="点过"+n;
+	alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){
+		unbind(this,"click",fn3);//
+		unbind(this,"click",fn2);
+				//第三次fnTemp是fn3的变形
+	}
+	alert(3);}
+	
+	function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+var ele=document.getElementById("div1");
+
+
+function bind(ele,type,handler){//当ele元素上的type事件触发的时候，执行handler方法
+	if(ele.addEventListener){
+		ele.addEventListener(type,handler,false);	
+	}else if(ele.attachEvent){
+		if(!ele["abind"+type]){//为了让bind的好基友unbind用的
+			ele["abind"+type]=[];
+		}
+		
+		var a=ele["abind"+type];
+		
+		for(var i=0;i<a.length;i++){
+			if(a[i].photo==handler){
+				return;
+			}
+		}
+		
+		var fnTemp=function(){handler.call(ele)}
+		fnTemp.photo=handler;
+		a.push(fnTemp);
+		ele.attachEvent("on"+type,fnTemp);
+	}
+}
+
+function unbind(ele,type,handler){
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,handler,false);
+	}else if(ele.detachEvent){
+		
+		var a=ele["abind"+type];
+		if(a){
+			for(var i=0;i<a.length;i++){
+				if(a[i].photo==handler){
+					ele.detachEvent("on"+type,a[i]);//从事件上真正的移除
+					a.splice(i,1);//不再数组里保存
+					return;
+				}
+				
+			}
+		}
+	}
+}
+
+
+//如果要解决顺序问题，需要抛弃IE原有事件模式，重新自己写一个绑定事件的模式
+//不直接绑定fn1---fn12
+
+var a=[];//程序池，事件池
+a.push(fn1);a.push(fn2);a.push(fn3);a.push(fn4);a.push(fn5);a.push(fn6);a.push(fn7);a.push(fn8);a.push(fn9);a.push(fn10);a.push(fn11);a.push(fn12);
+
+function fire(){//中间人，中介
+	for(var i=0;i<a.length;i++){
+		a[i].call(this);	
+		//a[i]();
+	}
+}
+
+bind(ele,"click",fire);
+
+
+function on(ele,type,fn){//这个绑定不是真绑定，而是把fn保存到某个数组里，当事件触发的时候，由一个中间人来遍历执行这个数组里的方法，从而达到按正常顺序执行这些方法的效果
+	if(!ele["aEvent"+type]){//定义事件池
+		ele["aEvent"+type]=[];	
+	}
+	var a=ele["aEvent"+type];//为了方便打字，把数组赋给一个短变量
+	
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;
+	}
+	a.push(fn);//把方法保存到事件池，以备事件触发时，通过遍历此数组执行此方法
+	bind(ele,type,fire);
+	
+	//on--->把需要绑定的方法放到事件池里--->事件池<----fire<---bind方法把fire绑定到真正的事件上
+}
+
+on(ele,"click",fn1);
+on(ele,"click",fn2);
+on(ele,"click",fn3);
+
+</script>

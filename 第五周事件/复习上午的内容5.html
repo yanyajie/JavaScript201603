@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<div id="div1">div1</div>
+1、如果只是为了解决this的问题，只需一行代码：
+	var fnTemp=function(){handler.call(ele)}
+2、但如果要移除handler方法，则需要把fnTemp保存下来，并且在unbind方法里可以认出它来：要认出fnTemp就是handler变形来的
+3、避免重复绑定的问题
+</body>
+</html>
+<script>
+function fn1(){
+	this.innerHTML="点过"+n;
+	alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){
+		unbind(this,"click",fn3);//
+		unbind(this,"click",fn2);
+				//第三次fnTemp是fn3的变形
+	}
+	alert(3);}
+var ele=document.getElementById("div1");
+//ele.addEventListener("click",fn1,false);
+//ele.addEventListener("click",fn1,false);
+//ele.attachEvent("onclick",fn1);
+//ele.attachEvent("onclick",fn1);
+
+function bind(ele,type,handler){//当ele元素上的type事件触发的时候，执行handler方法
+	if(ele.addEventListener){
+		ele.addEventListener(type,handler,false);	
+	}else if(ele.attachEvent){
+		if(!ele["abind"+type]){
+			ele["abind"+type]=[];
+		}
+		
+		var a=ele["abind"+type];
+		
+		for(var i=0;i<a.length;i++){
+			if(a[i].photo==handler){
+				return;
+			}
+		}
+		
+		var fnTemp=function(){handler.call(ele)}
+		fnTemp.photo=handler;
+		a.push(fnTemp);
+		ele.attachEvent("on"+type,fnTemp);
+	}
+}
+
+bind(ele,"click",fn1);bind(ele,"click",fn1);bind(ele,"click",fn1);
+bind(ele,"click",fn2);
+bind(ele,"click",fn3);
+
+function unbind(ele,type,handler){
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,handler,false);
+	}else if(ele.detachEvent){
+		
+		var a=ele["abind"+type];
+		if(a){
+			for(var i=0;i<a.length;i++){
+				if(a[i].photo==handler){
+					ele.detachEvent("on"+type,a[i]);//从事件上真正的移除
+					a.splice(i,1);//不再数组里保存
+					return;
+				}
+				
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+</script>
