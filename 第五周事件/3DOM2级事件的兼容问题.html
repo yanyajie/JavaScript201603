@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ height:100px; background:red;}
+</style>
+</head>
+
+<body>
+<div id="div1">div1</div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+function fn1(){alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){//第二次执行的时候执行移除，到第三次的时候生效
+		this.removeEventListener("click",fn3,false);
+	}
+	alert(3);}
+function fn4(){alert(4);}
+ele.addEventListener("click",fn1,false);//第三个参数是指：是否在捕获阶段绑定此方法
+ele.addEventListener("click",fn2,false);
+ele.addEventListener("click",fn3,false);
+ele.addEventListener("click",fn4,false);
+</script>

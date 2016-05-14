@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>KeyboardEvent</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1" style="top: 50px;left: 200px;"></div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+
+    document.onkeydown = document.onkeyup = document.onkeypress = function (e) {
+        e = e || window.event;
+        var top = parseFloat(oDiv.style.top);
+        var left = parseFloat(oDiv.style.left);
+        switch (e.keyCode) {
+            case 37:
+                left -= 5;
+                break;
+            case 39:
+                left += 5;
+                break;
+            case 38:
+                top -= 5;
+                break;
+            case 40:
+                top += 5;
+        }
+        oDiv.style.top = top + "px";
+        oDiv.style.left = left + "px";
+
+        //->e.keyCode:每一个键盘按键码
+        //->四个方向键(左、上、右、下):37、38、39、40
+        //Ctrl ->17
+        //Alt ->18
+        //Space ->32
+        //Shift ->16
+        //Enter ->13
+        //Backspace ->8
+        //Delete ->46
+        //Esc ->27
+    };
+</script>
+</body>
+</html>

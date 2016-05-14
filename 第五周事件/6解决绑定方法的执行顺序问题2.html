@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<div id="div1">div1</div>
+1、如果只是为了解决this的问题，只需一行代码：
+	var fnTemp=function(){handler.call(ele)}
+2、但如果要移除handler方法，则需要把fnTemp保存下来，并且在unbind方法里可以认出它来：要认出fnTemp就是handler变形来的
+3、避免重复绑定的问题
+</body>
+</html>
+<script>
+function fn1(){
+	this.innerHTML="点过"+n;
+	alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){
+		off(this,"click",fn3);//
+		off(this,"click",fn2);
+				//第三次fnTemp是fn3的变形
+	}
+	alert(3);}
+	
+	function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+var ele=document.getElementById("div1");
+
+
+function bind(ele,type,handler){//当ele元素上的type事件触发的时候，执行handler方法
+	if(ele.addEventListener){
+		ele.addEventListener(type,handler,false);	
+	}else if(ele.attachEvent){
+		if(!ele["abind"+type]){//为了让bind的好基友unbind用的
+			ele["abind"+type]=[];
+		}
+		
+		var a=ele["abind"+type];
+		
+		for(var i=0;i<a.length;i++){
+			if(a[i].photo==handler){
+				return;
+			}
+		}
+		
+		var fnTemp=function(){handler.call(ele)}
+		fnTemp.photo=handler;
+		a.push(fnTemp);
+		ele.attachEvent("on"+type,fnTemp);
+	}
+}
+
+function unbind(ele,type,handler){
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,handler,false);
+	}else if(ele.detachEvent){
+		
+		var a=ele["abind"+type];
+		if(a){
+			for(var i=0;i<a.length;i++){
+				if(a[i].photo==handler){
+					ele.detachEvent("on"+type,a[i]);//从事件上真正的移除
+					a.splice(i,1);//不再数组里保存
+					return;
+				}
+				
+			}
+		}
+	}
+}
+
+
+//如果要解决顺序问题，需要抛弃IE原有事件模式，重新自己写一个绑定事件的模式
+//不直接绑定fn1---fn12
+
+//bind和unbind它们是独立的功能模块：this关键字
+//on,fire,off,这三个方法是三口之家，它们主要负责解决IE中事件上绑定的方法的执行顺序问题：不直接把方法绑定给元素（假绑定），而是自己创建一个事件池，把方法放在事件池里，然后在这个事件上绑定fire方法，当事件事件触发执行fire，再fire去遍历执行事件池里的方法，以达到按顺序执行“假绑定的方法”
+/*
+var a=[];
+a.push(fn1);
+bind(ele,type,fire);
+*/
+function on(ele,type,fn){
+	if(!ele["aEvent"+type]){
+		ele["aEvent"+type]=[];
+	}
+	
+	var a=ele["aEvent"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);//这是关键的一步：把方法保存到事件池里
+	
+	//当事件触发的时候，要遍历执行a里的这些方法
+	bind(ele,type,fire);//on每运行一次，bind就会执行一次，但bind的运行只有第一次有效
+}
+
+function fire(){
+	var e=window.event;//取得事件对象
+	var type=e.type;//从事件对象中得到相应的事件类型
+	//需要把数组找到，并且遍历执行数组里的方法
+	var a=this["aEvent"+type];	
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i].call(this,e);
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+
+function off(ele,type,fn){//解除绑定，其实也是“假”解除，从数组里把对应的方法去掉
+	var a=ele["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				//a.splice(i,1);
+				a[i]==null;//为了避免数组塌陷
+				return;	
+			}
+		}
+	}
+}
+
+on(ele,"click",fn1);
+on(ele,"click",fn2);
+on(ele,"click",fn3);
+on(ele,"click",fn4);
+on(ele,"click",fn5);
+
+on(ele,"click",fn6);
+on(ele,"click",fn7);
+on(ele,"click",fn8);
+on(ele,"click",fn9);
+on(ele,"click",fn10);
+/*
+		[fn1,fn2,fn3,fn4,fn5,fn6,fn7,fn8,fn9,fn10]
+		方法执行到fn3的时候，是fire调用的结果，fire里的循环，当i==2的时候执行fn3
+		fn2,和fn3
+		[fn1,fn4,fn5,fn6,fn7,fn8,fn9,fn10]
+		当fn3执行完成后，i是不是就应该为3了，在现在的数组中，第3项是
+
+*/
+
+</script>

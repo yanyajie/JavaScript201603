@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/index2.css"/>
+</head>
+<body>
+<div class="content">
+    <ul class="nav" id="nav">
+        <li class="navLi bg">
+            <span>呵呵呵呵呵</span>
+        </li>
+        <li class="navLi">
+            <span>哈哈哈哈哈哈</span>
+        </li>
+    </ul>
+    <div class="detail" id="detail">
+        <ul class="detailList">
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+            <li>
+                <span>小米手机5</span>
+                <a href="">选购</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript">
+    var detail = document.getElementById("detail");
+    document.body.onmouseover = function (e) {
+        e = e || window.event;
+        var tar = e.target || e.srcElement, tarParents = parents(tar);
+
+        //->如果是左侧的LI或者是其中的某一个子元素(所有的父亲节点中有一个标签名是LI的并且拥有navLi这个样式的),显示详细信息
+        for (var i = 0; i < tarParents.length; i++) {
+            var curP = tarParents[i];
+            if (/^LI$/i.test(curP.tagName) && curP.className.indexOf("navLi") > -1) {
+                detail.style.display = "block";
+                detail.innerHTML += curP.innerHTML;
+                return;
+            }
+            //->如果是DETAIL后者它下面的某一个子元素,我们什么都不做即可
+            if (curP.id === "detail") {
+                return;
+            }
+        }
+
+        //->除了以上的事件源其余的都隐藏
+        detail.style.display = "none";
+    };
+
+    //->获取当前元素的所有父亲节点(把当前的这个元素也算在内)
+    function parents(curEle) {
+        var ary = [];
+        ary.push(curEle);
+
+        var p = curEle.parentNode;
+        while (p) {
+            ary.push(p);
+            p = p.parentNode;
+        }
+        return ary;
+    }
+</script>
+</body>
+</html>

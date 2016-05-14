@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ height:100px; background:red;}
+</style>
+</head>
+
+<body>
+<div id="div1">div1</div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+function fn1(){alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){//第二次执行的时候执行移除，到第三次的时候生效
+		//this.removeEventListener("click",fn3,false);
+		ele.detachEvent("onclick",fn3);
+		//不能把上一行代码中的ele换成this
+	}
+	alert(3);}
+function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+ele.attachEvent("onclick",fn1);
+ele.attachEvent("onclick",fn2);
+ele.attachEvent("onclick",fn3);
+ele.attachEvent("onclick",fn4);
+ele.attachEvent("onclick",fn5);
+ele.attachEvent("onclick",fn6);
+ele.attachEvent("onclick",fn7);
+ele.attachEvent("onclick",fn8);
+ele.attachEvent("onclick",fn9);
+ele.attachEvent("onclick",fn10);
+ele.attachEvent("onclick",fn11);
+ele.attachEvent("onclick",fn12);
+
+</script>

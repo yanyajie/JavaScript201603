@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<div id="div1">div1</div>
+//重点：事件委托
+//事件的兼容性问题：
+1、事件对象本身的获得方式不同，IE是用全局的window.event，chrome是浏览器自动会给把事件对象传给事件触发的方法，作为此方法的第一个参数。
+1.1、chrome也是支持window.event的
+2、事件传播和阻止事件传播的方式：ie是e.cancelBubble=true;标准浏览器是用的e.stopPropagation()
+3、取消事件默认行为：IE是e.returnValue=false;标准浏览器用的是e.preventDefault();
+4、触发事件的事件源不一样：IE是e.srcElement,标准浏览器是e.target
+5、IE不支持e.pageX、e.pageY
+
+6、最大的兼容性问题在于对DOM2级事件的支持上
+   什么DOM2级事件：就是在DOM的第二个版本中，实现的事件绑定方式
+   DOM0 (本身没有DOM0这么个概念，它是相对于DOM1来讲的) DHTML(动态HTML)
+   
+   DOM是独立于JS之外的一个API，目的为了跨语言操作标记语言（主要是XML）应运而生的一种技术
+   DOM Core(DOM1):解决的文档的层次结构和增删改查的一些方法属性
+   DOM2 有一部分是实现更好的事件的解决方案
+   DOM3
+   
+
+</body>
+
+
+</html>
+<script>
+document.body.form;
+document.forms;
+document.anchors;
+document.all;
+document.all["div1"]
+
+document.onclick;
+var ele=document.getElementById("div1");
+function fn1(){alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移除些方法
+function fn3(){
+	n++;
+	if(n==2){
+		
+	}
+	alert(3);}
+function fn4(){alert(4);}
+ele.onclick=fn1;
+ele.onclick=function(){fn1();fn2();fn3();fn4();}
+//DOM2级事件的方法
+EventTarget.prototype.addEventListener;
+EventTarget.prototype.removeEventListener;
+//DOM2级事件中新增加的事件类型
+document.addEventListener("DOMContentLoaded",fn2,false);
+
+//文档的中标签已经加载并解析（标签已经在网页上显示了）就触发些事件，至于外链的图片、样式、JS是否加载或运行，跟这个事件无关。
+$(document).ready(function(e) {
+    //"DOMContentLoaded"
+	fn1
+});
+//$的参数如果是一个function，则表示文档内容加载完成之后运行此方法，也就是$(document).ready()这个事件，其实就是"DOMContentLoaded"这个事件
+$(fn1);//这个表示内容加载完成之后，触发fn2这个方法，相当于下面
+$(document).ready(fn2);
+
+//以下
+$("#div1").click(fn1);
+$("#div1").click(fn2);
+ele.addEventListener("click",fn1,false);
+ele.addEventListener("click",fn2,false);
+//浏览器的所有资源都已完成加载（当然，会有加载失败的：超时），触发onload事件
+window.onload;
+
+for(var i=0;true;i++){
+	console.log(i);	
+}
+
+document.addEventListener("DOMContentLoaded",function(){alert("ContentLoaded");},false)
+
+</script>
+

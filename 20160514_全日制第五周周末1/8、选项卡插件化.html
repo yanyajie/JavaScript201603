@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件委托/事件代理-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-user-select: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .tab {
+            margin: 10px auto;
+            width: 600px;
+        }
+
+        .tab ul {
+            position: relative;
+            top: 1px;
+            overflow: hidden;
+        }
+
+        .tab ul li {
+            float: left;
+            margin-right: 10px;
+            width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid green;
+        }
+
+        .tab ul li.bg {
+            background: lightblue;
+            border-bottom: 1px solid lightblue;
+        }
+
+        .tab .con {
+            display: none;
+            height: 300px;
+            line-height: 300px;
+            text-align: center;
+            background: lightblue;
+            border: 1px solid green;
+            font-size: 40px;
+        }
+
+        .tab .con.bg {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="tab">
+    <ul class="tabTap">
+        <li class="bg">选项卡一</li>
+        <li>选项卡二</li>
+        <li>选项卡三</li>
+    </ul>
+    <div class="con bg">1</div>
+    <div class="con">2</div>
+    <div class="con">3</div>
+</div>
+
+<div class="tab">
+    <ul class="tabTap">
+        <li class="bg">选项卡一</li>
+        <li>选项卡二</li>
+        <li>选项卡三</li>
+    </ul>
+    <div class="con bg">1</div>
+    <div class="con">2</div>
+    <div class="con">3</div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    //->把选项卡封装成为一个插件
+    ~function ($) {
+        function tabChange() {
+            //->this:最外层的那个盒子
+            var $list = $(this).children(".tabTap").children("li"), $divList = $(this).children(".con");
+
+            //->JQ内置循环,我如下操作相当于给每一个LI的点击事件都绑定了一个对应的方法
+            $list.on("click", function () {
+                //->this:当前点击的这个LI
+                var $curIndex = $(this).index();
+                $(this).addClass("bg").siblings().removeClass("bg");
+
+                $divList.each(function (index, item) {
+                    //->this:是当前循环的这一项
+                    $curIndex === index ? $(this).addClass("bg") : $(this).removeClass("bg");
+                });
+            });
+        }
+
+        $.fn.extend({
+            tabChange: tabChange
+        });
+    }(jQuery);
+
+    $(".tab").each(function () {
+        $(this).tabChange();
+    });
+</script>
+</body>
+</html>

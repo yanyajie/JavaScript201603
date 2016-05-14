@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<div id="div1">div1</div>
+1、如果只是为了解决this的问题，只需一行代码：
+	var fnTemp=function(){handler.call(ele)}
+2、但如果要移除handler方法，则需要把fnTemp保存下来，并且在unbind方法里可以认出它来：要认出fnTemp就是handler变形来的
+3、避免重复绑定的问题
+</body>
+</html>
+<script>
+function fn1(){
+	this.innerHTML="点过"+n;
+	alert(1);}
+function fn2(){alert(2);}
+
+var n=0;
+//如果点击超过2次，则从事件移这个方法
+function fn3(){
+	n++;
+	if(n==2){
+		off(this,"click",fn3);//
+		off(this,"click",fn2);
+				//第三次fnTemp是fn3的变形
+	}
+	alert(3);}
+	
+	function fn4(){alert(4);}
+function fn5(){alert(5);}
+function fn6(){alert(6);}
+function fn7(){alert(7);}
+function fn8(){alert(8);}
+function fn9(){alert(9);}
+function fn10(){alert(10);}
+function fn11(){alert(11);}
+function fn12(){alert(12);}
+var ele=document.getElementById("div1");
+
+
+
+function on(ele,type,fn){
+	if(ele.addEventListener){
+		ele.addEventListener(type,fn,false);
+		return;	
+	}
+	if(!ele["aEvent"+type]){
+		ele["aEvent"+type]=[];
+		//这里的代码在相同的元素相同事件的前提下，只会执行一次
+		ele.attachEvent("on"+type,function(){fire.call(ele)});
+	}
+	
+	var a=ele["aEvent"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);//这是关键的一步：把方法保存到事件池里
+	
+	//当事件触发的时候，要遍历执行a里的这些方法
+	//bind(ele,type,fire);//on每运行一次，bind就会执行一次，但bind的运行只有第一次有效。在bind里fire不会被重复绑定
+	
+	//ele.attachEvent("on"+type,function(){fire.call(ele)});//这样执行fire会被重复绑定到ele的type事件上。
+	//这个问题如何解决呢？要无论on执行多少次，fire方法只能被绑定一次。在这个函数里有一个地方，无论on执行多少次,ele.attachEvent在相同的事件类型下，只会执行一次。
+}
+
+function fire(){
+	var e=window.event;//取得事件对象
+	var type=e.type;//从事件对象中得到相应的事件类型
+	//需要把数组找到，并且遍历执行数组里的方法
+	if(!e.target){
+		e.target=e.srcElement;
+		e.preventDefault=function(){e.returnValue=false;};
+		e.stopPropagation=function(){e.cancelBubble=true;};
+		e.pageX=(document.documentElement.scrollLeft||document.body.scrollLeft)+e.clientX;
+		e.pageY=(document.documentElement.scrollTop||document.body.scrollTop)+e.clientY;
+		
+			
+	}
+	var a=this["aEvent"+type];	
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i].call(this,e);
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+
+function off(ele,type,fn){//解除绑定，其实也是“假”解除，从数组里把对应的方法去掉
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,fn,false);
+		return;	
+	}
+	var a=ele["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				//a.splice(i,1);
+				a[i]==null;//为了避免数组塌陷
+				return;	
+			}
+		}
+	}
+}
+
+on(ele,"click",fn1);//
+on(ele,"click",fn2);
+on(ele,"click",fn3);
+/*on(ele,"click",fn4);
+on(ele,"click",fn5);
+
+on(ele,"click",fn6);
+on(ele,"click",fn7);
+on(ele,"click",fn8);
+on(ele,"click",fn9);
+on(ele,"click",fn10);*/
+/*
+		[fn1,fn2,fn3,fn4,fn5,fn6,fn7,fn8,fn9,fn10]
+		方法执行到fn3的时候，是fire调用的结果，fire里的循环，当i==2的时候执行fn3
+		fn2,和fn3
+		[fn1,fn4,fn5,fn6,fn7,fn8,fn9,fn10]
+		当fn3执行完成后，i是不是就应该为3了，在现在的数组中，第3项是
+
+*/
+
+</script>

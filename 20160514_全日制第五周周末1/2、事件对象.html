@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件对象-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            margin: 1000px auto;
+            width: 100px;
+            height: 100px;
+            background: green;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+
+    //->给元素的某一个事件行为绑定方法(不管是DOM0还是DOM2),当事件触发的时候,都会把对应的绑定方法执行;
+    //->不仅仅执行了,而且还给对应的方法传递了一个参数值:"事件对象" ->MouseEvent(鼠标事件对象)、KeyboardEvent(键盘事件对象)
+    //->在IE6~8中并没有给方法传递事件对象进来(DOM0),但是在DOM2绑定的方法中,也传递进来事件对象了,但是传递进来的值和标准浏览器不一样,等价于window.event;
+    function fn(e) {
+        //->this是当前操作的元素oDiv
+        //console.log("我在珠峰培训学习JS啦啦啦~~", this);
+
+        //console.dir(e);//->所谓的鼠标事件对象指的是,记录了当前鼠标本次操作的相关信息,由于页面中有且只有一个鼠标,那么当鼠标本次操作的时候,不管是在哪个方法中获取到的e,存储的内容应该是一模一样的
+        //e = e || window.event;//->IE6~8下并没有给函数传递值,我们使用window下的event来获取鼠标事件对象
+        //console.log(e.pageX, e.pageY);
+
+        //->e.type:'click' 当前的事件类型
+
+        //->e.clientX/e.clientY 鼠标触发点距离"当前窗口"(不管处于哪一屏幕,获取的都是距离当前屏幕左上角)左上角的X/Y轴的坐标
+
+        //->e.pageX/e.pageY 鼠标触发点距离"BODY"(第一屏幕)左上角的X/Y轴的坐标(在IE6~8下不兼容的)
+        //e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+        //e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+
+        //->e.target 获取当前操作的事件源(鼠标是在哪个元素上操作的,那么事件源就是谁),在IE6~8下依然不兼容,我们需要使用e.srcElement来处理
+
+        //->e.preventDefault() 阻止默认行为,在IE6~8下不兼容,我们需要使用e.returnValue=false
+
+        //->e.stopPropagation() 阻止事件的冒泡传播,在IE6~8下不兼容,我们需要使用e.cancelBubble=true
+        e = e || window.event;
+        if (window.event) {//->当前的浏览器是IE6~8,我们就按照标准浏览器的模式,把所有不兼容的进行重写
+            e.target = e.srcElement;
+            e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+            e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+            e.preventDefault = function () {
+                e.returnValue = false;
+            };
+            e.stopPropagation = function () {
+                e.cancelBubble = true;
+            };
+        }
+    }
+
+    //->DOM0和DOM2可以共存,而且之间没有影响(因为是不同的处理机制)
+    oDiv.onclick = fn;
+    //    document.body.onclick = function (e) {
+    //        e = e || window.event;
+    //        console.dir(e);
+    //    };
+
+    //oDiv.addEventListener("click", fn, false);
+    //oDiv.attachEvent("onclick", fn);
+
+</script>
+</body>
+</html>

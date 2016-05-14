@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>京东放大镜-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+        }
+
+        img {
+            display: block;
+            border: none;
+        }
+
+        /*放大镜的原理：首先需要保证左侧区域和右侧区域的宽高一致;右侧图片:左侧图片===mark:box*/
+        #box, #boxDec {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #444;
+            box-shadow: 4px 4px 10px 0 #999;
+        }
+
+        #boxDec {
+            display: none;
+            left: 360px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        #box img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #boxDec img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+        }
+
+        #mark {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            background: #000;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+            cursor: move;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+    <img src="img/iphone.jpg"/>
+
+    <div id="mark"></div>
+</div>
+<div id="boxDec">
+    <img src="img/iphone_big.jpg"/>
+</div>
+
+<script type="text/javascript">
+    var oBox = document.getElementById("box"), oMark = document.getElementById("mark");
+    var oBoxDec = document.getElementById("boxDec"), oImg = oBoxDec.getElementsByTagName("img")[0];
+
+    //->计算MARK盒子的当前位置
+    function computedMarkPosition(e) {
+        e = e || window.event;
+        var curL = e.clientX - oBox.offsetLeft - oBox.clientLeft - (oMark.clientWidth / 2);
+        var curT = e.clientY - oBox.offsetTop - oBox.clientTop - (oMark.clientHeight / 2);
+
+        //->边界判断
+        var minL = 0, maxL = oBox.clientWidth - oMark.clientWidth, minT = 0, maxT = oBox.clientHeight - oMark.clientHeight;
+        curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+        curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+
+        oMark.style.left = curL + "px";
+        oMark.style.top = curT + "px";
+
+        //->左侧向右走10px,那么右侧的图片需要向左走20px...
+        oImg.style.left = -curL * 2 + "px";
+        oImg.style.top = -curT * 2 + "px";
+    }
+    oBox.onmouseenter = function (e) {
+        oMark.style.display = "block";
+        oBoxDec.style.display = "block";
+        computedMarkPosition(e);
+    };
+    oBox.onmousemove = computedMarkPosition;
+    oBox.onmouseleave = function (e) {
+        oMark.style.display = "none";
+        oBoxDec.style.display = "none";
+    };
+</script>
+</body>
+</html>

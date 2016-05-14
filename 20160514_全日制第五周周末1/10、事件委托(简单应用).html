@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>简单应用-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-user-select: none;
+        }
+
+        span {
+            display: block;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #ccc;
+            overflow: hidden;
+        }
+
+        #shop {
+            position: relative;
+            width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background: lightskyblue;
+            cursor: pointer;
+        }
+
+        #shop .fir {
+            width: 100%;
+            height: 100%;
+        }
+
+        #shop .two {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            width: 300px;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            background: lightpink;
+        }
+    </style>
+</head>
+<body>
+<div id="shop">
+    <span class="fir">购物车</span>
+    <span class="two" style="display: none;" id="shopDetail">暂无购物记录</span>
+</div>
+<script type="text/javascript">
+    var shopDetail = document.getElementById("shopDetail");
+
+    //->在事件委托的所有元素中在单独提取出不需要委托的进行特殊的处理
+    shopDetail.onclick = function (e) {
+        e = e || window.event;
+        e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+    };
+
+    document.body.onclick = function (e) {
+        e = e || window.event;
+        var tar = e.target || e.srcElement;
+
+        //->购物车
+        if (tar.tagName.toUpperCase() === "SPAN" && tar.className === "fir" && tar.parentNode && tar.parentNode.id === "shop") {
+            var isBok = shopDetail.style.display;
+            shopDetail.style.display = isBok === "block" ? "none" : "block";
+            return;
+        }
+
+        //->详细
+//        if (tar.tagName.toUpperCase() === "SPAN" && tar.id === "shopDetail") {
+//            return;
+//        }
+
+        //->否则其他
+        shopDetail.style.display = "none";
+    }
+</script>
+</body>
+</html>

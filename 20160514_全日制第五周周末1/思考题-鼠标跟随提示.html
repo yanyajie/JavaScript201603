@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        img {
+            display: block;
+            border: none;
+        }
+
+        .box {
+            margin: 50px auto;
+            width: 480px;
+        }
+
+        .box:after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .box li {
+            position: relative;
+            float: left;
+            margin-right: 18px;
+            width: 100px;
+            height: 75px;
+            border: 1px solid #999;
+        }
+
+        .box li img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .box li div {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 300px;
+            border: 1px solid #999;
+        }
+
+        .box li div img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<ul class="box">
+    <li>
+        <img src="img/tip/apple_1.jpg"/>
+
+        <div><img src="img/tip/apple_1_bigger.jpg"/></div>
+    </li>
+    <li>
+        <img src="img/tip/apple_2.jpg"/>
+
+        <div><img src="img/tip/apple_2_bigger.jpg"/></div>
+    </li>
+    <li>
+        <img src="img/tip/apple_3.jpg"/>
+
+        <div><img src="img/tip/apple_3_bigger.jpg"/></div>
+    </li>
+    <li>
+        <img src="img/tip/apple_4.jpg"/>
+
+        <div><img src="img/tip/apple_4_bigger.jpg"/></div>
+    </li>
+</ul>
+
+<script charset="utf-8" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var $oLis = $(".box>li");
+
+        //->解决IE7中zIndex无效的问题
+        $oLis.each(function (index) {
+            $(this).css("zIndex", $oLis.length - index);
+        });
+
+        $oLis.on("mouseover", function (e) {
+            var obj = $(this).offset();
+            $(this).children("div").stop().show("fast").css({
+                top: e.pageY - obj.top + 20,
+                left: e.pageX - obj.left + 20
+            });
+        }).on("mousemove", function (e) {
+            var obj = $(this).offset();
+            $(this).children("div").css({
+                top: e.pageY - obj.top + 20,
+                left: e.pageX - obj.left + 20
+            });
+        }).on("mouseout", function () {
+            $(this).children("div").stop().hide();
+        });
+    });
+</script>
+</body>
+</html>

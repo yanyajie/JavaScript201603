@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        #div1{//width: 100px;height: 100px;background: red;}
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+</body>
+</html>
+<script type="text/javascript">
+    var ele=document.getElementById("div1");
+    function fn1() {
+        alert(1);
+    };
+    function fn2() {
+        alert(2);
+    };
+    var n=0;
+    function fn3() {
+        n++;
+        if(n==2){
+            //this.removeEventListener("click",fn3,false);
+            unbind(ele,"click",fn3);
+            //->不能把上一行代码中的ele换成this
+        }
+        alert(3);
+    };
+    function fn4() {
+        alert(4);
+    }
+    /*ele.addEventListener("click",fn1,false);//->第三个参数是指：是否在捕获阶段绑定此方法
+    ele.addEventListener("click",fn2,false);//->第三个参数是指：是否在捕获阶段绑定此方法
+    ele.addEventListener("click",fn3,false);//->第三个参数是指：是否在捕获阶段绑定此方法
+    ele.addEventListener("click",fn4,false);//->第三个参数是指：是否在捕获阶段绑定此方法*/
+
+    //->IE
+    ele.attachEvent("onclick",fn1);
+    ele.attachEvent("onclick",fn2);
+    ele.attachEvent("onclick",fn3);
+    ele.attachEvent("onclick",fn4);
+
+    function bind(ele, type, handler) {//->handler直译为句柄，方法名，方法引用的意思
+        if(ele.addEventListener){
+            ele.addEventListener(type,handler,false);
+        }else if(ele.attachEvent){
+            ele.attachEvent("on"+type,handler);
+        }
+    }
+	
+	function unbind(ele,type,handler){
+		if(ele.removeEventListener){
+			ele.removeEventListener(type,handler,false);
+		}else if(ele.detachEvent){
+			ele.detachEvent("on"+type,handler);
+		}
+	}
+</script>
+
