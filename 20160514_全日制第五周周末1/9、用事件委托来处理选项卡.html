@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件委托/事件代理-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-user-select: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .tab {
+            margin: 10px auto;
+            width: 600px;
+        }
+
+        .tab ul {
+            position: relative;
+            top: 1px;
+            overflow: hidden;
+        }
+
+        .tab ul li {
+            float: left;
+            margin-right: 10px;
+            width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid green;
+        }
+
+        .tab ul li.bg {
+            background: lightblue;
+            border-bottom: 1px solid lightblue;
+        }
+
+        .tab .con {
+            display: none;
+            height: 300px;
+            line-height: 300px;
+            text-align: center;
+            background: lightblue;
+            border: 1px solid green;
+            font-size: 40px;
+        }
+
+        .tab .con.bg {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="tab">
+    <ul class="tabTap">
+        <li class="bg">选项卡一</li>
+        <li>选项卡二</li>
+        <li>选项卡三</li>
+    </ul>
+    <div class="con bg">1</div>
+    <div class="con">2</div>
+    <div class="con">3</div>
+</div>
+
+<div class="tab">
+    <ul class="tabTap">
+        <li class="bg">选项卡一</li>
+        <li>选项卡二</li>
+        <li>选项卡三</li>
+    </ul>
+    <div class="con bg">1</div>
+    <div class="con">2</div>
+    <div class="con">3</div>
+</div>
+<!--
+   事件委托(事件代理):利用事件的冒泡传播机制,如果一个容器中很多的元素都需要给点击事件绑定方法(之前是一个个的循环绑定的),我们现在不需要一个个的绑定,只需要给最外层的这个容器绑定一次即可,这样的话,不管点击里面的哪一个元素,最终都会传播到最外层的容器上,我们只需要获取到事件源(点击的那一个),根据不同的事件源做不同的处理即可
+
+   使用事件委托来处理,会比一个个的绑定的性能调高至少一倍
+-->
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    //->把选项卡封装成为一个插件(事件委托来优化)
+    ~function ($) {
+        function tabChange() {
+            var $divList = $(this).children(".con");
+            $(this).on("click", function (e) {
+                var tar = e.target, $tar = $(tar);
+                //->首先保证点击的事件源是一个LI
+                if (tar.tagName.toUpperCase() === "LI") {
+                    //->其次保证其父级元素中拥有tabTap这个样式类名
+                    if ($tar.parent().hasClass("tabTap")) {
+                        //->只有以上的两个条件同时成立,才说明点击的事件源是我们页卡区域的三个LI($tar)
+                        var $curIndex = $tar.index();
+                        $tar.addClass("bg").siblings().removeClass("bg");
+                        $divList.each(function (index, item) {
+                            $curIndex === index ? $(this).addClass("bg") : $(this).removeClass("bg");
+                        });
+                        return;
+                    }
+                }
+
+                //->如果点击的是DIV
+                if (tar.tagName.toUpperCase() === "DIV" && $tar.hasClass("con")) {
+                    alert($tar.html());
+                }
+            });
+        }
+
+        $.fn.extend({
+            tabChange: tabChange
+        });
+    }(jQuery);
+
+    $(".tab").each(function () {
+        $(this).tabChange();
+    });
+</script>
+</body>
+</html>

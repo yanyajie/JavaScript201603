@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>默认行为及其阻止-珠峰培训</title>
+    <style type="text/css">
+        #div1 {
+            margin: 2000px auto;
+            width: 300px;
+            height: 300px;
+            background: green;
+        }
+
+        a, a:hover, a:active, a:visited, a:target {
+            color: #424242;
+            text-decoration: none;
+        }
+
+        a {
+            display: block;
+            margin: 20px auto;
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background: #000;
+
+            opacity: 0.3;
+            filter: alpha(opacity=30);
+        }
+
+        a:hover {
+            opacity: 0.7;
+            filter: alpha(opacity=70);
+        }
+    </style>
+</head>
+<body>
+<!--
+  A标签的默认行为
+  1)跳转页面(本窗口打开/新窗口打开)
+  2)页面的锚点连接 href='#ID'
+
+  A特点
+  它的:HOVER这个CSS样式伪类是兼容所有的浏览器的
+
+  阻止默认行为
+  1)在HTML结构中阻止 <a href="javascript:;">向左</a>
+  2)在JS中的CLICK事件中进行阻止
+-->
+<!--<a href="http://www.zhufengpeixun.cn/" target="_blank">珠峰培训</a>-->
+<!--<a href="#div1">珠峰培训</a>-->
+
+<!--<a href="javascript:;">向左</a>-->
+
+<a href="" id="link">向左</a>
+<script type="text/javascript">
+    var oLink = document.getElementById("link");
+    //    oLink.onclick = function (e) {
+    //        return false;
+    //    };
+
+    oLink.onclick = function (e) {
+        e = e || window.event;
+        if (window.event) {
+            e.target = e.srcElement;
+            e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+            e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+            e.preventDefault = function () {
+                e.returnValue = false;
+            };
+            e.stopPropagation = function () {
+                e.cancelBubble = true;
+            };
+        }
+        e.preventDefault();
+    };
+</script>
+
+
+<div id="div1"></div>
+</body>
+</html>

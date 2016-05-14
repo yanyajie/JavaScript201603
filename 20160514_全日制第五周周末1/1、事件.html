@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            margin: 20px auto;
+            width: 100px;
+            height: 100px;
+            background: green;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+
+    //1、事件
+    //->事件就是一件事情,或者是一个操作行为,在JS中任何一个元素天生自带了很多的行为(和我们是否为其绑定方法没有关系)
+    //->JS中常用的事件类型/操作行为:click、mouseover(mouseenter)、mouseout(mouseleave)、mousemove、mousedown、mouseup、mousewheel、scroll(window.onscroll)、load(window.onload/oImg.onload)、unload、keydown、keyup、keypress、resize(window.onresize)...
+
+    //2、事件绑定 ->DOM0事件绑定、DOM2事件绑定
+    function fn() {
+        alert("我在珠峰培训学习JS啦啦啦~~");
+    }
+    function fn1() {
+        alert("我在珠峰培训学习JS呵呵呵~~");
+    }
+
+    //->DOM0:在给当前元素的某一个私有属性名赋值,当事件触发的时候,获取到属性值,然后把绑定的那个方法执行即可
+    //    oDiv.onclick = fn(); ->这个是错误的写法
+    //    oDiv.onclick = fn;
+    //    oDiv.onclick = fn1;
+    //->使用DOM0绑定,只能给当前元素的某一个事件行为绑定一个方法,后面绑定的方法会把前面的都替换掉
+    //    oDiv.onclick = null;//->移除绑定
+
+    //->DOM2:EventTarget.prototype->addEventListener/removeEventListener ->为当前元素创建一个事件池,把所有需要绑定的方法存储到事件池中,当事件触发的时候,到对应的事件池中找到对应的方法依次执行即可
+    //    oDiv.addEventListener("click", fn, false);
+    //    oDiv.addEventListener("click", fn1, false);
+    //->可以给当前元素的某一个事件行为绑定多个不同的方法
+    //    oDiv.removeEventListener("click", fn1, false);//->移除时候的三个参数需要和绑定时候一模一样
+    //    oDiv.addEventListener("click", function () {
+    //        alert(1);
+    //    }, false);
+    //    oDiv.removeEventListener("click", function () {
+    //        alert(1);
+    //    }, false);//->这样是无法移除掉的,因为是不同的两个匿名函数方法,所以DOM2中我们绑定的一般都是实名函数,这样的话方便后期的移除
+
+
+    //3、DOM2独有的事件类型:DOMContentLoaded->当页面中的HTML结构加载完成就会触发这个事件
+    //->window.onload=function... / jQuery中的$(document).ready()或者$(function(){}) 的区别是什么?
+
+    //1)window.onload:当页面中的HTML结构、图片、文字、音视频等所有资源加载完成才会触发这个事件;并且在同一个页面中只能使用一次;
+    //->因为是DOM0绑定的,所以只能使用一次;如果想使用多次,我们需要用DOM2来绑定;
+
+    //2)$(document).ready:只要HTML结构加载完成,就会触发对应的事件;在一个页面中可以使用多次;
+    //->采用DOM2事件绑定,监听的是DOMContentLoaded这个事件行为(在IE6~8下监听的是onreadystatechange这个事件行为)
+</script>
+</body>
+</html>
