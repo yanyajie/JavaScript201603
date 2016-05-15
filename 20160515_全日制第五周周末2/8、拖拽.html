@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #eee;
+            overflow: hidden;
+        }
+
+        #mark {
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            width: 200px;
+            height: 200px;
+            background: green;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<div id="mark"></div>
+
+<script type="text/javascript" src="js/event.js"></script>
+<script type="text/javascript">
+    var oMark = document.getElementById("mark");
+    on(oMark, "mousedown", dragDown);
+    //->鼠标按下
+    function dragDown(e) {
+        //->记录鼠标和盒子的起始位置
+        this["strX"] = e.clientX;
+        this["strY"] = e.clientY;
+        this["strL"] = this.offsetLeft;
+        this["strT"] = this.offsetTop;
+
+        //->只有鼠标按下来的时候才代表拖拽开始,我们在给其对应的行为绑定方法
+        on(oMark, "mousemove", dragMove);
+        on(oMark, "mouseup", dragUp);
+    }
+    //->鼠标移动
+    function dragMove(e) {
+        //->根据当前鼠标的位置,计算出盒子的当前位置:盒子的起始位置+鼠标的偏移
+        var curL = parseFloat(this["strL"]) + (e.clientX - this["strX"]);
+        var curT = parseFloat(this["strT"]) + (e.clientY - this["strY"]);
+
+        //->边界判断
+        var minL = 0, minT = 0, maxL = (document.documentElement.clientWidth || document.body.clientWidth) - this.offsetWidth, maxT = (document.documentElement.clientHeight || document.body.clientHeight) - this.offsetHeight;
+        curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+        curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+
+        this.style.left = curL + "px";
+        this.style.top = curT + "px";
+    }
+    //->鼠标抬起
+    function dragUp(e) {
+
+        //->只要鼠标松开,我们立马结束拖拽,把事件行为对应的方法都移除掉
+        off(oMark, "mousemove", dragMove);
+        off(oMark, "mouseup", dragUp);
+    }
+</script>
+</body>
+</html>

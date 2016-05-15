@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>多级菜单(JQ版)-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            color: #424242;
+            -webkit-user-select: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        em {
+            display: block;
+        }
+
+        .box {
+            margin: 10px;
+            padding: 10px;
+            width: 300px;
+            border: 1px dashed green;
+
+            /*移动端兼容的处理思想:优雅降级->按照高版本的浏览器去编写样式,但是对于低版本的浏览器如果不兼容的话,我们可以选择用其它的方案代替,或者对于无关紧要的可以选择不管*/
+            border-radius: 5px;
+            box-shadow: 4px 4px 10px 0 #999;
+
+            /*移动端兼容的处理思想:渐进增强->先写一个兼容所有浏览器的纯色背景,然后在对高版本浏览器增加更好的效果*/
+            background: #ffe98b;
+            background: -webkit-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -moz-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -ms-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -o-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+        }
+
+        .box li {
+            position: relative;
+        }
+
+        .box span {
+            display: block;
+            padding-left: 20px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .box em {
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 16px;
+            height: 16px;
+            background: url("img/icon.png") no-repeat -59px -28px;
+        }
+
+        /*如果EM拥有这个样式,则会变为‘减号’按钮,没有的话是‘加号’按钮*/
+        .box em.bg {
+            background-position: -42px -28px;
+        }
+
+        .two, .three {
+            display: none;
+        }
+
+        .two {
+            margin-left: 20px;
+        }
+
+        .three {
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <ul>
+        <li>
+            <em></em><span>第一级第一个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <em></em><span>第一级第二个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var $box = $(".box");
+        $box.on("click", function (e) {
+            var tar = e.target, $tar = $(tar);
+            if (/^(?:EM|SPAN)$/i.test(tar.tagName)) {
+                var $em = $tar.parent().children("em"), $child = $tar.parent().children("ul");
+                if ($child.length === 0) {
+                    return;
+                }
+
+                var isBok = $child.css("display");
+                $child.slideToggle(300);//->使用快捷操作控制显示隐藏:slideToggle它的意思就是之前展示我隐藏,之前隐藏我展开
+                if (isBok === "none") {
+                    //->之前是隐藏的
+                    $em.addClass("bg");
+                    return;
+                }
+
+                //->之前是显示的
+                $em.removeClass("bg");
+
+                //->让它下面的所有的UL和EM回归到初始的隐藏状态
+                window.setTimeout(function () {
+                    $child.find("ul").css("display", "none");
+                    $child.find("em").removeClass("bg");
+                }, 300);
+            }
+        });
+        //->jQuery专门处理事件委托的方法,首先还是委托给$box,如果事件源是em/span,我分别执行对应的绑定方法
+        //$box.delegate("em","click",function(){});
+        //$box.delegate("span","click",function(){});
+    });
+</script>
+</body>
+</html>

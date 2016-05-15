@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>多级菜单(JS版)-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            color: #424242;
+            -webkit-user-select: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        em {
+            display: block;
+        }
+
+        .box {
+            margin: 10px;
+            padding: 10px;
+            width: 300px;
+            border: 1px dashed green;
+
+            /*移动端兼容的处理思想:优雅降级->按照高版本的浏览器去编写样式,但是对于低版本的浏览器如果不兼容的话,我们可以选择用其它的方案代替,或者对于无关紧要的可以选择不管*/
+            border-radius: 5px;
+            box-shadow: 4px 4px 10px 0 #999;
+
+            /*移动端兼容的处理思想:渐进增强->先写一个兼容所有浏览器的纯色背景,然后在对高版本浏览器增加更好的效果*/
+            background: #ffe98b;
+            background: -webkit-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -moz-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -ms-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: -o-linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+            background: linear-gradient(top left, #ffe98b, #FFCF78, #ff9933, #FF6500);
+        }
+
+        .box li {
+            position: relative;
+        }
+
+        .box span {
+            display: block;
+            padding-left: 20px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .box em {
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 16px;
+            height: 16px;
+            background: url("img/icon.png") no-repeat -59px -28px;
+        }
+
+        /*如果EM拥有这个样式,则会变为‘减号’按钮,没有的话是‘加号’按钮*/
+        .box em.bg {
+            background-position: -42px -28px;
+        }
+
+        .two, .three {
+            display: none;
+        }
+
+        .two {
+            margin-left: 20px;
+        }
+
+        .three {
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="box" id="box">
+    <ul>
+        <li>
+            <em></em><span>第一级第一个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <em></em><span>第一级第二个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript" src="js/utils-1.0.0.min.js"></script>
+<script type="text/javascript">
+    var oBox = document.getElementById("box");
+    oBox.onclick = function (e) {
+        e = e || window.event;
+        var tar = e.target || e.srcElement, tarTagName = tar.tagName.toUpperCase();
+
+        //->我们点击的是EM/SPAN标签
+        if (tarTagName === "EM" || tarTagName === "SPAN") {
+            //->获取需要展开/收起的那个UL和EM
+            var oEM = utils.firstChild(tar.parentNode);
+            var child = utils.lastChild(tar.parentNode);
+            if (child.tagName.toUpperCase() !== "UL") {
+                //->如果存在的话我们才有必要操作,不存在说明没有子级了
+                return;
+            }
+
+            //->获取当前的UL是处于展开还是隐藏状态
+            var isBok = utils.css(child, "display");
+            if (isBok === "none") {
+                //->当前的UL处于隐藏状态,我们让其展开即可
+                utils.css(child, "display", "block");
+                utils.addClass(oEM, "bg");
+                return;
+            }
+
+            //->当前的UL处于展开状态,我们让其隐藏即可
+            utils.css(child, "display", "none");
+            utils.removeClass(oEM, "bg");
+
+            //->光隐藏当前的这个UL还不可以,还需要让其后代元素中的所有的UL也跟着隐藏,所有的EM移除BG的样式
+            var findUL = child.getElementsByTagName("ul"), findEM = child.getElementsByTagName("em");
+            for (var i = 0; i < findUL.length; i++) {
+                utils.css(findUL[i], "display", "none");
+                utils.removeClass(findEM[i], "bg");
+            }
+        }
+    }
+</script>
+</body>
+</html>

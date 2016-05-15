@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DOM2-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #ccc;
+            overflow: hidden;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript" src="js/event.js"></script>
+<script type="text/javascript">
+    function fn1(e) {
+        console.log(this === window);
+    }
+    function fn2(e) {
+        console.log(2);
+    }
+    function fn3(e) {
+        console.log(3);
+    }
+    function fn4(e) {
+        console.log(4);
+    }
+    function fn5(e) {
+        console.log(5);
+    }
+    function fn6(e) {
+        console.log(6);
+    }
+    function fn7(e) {
+        console.log(7);
+    }
+    function fn8(e) {
+        console.log(8);
+    }
+    function fn9(e) {
+        console.log(9);
+    }
+    function fn10(e) {
+        console.log(10);
+    }
+    function fn11(e) {
+        console.log(11);
+    }
+    function fn12(e) {
+        console.log(12);
+    }
+
+    //1、DOM2事件绑定
+    //[标准浏览器]
+    //->方法执行的时候,方法里面的this是当前元素
+    //->只能给某一个元素的同一个事件行为绑定多个"不同"的方法,方法相同,自己会过滤到重复的(三个参数完全一样才算是重复,只要有一个不一样都不是重复)
+    //->当行为触发的时候,会按照之前绑定的先后顺序依次的去执行
+    //    document.body.addEventListener("click", fn1, false);
+    //    document.body.addEventListener("click", fn1, false);
+    //    document.body.removeEventListener("click", fn1, false);
+
+    //[IE6~8]
+    //->语法的区别:
+    //1)标准浏览器使用addEventListener/removeEventListener实现DOM2的绑定/移除绑定；IE6~8使用attachEvent/detachEvent来实现绑定和移除绑定；
+    //2)标准浏览器传递三个参数,最后一个参数可以控制方法是在捕获阶段还是冒泡阶段发生(一般都用冒泡),IE6~8不能控制,只能在冒泡阶段发生；
+    //3)标准浏览器第一个参数只需要写事件类型即可,而IE6~8下需要加上on才可以
+
+    //->THIS问题:
+    //给元素的某一个行为绑定多个不同的方法，行为触发的时候执行方法，在标准浏览器中，方法执行里面的THIS是当前元素，但是在IE6~8中方法中的THIS是window
+
+    //->重复问题:
+    //标准浏览器是不允许给一个元素的同一个行为绑定相同的方法的(即使绑定多个也只留一个)，但是IE6~8下却可以重复绑定，浏览器不会默认的对绑定的方法进行重复判断
+
+    //->顺序问题:
+    //标准浏览器会按照绑定的顺序依次的去执行方法，IE6~8没有固定的顺序，执行方法的时候和绑定的顺序没啥关系，是乱序执行的
+    bind(document.body, "click", fn1);
+    bind(document.body, "click", fn2);
+    bind(document.body, "click", fn3);
+    bind(document.body, "click", fn4);
+    bind(document.body, "click", fn5);
+    bind(document.body, "click", fn6);
+    bind(document.body, "click", fn7);
+    bind(document.body, "click", fn8);
+    bind(document.body, "click", fn9);
+    bind(document.body, "click", fn10);
+    bind(document.body, "click", fn11);
+    bind(document.body, "click", fn12);
+    bind(document.body, "click", fn12);
+    bind(document.body, "click", fn12);
+</script>
+</body>
+</html>
