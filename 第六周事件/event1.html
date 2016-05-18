@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; background:green; top:100px; left:100px; cursor:move; -webkit-user-select:none;}
+</style>
+</head>
+
+<body>
+<div id="div1" style="left:0; top:0; background:red;"></div>
+<div id="div2"></div>
+<div id="div3" style="top:200px; left:150px; background:blue;"></div>
+</body>
+</html>
+<script>
+/*
+bind,unbind,on,off,run
+on方法按顺序保存，run负责当事件触发的时候，按顺序遍历执行已经保存好的那些方法
+off和on是相反的，它负责从数组里移除
+*/
+
+
+function on(ele,type,fn){
+	if(ele.addEventListener){
+		ele.addEventListener(type,fn,false);
+		return;	
+	}
+	if(!ele["aEvent"+type]){
+		ele["aEvent"+type]=[];	
+		//只有这个判断里，才能实现相当的事件类型下，run方法只被绑定一次（确保run方法不会被重复绑定）
+		ele.attachEvent("on"+type,function(){run.call(ele)});
+	}
+	
+	var a=ele["aEvent"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;
+	}
+	a.push(fn);
+	//ele.attachEvent("on"+type,function(){run.call(ele)});
+	//bind(ele,type,run);
+	//以上这些只是把fn保存到数组里了，但是当事件触发的时候，这些fn还不能运行。写完这些，还不能实现当事件触发就执行已经约定好的这些方法。
+	//还需要当事件触发的时候，由run方法来遍历数组，并且按顺序执行数组里的方法
+	
+	
+	
+}
+function run(){
+	var e=window.event;
+	var type=e.type;
+	if(!e.target){
+		e.target=e.srcElement;
+		e.pageX=(document.documentElement.scrollLeft||document.body.scrollLeft)+e.clientX;
+		e.pageY=(document.documentElement.scrollTop||document.body.scrollTop)+e.clientY;
+		e.preventDefault=function(){e.returnValue=false;}
+		e.stopPropagation=function(){e.cancelBubble=true;}
+	}
+	var a=this["aEvent"+type];
+	if(a&&a.length){//判断这是个数组并且是个有内容（长度）的数组
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i].call(this,e);
+				/*
+				//e=e||window.event;	
+				function fn(e){
+					//e=e||window.event;	
+					
+				}
+				*/
+				
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+function off(ele,type,fn){
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,fn,false);
+		return;	
+	}
+	var a=ele["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;//防止数组塌陷
+				//a.splice(i,1);	
+			}
+		}
+	}
+}
+</script>
+

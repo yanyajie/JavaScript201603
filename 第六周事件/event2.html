@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; background:green; top:100px; left:100px; cursor:move; -webkit-user-select:none;}
+</style>
+</head>
+
+<body>
+<div id="div1" style="left:0; top:0; background:red;"></div>
+<div id="div2"><img src="" height="100" width="100"></div>
+<div id="div3" style="top:200px; left:150px; background:blue;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+//以下的三个方法形成一个拖拽模块
+//拖拽行为的this原则：this一定要指向当前被拖拽的元素
+function down(e){//准备拖拽：是当鼠标按下去的时候
+	this.x=this.offsetLeft;
+	this.y=this.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	//在鼠标按下去的时候，处理好mousemove和mouseup方法。
+	//在鼠标按下去的时候，mousemove事件才会绑定move方法
+	if(this.setCapture){
+		this.setCapture();
+		on(this,"mousemove",move);
+		on(this,"mouseup",up);
+	}else{
+		//chrome中使用类似于委托的方式，把事件绑定给document
+		//只要是处理this指向的问题，一定要牢记call和apply方法
+		this.MOVE=processThis(move,this);
+		this.UP=up.bind(this);
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);
+	}
+	e.preventDefault();//阻止mousedown的准备选中内容的这个默认行为
+	
+}
+
+function move(e){//进行拖拽：当鼠标按着，并且鼠标的位置发生移动的时候
+	this.style.left=this.x+(e.pageX-this.mx)+"px";
+	this.style.top=this.y+(e.pageY-this.my)+"px";
+}
+
+function up(e){//结束拖拽：当鼠标抬起来的时候
+	if(this.releaseCapture){
+		this.releaseCapture();
+		off(this,"mousemove",move);
+		off(this,"mouseup",up);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+}
+
+var eles=document.getElementsByTagName("div");
+for(var i=0;i<eles.length;i++){
+	on(eles[i],"mousedown",down);	
+}
+</script>
+
