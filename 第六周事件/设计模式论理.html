@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+1、如果想约定你的某个行为，要提前公布这个行为，给这个行为一个代号。在创建这个行为的时候，就要把这个代号起好。（难点1）
+比如说你的结婚事件的代号叫marry,这是一个设计原则，在定义结婚这个function的时候，就要把这个原则规定好
+2、有约定的方法：addEventListener，on
+3、有通知的方法:run,fire,通知的方法是个底层的后台方法，使用者看不到
+4、还要有解除约定的方法：removeEventListener，off
+
+function marry(){
+	//省略一万行marry的代码
+    
+    //第一、先要理解所谓的通知，就是在这里执行run方法
+    //第二、把规划的时候的“事件类型”在这儿传进去，就会去遍历执行对应的数组里的那些方法（那些方法由on保存的）。
+    //第三、把“事件类型”传进去，也就相当于真正的确定了当前行为的事件类型
+   				// run.call(this,"marry");
+    run("marry");
+}
+on(李四,"marry",eat);//"marry"是代号，是在定义marry方法的时候规定好的
+marry();//一但marry方法执行,则eat会自动执行，因为marry里有一个秘书，会打电话通知eat来执行，这个秘书叫run
+-------------------------------------------------
+function on(obj,type,fn){//on方法负责登记
+	obj["aEvent"+type]=[];
+    obj["aEvent"+type].push(fn);
+}
+
+//“marry”是marry方法行为的表示符，也就是说marry就是个事件类型，和"click"表示鼠标点一下一样，也是事件类型，只不过这个事件类型是我们在这儿胡诌的
+//我们来看我们自己的拖拽方法：
+1、down的时候，清除动画要执行，可以说成是：清除动画约定了down行为。我们用"selfdragstart"这个字符来表示down这个行为
+2、move的时候，计算速度要执行:"selfdragging"来表示拖拽进行的move方法
+3、up的时候，fly和drop这个两个方法要执行，"selfdragend"来表示拖拽结束的up方法
+	总结：selfdragstart、selfdragging、selfdragend这些都是事件类型，不过这些事件类型都我们自己胡诌的，其实就是自定义
+
+function run(type){//run负责通知，什么时候以什么方式“通知”
+	var a=this["aEvent"+type];
+    for(var i=0;i<a.length;i++){
+    	a[i]();
+    }
+    
+
+}
+
+</body>
+</html>
