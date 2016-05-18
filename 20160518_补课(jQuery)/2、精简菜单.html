@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>精简菜单-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            color: #424242;
+            -webkit-user-select: none;
+        }
+
+        a, a:hover, a:active, a:visited, a:target {
+            display: block;
+            text-decoration: none;
+            color: #424242;
+        }
+
+        a:hover {
+            color: blue;
+        }
+
+        .menu {
+            margin: 20px auto;
+            padding: 10px;
+            width: 600px;
+            border: 1px solid green;
+        }
+
+        .menuList {
+            overflow: hidden;
+        }
+
+        .menu a {
+            float: left;
+            width: 200px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+        }
+
+        .menu a span {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .menuBtn {
+            position: relative;
+            margin: 20px auto 0 auto;
+            width: 300px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border: 1px solid green;
+            cursor: pointer;
+        }
+
+        .menuBtn em {
+            display: block;
+            position: absolute;
+            top: 13px;
+            left: 90px;
+            width: 11px;
+            height: 11px;
+            background: url("img/down.gif") no-repeat;
+        }
+
+        .menuBtn em.up {
+            background: url("img/up.gif") no-repeat;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $menuLink = $(".menuList>a");
+
+            //->让所有包含苹果|小米|华为品牌手机高亮显示
+            var $menuFilter = $menuLink.filter(":contains('苹果'),:contains('小米'),:contains('华为')");
+            $menuFilter.css("color", "red");
+
+            //->让索引大于五并且小于十三的菜单开始的时候是隐藏的
+            //var $menus = $(".menuList>a:gt(5):not(:last)");
+            //var $menus = $(".menuList>a:gt(5)").filter(":not(:last)");
+            var $menus = $menuLink.filter(":gt(5):not(:last)");
+            $menus.css("display", "none");//->$menus.hide();
+
+
+            //->获取按钮给其点击事件绑定方法
+            var $menuBtn = $(".menuBtn"), $menuEM = $menuBtn.children("em"), $menuSPAN = $menuBtn.children("span");
+            $menuBtn.on("click", function () {
+                if ($(this).attr("isBok") === "hide") {
+                    $menus.css("display", "block");
+                    $menuSPAN.html("精简显示品牌");
+                    $menuEM.addClass("up");
+                    $(this).attr("isBok", "show");
+                    return;
+                }
+                $menus.css("display", "none");
+                $menuSPAN.html("显示全部品牌");
+                $menuEM.removeClass("up");
+                $(this).attr("isBok", "hide");
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="menu">
+    <div class="menuList">
+        <a href="#">苹果<span>(30400)</span></a>
+        <a href="#">索尼<span>(30400)</span></a>
+        <a href="#">三星<span>(30400)</span></a>
+        <a href="#">小米<span>(30400)</span></a>
+        <a href="#">华为<span>(30400)</span></a>
+        <a href="#">诺基亚<span>(30400)</span></a>
+        <a href="#">锤子<span>(30400)</span></a>
+        <a href="#">联想<span>(30400)</span></a>
+        <a href="#">OPP<span>(30400)</span></a>
+        <a href="#">乐视<span>(30400)</span></a>
+        <a href="#">360手机<span>(30400)</span></a>
+        <a href="#">步步高<span>(30400)</span></a>
+        <a href="#">HTC<span>(30400)</span></a>
+        <a href="#">其它品牌手机<span>(30400)</span></a>
+    </div>
+    <div class="menuBtn" isBok="hide"><em></em><span>显示全部品牌</span></div>
+</div>
+</body>
+</html>

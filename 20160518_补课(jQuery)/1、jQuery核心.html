@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery-珠峰培训</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            margin: 10px auto;
+            width: 80%;
+            height: 50px;
+            background: green;
+        }
+    </style>
+</head>
+<body>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    //window.jQuery = window.$ = jQuery;
+    //jQuery = function( selector, context ) {
+    //return new jQuery.fn.init( selector, context );
+    //}
+    //    $ - > jQuery
+    //    $() -> jQuery([选择器],[上下文->默认是document])
+    //    $("div")
+    //$()就是创建一个jQuery类的实例->jQuery对象
+
+    //->jQuery的方法分为两部分:
+    //一部分是把它当做一个类,定义在jQuery.prototype上的,这些方法只有通过选择器获取它的一个实例后才可以调用,例如：$("div").addClass()
+    //一部分是把它当做一个普通的对象,通过对象键值对的方式存储的,这类方法在调取的时候直接的jQuery.属性名调取即可,例如:$.ajax()
+
+    //->基于jQuery扩展方法:
+    //jQuery.fn.extend({[attr]:[value]}); ->把方法扩展到原型上(扩展插件)
+    //jQuery.extend({[attr]:[value]}); ->把方法扩展到私有属性上(完善类库)
+
+    //    jQuery.fn.extend({
+    //        banner: function () {
+    //
+    //        }
+    //    });
+    //    $(".inner").banner();
+
+    //    jQuery.extend({
+    //        aryDistinct: function (ary) {
+    //
+    //        }
+    //    });
+    //    $.aryDistinct([1, 2, 1, 2, 3, 4, 2, 3, 1, 2, 3]);
+
+    //->jQuery拥有非常强大的循环/遍历系统
+    //不仅在原型上有一个叫做each的方法(遍历jQuery对象集合的),而且在私有属性上也有一个叫做each的方法(遍历对象、数组、类数组的)
+    //    $("div").each(function (index, item) {
+    //        //->index:当前循环这一项的索引
+    //        //->item:当前循环的这一项(JS对象) ->把它变为jQuery对象 $(item) ->$(this):说明回调函数中的this是当前循环的每一项
+    //        //console.log(index, item);
+    //    });
+    //->jQuery选择器获取到一组元素集合,当使用元素集合调取一个方法的时候,相当于给元素集合中的每一项都分别执行了这个方法(内置循环)
+    //    $("div").css("background", "red"); ==>
+    //    $("div").each(function () {
+    //        $(this).css("background", "red");
+    //    });
+
+    //    $.each([12, 23, 34], function (index, item) {
+    //        console.log(index, item, this);//this<==>item
+    //    });
+    //    $.each(document.getElementsByTagName("div"), function (index, item) {
+    //        console.log(index, item, this);//this<==>item
+    //    });
+    //    $.each({name: "珠峰", age: 7}, function (index, item) {
+    //        console.log(index, item, this);//this<==>item
+    //    });
+
+    //->jQuery拥有强大的链式写法
+    //$("div").addClass("bg").css("height", 60).stop().animate({opacity: 0.5}, 1000);
+
+    //->jQuery的回调函数队列
+    var $callList = $.Callbacks();//->发布了一个计划
+    function A() {
+        console.log("A");
+        $callList.fire(100);//->按照计划表中的内容执行,这里传递的参数相当于给每个计划表中的方法都传递了这个参数值
+    }
+    function B() {
+        console.log("B", arguments[0]);
+    }
+    $callList.add(B);
+
+    function C() {
+        console.log("C", arguments[0]);
+    }
+    $callList.add(C);
+
+    function D() {
+        console.log("D", arguments[0]);
+    }
+    $callList.add(D);
+
+    function E() {
+        console.log("E", arguments[0]);
+    }
+    $callList.add(E);
+
+    function F() {
+        console.log("F", arguments[0]);
+    }
+    $callList.add(F);
+
+    A();
+</script>
+</body>
+</html>
