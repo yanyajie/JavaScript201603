@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; background:green; top:100px; left:100px; cursor:move; -webkit-user-select:none;}
+</style>
+</head>
+
+<body>
+<div id="div1" style="left:0; top:0; background:red;"></div>
+<div id="div2"><img src="" height="100" width="100"></div>
+<div id="div3" style="top:200px; left:150px; background:blue;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+//面向对象的编程强在管理、拓展功能。强项不是逻辑
+//在使用面向对象编程方式之前，先要确定设计原则：this关键字的问题。
+	//this要指向当前类的实例，无论是构造函数还是原型函数，this都要指是指向类的实例。
+	//这一点会和事件原则中this冲突，如果存在冲突，强制使this指向类的实例
+//一但使用的面向对象，代码的可读性会变差。
+//使用面向对象，要理解整个类的体系
+
+function Drag(ele){//构造函数是初始化的作用
+	this.x=null;
+	this.y=null;
+	this.mx=null;
+	this.my=null;
+	this.ele=ele;//把被拖拽的元素保存到当前实例的ele属性上，以便其类上的其它函数能够访问。如果不把ele保存到this.ele上，其它方法无法访问这个私有变量ele。一个方法里定义的变量或形参，都是私有变量，其它的函数里无法访问；但如果我们把一个值保存到this的属性，则这个属性就成了公有变量
+	/*
+	function processThis(fn,obj){
+		//返回的新方法：让fn的功能不变，但是this被强制改变了
+		return function(e){fn.call(obj,e);this}	
+		function fn1(){
+			this;
+			fn();	
+		}
+	}
+	*/
+	this.DOWN=processThis(this.down,this);
+	//processThis会返回一个新的方法，这个新的方法里还是执行老的方法this.down，但是会让this.down里的this一定指向当前类的实例
+	this.MOVE=processThis(this.move,this);
+	this.UP=processThis(this.up,this);
+	
+	on(ele,"mousedown",this.DOWN);
+	//以下是错误的绑定方式
+	//on(ele,"mousedown",this.down);//我们原则是：down方法无论在什么情况下里的this都指向类的实例this
+	
+	
+	
+	
+}
+
+Drag.prototype.down=function(e){
+	this.x=this.ele.offsetLeft;
+	this.y=this.ele.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.ele.setCapture){
+		this.ele.setCapture();
+		on(this.ele,"mousemove",this.MOVE);
+		on(this.ele,"mouseup",this.UP);
+	}else{
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);
+	}
+	e.preventDefault();
+	//一定要注意的是：如果事件是用DOM2事件绑定方法来绑定的，那么阻止事件的默认行为一定要用e.preventDefault()这个方法
+	
+}
+Drag.prototype.move=function(e){
+	this.ele.style.left=this.x+e.pageX-this.mx+"px";
+	this.ele.style.top=this.y+e.pageY-this.my+"px";
+	
+	
+}
+Drag.prototype.up=function(e){
+	if(this.ele.releaseCapture){
+		this.ele.releaseCapture();
+		off(this.ele,"mousemove",this.MOVE);
+		off(this.ele,"mouseup",this.UP);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+}
+
+var obj1=new Drag(div1);
+//操作的主体，上下文，是ele这个dom元素；现在操作的主体是obj1这个对象，这个obj1中，承载了所有的和拖拽相关的信息（属性和方法）
+new Drag(div2);
+new Drag(div3);
+
+
+
+
+</script>
+
