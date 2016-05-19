@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; background:green; top:100px; left:100px; cursor:move; -webkit-user-select:none;}
+</style>
+</head>
+
+<body>
+<div id="div1" style="left:0; top:0; background:red;"></div>
+<div id="div2"><img src="" height="100" width="100"></div>
+<div id="div3" style="top:200px; left:150px; background:blue;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+//面向对象的编程强在管理、拓展功能。强项不是逻辑
+//在使用面向对象编程方式之前，先要确定设计原则：this关键字的问题。
+	//this要指向当前类的实例，无论是构造函数还是原型函数，this都要指是指向类的实例。
+	//这一点会和事件原则中this冲突，如果存在冲突，强制使this指向类的实例
+//一但使用的面向对象，代码的可读性会变差。
+//使用面向对象，要理解整个类的体系
+
+function EventEmitter(){};
+ EventEmitter.prototype.on=function(type,fn){//登记、约定
+ 	if(!this["aEmitter"+type]){
+		this["aEmitter"+type]=[];	
+	}
+	var a=this["aEmitter"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);
+	 
+ }
+ EventEmitter.prototype.run=function(type,e){//通知
+ 		var a=this["aEmitter"+type];
+		if(a){
+			for(var i=0;i<a.length;i++){
+				if(typeof a[i] == "function"){
+					a[i].call(this,e)
+					//a[i](e);
+					//a[i]();
+				}else{
+					a.splice(i,1);
+					i--;	
+				}
+			}
+			
+		}
+	 
+ }
+ EventEmitter.prototype.off=function(){//解除约定
+	 var a=this["aEmitter"+type];
+	 if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;
+				return;	
+			}
+		}
+	 }
+ }
+
+function Drag(ele){//构造函数是初始化的作用
+	this.x=null;
+	this.y=null;
+	this.mx=null;
+	this.my=null;
+	this.ele=ele;
+	this.DOWN=processThis(this.down,this);
+	this.MOVE=processThis(this.move,this);
+	this.UP=processThis(this.up,this);
+	on(ele,"mousedown",this.DOWN);	
+}
+Drag.prototype=new EventEmitter;
+//EventEmitter.prototype=new Drag;
+//EventEmitter.prototype.dragstart
+Drag.prototype.down=function(e){
+	this.x=this.ele.offsetLeft;
+	this.y=this.ele.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.ele.setCapture){
+		this.ele.setCapture();
+		on(this.ele,"mousemove",this.MOVE);
+		on(this.ele,"mouseup",this.UP);
+	}else{
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);
+	}
+	e.preventDefault();
+	this.run("dragstart",e);//this.run是干嘛的？
+}
+Drag.prototype.move=function(e){
+	this.ele.style.left=this.x+e.pageX-this.mx+"px";
+	this.ele.style.top=this.y+e.pageY-this.my+"px";
+	this.run("dragging",e);//发布事件、通知
+	
+	/*
+	function processThis(fn,obj){
+		return function(e){fn.call(obj,e)}	
+	}
+	//浏览器把e传给this.MOVE--->this.move-->this.run-->getSpeed
+	//getSpeed
+	*/
+	
+	
+}
+Drag.prototype.up=function(e){
+	if(this.ele.releaseCapture){
+		this.ele.releaseCapture();
+		off(this.ele,"mousemove",this.MOVE);
+		off(this.ele,"mouseup",this.UP);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+	this.run("dragend",e);
+}
+/*
+	把拖拽开始的事件类型定为："dragstart"--this.down
+						: "dragging"--->this.move
+						:dragend----->this.up
+
+*/
+
+var obj1=new Drag(div1);
+obj1.on("dragstart",clearEffect);
+obj1.on("dragging",getSpeed);
+obj1.on("dragend",fly);
+obj1.on("dragend",drop);
+new Drag(div2);
+new Drag(div3);
+
+function clearEffect(){
+	clearTimeout(this.flyTimer);
+	clearTimeout(this.dropTimer)
+	
+}
+function getSpeed(e){
+	if(this.prevPosi)
+		this.speed=	e.pageX-this.prevPosi;
+	this.prevPosi=e.pageX;
+}
+
+function fly(){
+	this.speed*=.97;
+	var maxRight=(document.documentElement.clientWidth||document.body.clientWidth)-this.ele.offsetWidth;
+	var val=this.speed+this.ele.offsetLeft;
+	if(val<=0){
+		this.ele.style.left=0;
+		this.speed*=-1;	
+	}else if(val>=maxRight){
+		this.ele.style.left=maxRight+"px";
+		this.speed*=-1;
+	}else{
+		this.ele.style.left=val+"px";
+	}
+	if(Math.abs(this.speed)>=0.5){
+		this.flyTimer=setTimeout(processThis(fly,this),20);	
+	}
+	
+}
+
+function drop(){
+	if(this.dropSpeed){
+		this.dropSpeed+=9;
+	}else{
+		this.dropSpeed=9;
+	}
+	this.dropSpeed*=.97;
+	var maxBottom=(document.documentElement.clientHeight||document.body.clientHeight)-this.ele.offsetHeight;
+	var val=this.dropSpeed+this.ele.offsetTop;
+	if(val>=maxBottom){
+		this.ele.style.top=maxBottom+"px";
+		this.dropSpeed*=-1;
+		this.flag++;	
+	}else{
+		this.ele.style.top=val+"px";
+		this.flag=0;	
+	}
+	if(this.flag<2){
+		this.dropTimer=setTimeout(processThis(drop,this),20);	
+	}
+}
+
+</script>
+

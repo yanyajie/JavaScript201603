@@ -17,10 +17,10 @@ function on(ele,type,fn){
 	}
 	if(!ele["aEvent"+type]){
 		ele["aEvent"+type]=[];	
-		//只有这个判断里，才能实现相当的事件类型下，run方法只被绑定一次（确保run方法不会被重复绑定）
-		//把run方法绑定到真正的浏览器事件上，事件触发的时候才能触发run方法。
-		//自定义事件是由人为写在方法里执行的（比如写在了down,move,up方法里了）
+		
 		ele.attachEvent("on"+type,function(){run.call(ele)});
+		//所谓的事件，就是把一件事发布了（公开了），一件事就是指一个function
+		//自定义事件里，run的作用是通知，发布：
 	}
 	
 	var a=ele["aEvent"+type];

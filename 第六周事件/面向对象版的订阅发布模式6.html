@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+</body>
+</html>
+<script>
+
+//烧水（20分钟），泡方便，喝水，洗澡，扫地（5），看书(随意)，打电话（10），充电（>6小时）
+//烧水（异步方法）       （报警器，回调）  --->泡方便面--喝水--洗澡
+//扫地-->打电话--->看会书
+//充电
+//单线程多进程（多任务）
+
+function EventEmitter(){};
+EventEmitter.prototype.on=function(type,fn){
+	if(!this["aEvent"+type]){
+		this["aEvent"+type]=[];	
+	}
+	var a=this["aEvent"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	
+	a.push(fn);
+}
+EventEmitter.prototype.run=function(type,e){
+	var a=this["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			a[i].call(this,e);	
+		}
+	}
+}
+
+EventEmitter.prototype.off=function(type,fn){
+	var a=this["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a.splice(i,1);	
+			}
+		}
+	}
+}
+
+
+
+function Kettle(){};
+Kettle.prototype=new EventEmitter;//会破坏原有的原型地址
+//Kettle.prototype.__proto__=EventEmitter.prototype;//nodeJS中一般用这个，更安全，但IE6/7/8不支持
+Kettle.prototype.boiling=function(){//水沸腾的方法
+	//this.run("boiling");
+	var that=this;
+	window.setTimeout(function(){
+		console.log("水开了");	
+		that.run("boiling");
+	},5000);
+	
+}
+
+function cookNoodles(){
+	console.log("煮面");
+}
+function drink(){
+	console.log("喝开水");	
+}
+function bath(){
+	console.log("洗澡");	
+}
+var kettle1=new Kettle();
+
+kettle1.on("boiling",cookNoodles);
+kettle1.on("boiling",drink);
+kettle1.on("boiling",bath);
+
+kettle1.boiling();
+
+
+
+
+</script>
