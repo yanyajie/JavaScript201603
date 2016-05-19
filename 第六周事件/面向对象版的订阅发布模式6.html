@@ -28,11 +28,11 @@ EventEmitter.prototype.on=function(type,fn){
 	
 	a.push(fn);
 }
-EventEmitter.prototype.run=function(type){
+EventEmitter.prototype.run=function(type,e){
 	var a=this["aEvent"+type];
 	if(a){
 		for(var i=0;i<a.length;i++){
-			a[i]();	
+			a[i].call(this,e);	
 		}
 	}
 }
