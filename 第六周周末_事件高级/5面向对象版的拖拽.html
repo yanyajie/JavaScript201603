@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; background:red; position:absolute; top:0; left:0; cursor:move;}
+
+</style>
+</head>
+
+<body>
+<div id="div1" ><img src="QQ截图20160112104818.png" width="100" height="100"></div>
+<div id="div2" style="top:100px; left:0; background:blue;"></div>
+<div id="div3" style="top:100px; left:100px; background:yellow;"></div>
+<div id="div4"  style="top:200px; left:220px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+var eles=document.getElementsByTagName("div");
+//用面向对象的方式方法来完成代码，主要是为了更好的管理和扩展功能功能
+//首先要确定设计原则：
+	//1、this的指向。则是类的方法，this都要指向这个类当前的实例
+	//2、一个类就是一个具体完整功能的模块，这个模块（类）上定义了此功用所需要所有的属性和方法。
+	//3、我们在定义这个类的时候，最其码要实现它的最基本的功能。还要留好扩展的余地，以便升级
+	
+	function Drag(ele){//类名、构造函数
+	//构造函数是初始化的作用
+		this.x=null;
+		this.y=null;
+		this.mx=null;
+		this.my=null;
+		
+		this.ele=ele;//把ele这个私有变量上保存的DOM元素，保存到公有变量this.ele上
+		
+		//要想实现拖拽，要处理好mousedown事件
+		//on(ele,"mousedown",this.down);
+		//this要指向类的实例，以上的绑定方式和事件处理中的this原则冲突
+		this.DOWN=processThis(this.down,this);
+		/* processThis的实现如下
+		function processThis(fn,obj){
+			return function(e){fn.call(obj,e);this}	
+		}
+		*/
+		on(ele,"mousedown",this.DOWN);//这样处理，当事件触发的时候，执行的是this.DOWN,this.DOWN里的this是谁？this.down里的this为什么
+		this.MOVE=processThis(this.move,this);
+		this.UP=processThis(this.up,this);
+	}
+	Drag.prototype.down=function(e){
+		this.x=this.ele.offsetLeft;
+		this.y=this.ele.offsetTop;
+		this.mx=e.pageX;
+		this.my=e.pageY;
+		if(this.ele.setCapture){
+			this.ele.setCapture();
+			on(this.ele,"mousemove",this.MOVE);
+			//on(this.ele,"mousemove",this.move);
+			//this.move();
+			on(this.ele,"mouseup",this.UP);
+		}else{
+			on(document,"mousemove",this.MOVE);
+			on(document,"mouseup",this.UP);
+		}
+		e.preventDefault();
+	};
+	Drag.prototype.move=function(e){
+		this.ele.style.left=this.x+e.pageX-this.mx+"px";
+		this.ele.style.top=this.y+e.pageY-this.my+"px";
+	};
+	Drag.prototype.up=function(e){
+		if(this.ele.releaseCapture){
+			this.ele.releaseCapture();
+			off(this.ele,"mousemove",this.MOVE);
+			off(this.ele,"mouseup",this.UP);	
+		}else{
+			off(document,"mousemove",this.MOVE);
+			off(document,"mouseup",this.UP);
+		}
+	};
+	new Drag(div1);
+	new Drag(div2);
+	new Drag(div3);
+	new Drag(div4);
+</script>

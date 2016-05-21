@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:blue; cursor:move; -webkit-user-select:none;}
+</style>
+<div id="div1"><img src="主要看气质.jpg" width="100" height="100"></div>
+<div id="div2" style="background:red; left:300px;"></div>
+<div id="div3" style="background:green; left:200px; "></div>
+<div id="div4" style="left:400px; background:purple;"></div>
+</body>
+</html>
+<script>
+
+bind,unbind,on,fire,off
+
+//解决this关键字问题
+//解决一个方法不能被重复的绑定到同一个事件
+function bind(ele,type,fn){
+	//只解决IE的问题
+	
+	//这是核心代码，解决this的指向问题的代码	
+	var fnTemp=function(){fn.call(ele)}
+	
+	
+	if(!ele["aBind"+type]){
+		ele["aBind"+type]=[];
+	};
+	//下面是解决重复绑定的代码
+	 for(var i=0;i<ele["aBind"+type].length;i++){
+			if(ele["aBind"+type][i].photo==fn)return; 
+	 }
+	
+	ele["aBind"+type].push(fnTemp);
+	fnTemp.photo=fn;
+	
+	ele.attachEvent("on"+type,fnTemp);
+}
+
+function unbind(ele,type,fn){};
+
+//顺序问题：新建程序池（数组），把需要绑定的方法存到数组里，而不是直接绑定给事件。相当于抛弃了原有的事件模型。
+function on(ele,type,fn){
+	if(!ele["aEvent"+type]){
+		ele["aEvent"+type]=[];
+		//这个位置可以实现：无论on方法执行多少次，只要是同一个元素的同一个事件，则此处的代码，只能被执行一次	
+		ele.attachEvent("on"+type,function(){fire.call(ele)})
+	}
+	var a=ele["aEvent"+type];
+	
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	//最核心的代码就是这一行
+	a.push(fn);
+	
+	//中间环节：当事件触发的时候，触发的fire方法，由fire方法去遍历执行这个数组，达到按绑定的顺序执行的目的
+	//bind方法可以把fire绑定给ele的type事件，并且解决了this的问题，并且无论on执行多少次，fire只会被绑定一次
+	//fire被绑定之后，不需要移除
+	bind(ele,type,fire);//
+	//bind要解决的三件事：绑定，this,重复
+	//ele.attachEvent("on"+type,function(){fire.call(ele)})
+	
+	//事件 ----- fire -----a[i] (a里是用on保存下来的方法，a是自定义的程序池)
+	//系统事件和自定义程序池a之间联系的桥梁是 fire
+	//无论on执行多少次，fire方法只能被绑定一次--->无论on方法执行多少次,ele.attachEvent("on"+type,function(){fire.call(ele)})这句代码只执行一次
+}
+
+
+/*
+		总结on方法的实现
+	on方法是通过自定义的一个程序池，把系统事件触发时，方法执行混乱的问题解决
+	1、自定义的程序池按顺序把需要绑定的方法保存在此数组中（程序池、事件池）
+	2、当事件触发的时候，由fire来遍历执行保存在程序池中的方法，这样就实现了按顺序执行绑定在事件上的方法了。也就是说当事件触发的时候是执行的fire方法，而非用on方法保下来的这些方法。那么就需要在on方法里，在事件真正绑定fire方法
+	3、在on里绑定方法要注意：this关键字的问题，fire不要被重复绑定的问题
+	
+	//事件触发 -----> fire --遍历-->a[i] (a里是用on保存下来的方法，a是自定义的程序池)
+
+*/
+
+function on(ele,type,fn){
+	if(ele.addEventListener){
+		ele.addEventListener(type,fn,false);
+		return;	
+	}
+	
+	if(!ele["aEvent"+type]){
+		ele["aEvent"+type]=[];	
+		ele.attachEvent("on"+type,function(){fire.apply(ele)});
+	}
+	var a=ele["aEvent"+type];
+	
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);
+		
+}
+/*
+on(div1,"click",fn1);
+on(div1,"click",fn1);
+on(div1,"click",fn2);
+on(div1,"click",fn3);
+*/
+function fire(){
+	var e=window.event;
+	var type=e.type;
+	var a=this["aEvent"+type];
+	if(!e.target){
+		e.target=e.srcElement;
+		e.pageX=(document.documentElement.scrollLeft||document.body.scrollLeft)+e.clientX;
+		e.pageY=(document.documentElement.scrollTop||document.body.scrollTop)+e.clientY;
+		e.stopPropagation=function(){e.cancelBubble=true;}
+		e.preventDefault=function(){e.returnValue=false;}
+		
+	}
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i].call(this,e);	
+			}else{
+				a.splice(i,1);
+				i--;
+			}
+		}
+	}
+}
+
+function off(ele,type,fn){
+	if(ele.removeEventListener){
+		ele.removeEventListener(type,fn,false);
+		return;	
+	}
+	var a=ele["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;	
+			}
+		}
+	}
+	
+}
+
+
+
+
+</script>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:blue; cursor:move; -webkit-user-select:none;}
+</style>
+<div id="div1"><img src="主要看气质.jpg" width="100" height="100"></div>
+<div id="div2" style="background:red; left:300px;"></div>
+<div id="div3" style="background:green; left:200px; "></div>
+<div id="div4" style="left:400px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+function down(e){//拖拽开始，或准备拖拽
+	this.x=this.offsetLeft;
+	this.y=this.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.setCapture){
+		this.setCapture();
+		on(this,"mousemove",move);
+		on(this,"mouseup",up);
+	}else{
+		//毛主席教导我们：只要是处理或改变this关键字的指向，一定不要忘记call或apply方法。
+		this.MOVE=move.bind(this);
+		this.UP=up.bind(this);
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);
+	}
+	e.preventDefault();
+	
+	//当执行拖拽的时候，清除或许有的动画效果
+	clearTimeout(this.dropTimer);
+	clearTimeout(this.flyTimer);
+}
+
+
+//drag,fly:功能是独立的，但是还可以在需要的时候，这两个行为协作
+function move(e){
+	//当前盒子的位置=鼠标移动的距离+盒子原来的位置
+	this.style.left=e.pageX-this.mx+this.x+"px";
+	this.style.top=e.pageY-this.my+this.y+"px";
+	
+	//两次mousemove事件之间的距离怎么得到:这一次move方法执行时的鼠标的位置-上一次move执行的时候的鼠标的位置
+	
+	e.pageX
+	if(this.prevPosi){
+		this.speed=e.pageX-this.prevPosi;
+		this.prevPosi=e.pageX;
+		
+	}else{
+		this.prevPosi=e.pageX;	
+	}
+	
+	
+}
+
+function up(e){
+	if(this.releaseCapture){
+		this.releaseCapture();
+		off(this,"mousemove",move);
+		off(this,"mouseup",up);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+	
+	//以下是在拖拽结束的时候，执行动画效果
+	fly.call(this);
+	drop.call(this);
+}
+
+var eles=document.getElementsByTagName("div");
+for(var i=0;i<eles.length;i++){
+	on(eles[i],"mousedown",down);
+}
+
+
+//在实现fly效果之前，先把fly的速度模拟出来，这个实现的原理是：认为两次mousemove事件的时间间隔是相等的，则把这个相等的时间看成一个单位时间，然后去得到这个单位时间内盒子被拖拽的距离，把这个距离当成速度
+function fly(){
+	this.speed*=.97;
+	
+	var maxRight=(document.documentElement.clientWidth||document.body.clientWidth)-this.offsetWidth;
+	var val=this.offsetLeft+this.speed;
+	if(val>=maxRight){
+		this.style.left=maxRight+"px";
+		this.speed*=-1;	
+	}else if(val<=0){
+		this.style.left=0;
+		this.speed*=-1;	
+	}else{
+		this.style.left=val+"px";	
+	}
+	if(Math.abs(this.speed)>=0.5){
+		this.flyTimer=setTimeout(processThis(fly,this),20);
+	}
+	
+}
+
+
+function drop(){
+	if(this.dropSpeed){
+		this.dropSpeed+=9;	
+	}else{
+		this.dropSpeed=9;	
+	}
+	this.dropSpeed*=.98;
+	
+	var val=this.offsetTop+this.dropSpeed;
+	var maxBottom=(document.documentElement.clientHeight||document.body.clientHeight)-this.offsetHeight;
+	if(val>=maxBottom){
+		this.style.top=maxBottom+"px";
+		this.dropSpeed*=-1;
+		this.flag++;
+	}else{
+		this.style.top=val+"px";
+		this.flag=0;
+	}
+	if(this.flag<2){
+		this.dropTimer=setTimeout(processThis(drop,this),20);	
+	}
+	
+}
+</script>

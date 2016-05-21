@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+</body>
+</html>
+<script>
+
+//烧水---煮方便面----喝--洗个开水澡
+//扫地，打电话，看会书，充电
+
+//1烧水--2扫地--3打电话--4看书
+//在以上过程中。。。等着水烧水
+//所有的工作都在一个流程（进程）中被安排，这就是同步
+//在js中，是使用异步回调的方式来实现进程安排
+//水开之后，会通知煮方便面
+
+
+//行为的承载体
+//面向过程---面向对象
+
+//-----------------------------分隔线---------------->
+
+function EventEmitter(){};//EventTarget
+EventEmitter.prototype.on=function(type,fn){
+	if(!this["emitter"+type]){
+		this["emitter"+type]=[];	
+	}
+	var a=this["emitter"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);
+};
+EventEmitter.prototype.fire=function(type){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i]();	
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+};
+EventEmitter.prototype.off=function(type,fn){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){a[i]=null;	return}
+		}
+	}
+}
+
+function Kettle(){};
+Kettle.prototype=new EventEmitter;
+Kettle.prototype.boiling=function(){
+	var that=this;
+	window.setTimeout(function(){
+		console.log("水已烧开！");
+		that.fire("abcd");	
+		//this.fire("abcd");
+	},5000);
+}
+var k=new Kettle;
+k.boiling();
+
+//以下这三个方法，约定了水开这个行为：水开之后，做以下三件事
+function noodles(){
+	console.log("泡方便面");	
+}
+function drink(){
+	console.log("喝开水");
+}
+function bath(){//shower
+	console.log("洗个开水澡");
+}
+var k2=new Kettle;
+k2.on("abcd",noodles);
+k2.on("abcd",drink);
+k2.on("abcd",bath);
+
+//k2.boiling();
+</script>

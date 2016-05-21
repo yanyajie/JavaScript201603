@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+div{ width:100px; height:100px; background:red; position:absolute; top:0; left:0; cursor:move;}
+
+</style>
+</head>
+
+<body>
+<div id="div1" ><img src="QQ截图20160112104818.png" width="100" height="100"></div>
+<div id="div2" style="top:100px; left:0; background:blue;"></div>
+<div id="div3" style="top:100px; left:100px; background:yellow;"></div>
+<div id="div4"  style="top:200px; left:220px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+var eles=document.getElementsByTagName("div");
+
+function down(e){//准备拖拽
+	
+	this.x=this.offsetLeft;
+	this.y=this.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.setCapture){
+		this.setCapture();
+	
+		on(this,"mousemove",move);
+		on(this,"mouseup",up);
+	}else{
+		
+		/*function processThis(fn,obj){
+			return function(e){fn.call(obj,e);this}	
+		}*/
+		this.MOVE=processThis(move,this);
+		this.UP=up.bind(this);
+		
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);
+	}
+	
+	e.preventDefault();
+	
+	clearTimeout(this.flyTimer);//在准备拖拽的时候，把正在执行的动画要清掉，以免有影响干扰
+}
+function move(e){
+	this.style.left=this.x+e.pageX-this.mx+"px";
+	this.style.top=this.y+e.pageY-this.my+"px";
+	this.flySpeed;//以两次mousemove事件发生的间隔时间做单位时间，以这两次mousemove事件之间鼠标鼠标的距离为速度，得到一个this.flySpeed,需要move方法里计算出来
+	if(this.prevPosi){
+		this.flySpeed=e.pageX-this.prevPosi
+		this.prevPosi=e.pageX;
+		//计算到最后一次的时候，以最后一次得到的速度为准（up执行之前的那一次）
+	}else{//表示没有所谓的上一次的速度
+		this.prevPosi=e.pageX;//如果没有上一次鼠标的位置，则把当次鼠标的位置赋值给它，这样到了第二次的时候，this.prePosi就是上一次的位置了。也就是说所谓的“上一次的位置”是个相关的概念
+		
+	}
+}
+function up(e){
+	if(this.releaseCapture){
+		this.releaseCapture();
+		off(this,"mousemove",move);
+		off(this,"mouseup",up);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+	
+	fly.call(this);
+	drop.call(this);
+}
+for(var i=0;i<eles.length;i++){
+	on(eles[i],"mousedown",down);
+}
+//fly和drop里的this都是做运动的那个元素，也就是被拖拽的元素
+function fly(){
+	this.flySpeed;//以两次mousemove事件发生的间隔时间做单位时间，以这两次mousemove事件之间鼠标鼠标的距离为速度，得到一个this.flySpeed,需要move方法里计算出来
+	this.flySpeed*=.98;
+	var maxRight=(document.documentElement.clientWidth||document.body.clientWidth)-this.offsetWidth;
+	var current=this.offsetLeft+this.flySpeed//当前的位置
+	//如果当前的位置大于了右边界，则停在右边界上
+	if(current>=maxRight){
+		this.style.left=maxRight+"px";
+		this.flySpeed*=-1;//没有这句话就会停在边界上不动了，有这句则会往反向运动
+	}else if(current <=0){
+		this.style.left=0;
+		this.flySpeed*=-1;	
+	}else{
+		this.style.left=current+"px";
+	}
+	
+	if(Math.abs(this.flySpeed)>=0.5)//如果速度有效则继续执行动画
+		this.flyTimer=window.setTimeout(processThis(fly,this),20);
+}
+
+//ele.style.left="22.7px"
+function drop(){
+	if(this.dropSpeed){
+		this.dropSpeed+=9;
+	}else{
+		this.dropSpeed=9;
+	}
+	
+	this.dropSpeed*=.98;
+	var current=this.offsetTop+this.dropSpeed;
+	var maxBottom=(document.documentElement.clientHeight||document.body.clientHeight)-this.offsetHeight;
+	if(current>=maxBottom){
+		this.style.top=maxBottom+"px";
+		this.dropSpeed*=-1;
+		this.flag++;//记录器：用来记录是否是连续的到达了边界
+	}else{
+		this.style.top=current+"px";
+		this.flag=0;	
+	}
+	
+	if(this.flag<2){
+		this.dropTimer=window.setTimeout(processThis(drop,this),20);	
+	}else{
+		this.dropSpeed=null;
+	}
+}
+
+</script>

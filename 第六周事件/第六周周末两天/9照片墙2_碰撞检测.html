@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+ul,li{ padding:0; margin:0; list-style:none; }
+ul{ width:480px; height:640px; padding:5px; margin:0px auto; background:#6FF; position:relative;}
+li{ width:150px; height:150px; overflow:hidden; margin:5px; float:left; background:#FF0; cursor:move; -webkit-user-select:none; }
+img{ width:150px; height:150px;}
+</style>
+</head>
+
+<body>
+<ul>
+	<li><img src="img/1.png"></li>
+    <li><img src="img/2.png"></li>
+    <li><img src="img/3.png"></li>
+    <li><img src="img/4.png"></li>
+    <li><img src="img/5.png"></li>
+    <li><img src="img/6.png"></li>
+    <li><img src="img/7.png"></li>
+    <li><img src="img/8.png"></li>
+    <li><img src="img/9.png"></li>
+    <li><img src="img/10.png"></li>
+    <li><img src="img/11.png"></li>
+    <li><img src="img/12.png"></li>
+    
+
+</ul>
+
+</body>
+</html>
+<script src="JS/event1.js"></script>
+<script src="JS/drag_oop.js"></script>
+<script src="JS/animate.js"></script>
+<script>
+//用js把浮动的布局改造成绝对定位布局
+
+var oLis=document.getElementsByTagName("li");
+/*
+for(var i=0;i<oLis.length;i++){
+	var oLi=oLis.item(i);
+	//oLi.style.position="absolute";//一但设置绝对定位，它就脱离标准流，它会自动的向定位依据的左上角对齐，立马它的offsetLeft和offsetTop的值就会改变，改变为现在的值
+	oLi.style.left=oLi.offsetLeft+"px";//把新的offsetLeft赋给了left
+	oLi.style.top=oLi.offsetTop+"px";
+}
+
+for(var i=0;i<oLis.length;i++){
+	var oLi=oLis.item(i);
+	oLi.style.position="absolute";
+	//margin
+	//left是从那儿开始计算的？offsetLeft是从那儿开始计算
+	//left的值不包括margin，offsetLeft包括margin，所以margin的值会被重复计算一次
+	oLi.style.margin=0;
+	
+	}
+*/
+for(var i=oLis.length-1;i>=0;i--){
+	var oLi=oLis.item(i);
+	oLi.style.left=(oLi.l=oLi.offsetLeft)+"px";
+	oLi.style.top=(oLi.t=oLi.offsetTop)+"px";
+	oLi.style.position	="absolute";
+	oLi.style.margin=0;
+	new Drag(oLi).on("dragstart",increaseIndex).on("dragend",goBack).on("dragging",test);
+	
+}
+var zIndex=0;
+function increaseIndex(){
+	this.ele.style.zIndex=++zIndex;
+}
+
+function goBack(){
+	animate(this.ele,{left:this.ele.l,top:this.ele.t},700,3)
+}
+
+function hitedTest(r,b){
+	if(b.offsetLeft+b.offsetWidth<r.offsetLeft||b.offsetTop+b.offsetHeight<r.offsetTop||b.offsetLeft>r.offsetLeft+r.offsetWidth||b.offsetTop>r.offsetTop+r.offsetHeight){
+		return false;
+	}else{	return true;}
+}
+//test负责所有元素的碰撞检测
+function test(){
+	this.aHited=[];
+	for(var i=0;i<oLis.length;i++){
+		var oLi=oLis[i];var curEle=this.ele;
+		oLi.style.background="";
+		if(oLi==curEle)continue;
+		if(hitedTest(curEle,oLi)	){
+			oLi.style.background="black";
+			this.aHited.push(oLi);
+		}
+	}
+	
+}
+</script>

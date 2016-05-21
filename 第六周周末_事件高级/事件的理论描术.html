@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+拖拽模块：down,move,up
+给拖拽模块增加了一些效果：drop,fly，完成drop和fly还需要改动down和move方法，并且为了让drop和fly执行，还要改动up方法，在up方法里增加代码
+拖拽改的面目全非了
+还要漂漂拳
+
+心行处灭，言语道断
+
+什么是事件
+字符串click是某个硬件或软件行为的标识符---（是现象、是概念）---本质是行为
+用click这个标识符来表示鼠标点一下的行为
+	ele.addEventListener("click",fn,false);
+addEventListener这个方法它就是一个接口，它把click所表示的这个行为，和fn这个行为联系在一起了，
+有了addEventListener这个方法，就可以实现当click发现的时候，fn也发生
+
+
+如果能像addEventListener一样，来解决两个不同的事（行为、function）之间的协作（A发生则B随着A的发生而发生，简言之就是A执行，则B就会执行）
+首先要为这个事（行为、function）的发生，确定一个标识符
+
+	在写具体的代码之前，确定的设计原则：确定由那些字符串来表示什么行为 
+拖拽有三个阶段，对应三个方法：down,move,up
+down--->"selfdragstart" (像这样标识符是由作者决定 ，就像定义变量一样)
+move--->"selfdragging"
+up----->"selfdragend"
+
+这些标识符是这样用的
+    on(ele,"selfdragstart",清除动画积累);
+    on(ele,"selfdragging",得出速度);
+    on(ele,"selfdragend",drop);
+    on(ele,"selfdragend",fly);
+
+以上的on方法就是两个不同的功能之间的桥梁，在JS里就是事件绑定（和addEventListener一样）
+
+on方法如何实现
+	on方法负责在down执行之前，把clearEffect的方法保存起来（订阅），以便当down执行的时候让clearEffect执行(通知，发布)。
+    
+    具体如何保存呢？和在处理IE事件兼容问题时候的原理和方式一样
+    function on(ele,type,fn){
+    	if(!ele["aSelf"+type]){
+        	ele["aSelf"+type]=[];
+        }
+        var a=ele["aSelf"+type];
+        for(var i=0;i<a.length;i++){
+        	if(a[i]==fn)return;
+        }
+        a.push(fn);
+    }
+
+
+	通知
+    所谓的通知，就是当down发生的时候，遍历保存到selfdragstart这个数组里对应的那些方法，让它们执行。selfdragstart就是和down对应的方法。原理和我们原来学过的run方法一样
+    function run(type){//这些只是run方法的定义，关键要是理解它在那儿执行
+    	var a=this["aSelf"+type];//对应到on方法保存的那个数组
+        
+        if(a){
+        	for(var i=0;i<a.length;i++){
+            	a[i].call(this);
+            }
+        }
+}
+
+down，move,up看成是主体行为
+把约定down，move,up的方法看成仆从行为
+on,run是down,move,up的秘书，
+on就负责登记记录约定某一个行为的其它行为
+
+run负责当某一个行为发生的时候，去通知由on已经登记好的那些行为
+run什么时候通知（执行）
+
+</body>
+</html>

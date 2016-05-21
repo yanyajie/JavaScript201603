@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+body{ width:100%; height:100%;}
+#outer{ width:70%; height:200px;  margin:30px auto; overflow:hidden; }
+#inner{ width:500%; height:100%; -webkit-transition-duration:0.5s; }
+#inner>div{ width:20%; height:100%; float:left; text-align:center; font-size:44px; line-height:200px; font-weight:bold; color:white;}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<div id="inner">
+    	<div style="background:red;">一</div>
+        <div style="background:green;" >二</div>
+        <div style="background:black" >三</div>
+        <div style="background:yellow;" >四</div>
+        <div style="background:blue;" >五</div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+
+function start(e){
+	
+	this.mx=e.changedTouches[0].pageX;//把手指按下去的时候的坐标保存下来
+	this.x=-this.i*this.offsetWidth;//盒子坐标计算起点（这个值是负数）,相当于拖拽中的this.x
+	
+}
+function move(e){
+	
+	var pageX=e.changedTouches[0].pageX;
+	//currentX相当于拖拽中的e.pageX
+	var val=this.x+(pageX-this.mx)+"px";
+	console.log(val);
+	this.parentNode.style.transform="translate("+val+",0)";
+	
+	
+	
+	if(pageX>this.mx){//当前的坐标比按下去值大，向右走
+		this.nextIndex=this.i-1;
+		if(this.nextIndex<0){
+			this.nextIndex=0;	
+		}
+	}else if(pageX<this.mx){//当前的坐标比按下去值小,向左走
+		this.nextIndex=this.i+1;
+		if(this.nextIndex>=eles.length-1){
+			this.nextIndex=eles.length-1;
+		}
+	}
+}
+function end(e){
+	var val=-this.nextIndex*this.offsetWidth+"px";
+	//从第0张走到第1张，应该向左移动一屏的宽
+	//从第1张走到第2张，应该向左移动两屏的宽
+	//从第2张走到第3张，应该向左移动三屏的宽
+	//
+
+
+	this.parentNode.style.transform="translate("+val+",0)";
+	
+}
+
+var eles=document.getElementById("inner").getElementsByTagName("div");
+var ele=eles.item(0);
+[].forEach.call(eles,function(ele,i){
+	ele.i=i;
+	ele.addEventListener("touchstart",start,false);
+	ele.addEventListener("touchmove",move,false);
+	ele.addEventListener("touchend",end,false);
+})
+
+</script>

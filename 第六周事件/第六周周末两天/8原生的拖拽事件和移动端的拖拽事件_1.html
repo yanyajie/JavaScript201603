@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{width:100px; height:100px; position:absolute; top:0; left:0; background:red; cursor:move;}
+</style>
+</head>
+
+<body>
+<div id="div1" draggable="true"></div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+ele.ondragstart=function(e){//表示：鼠标按下去，并且是在mousemove之前的这个阶段
+	this.x=this.offsetLeft;
+	this.y=this.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	//on(this,"mousemove",move);
+}
+ele.ondrag=function(e){
+	this.style.left=e.pageX-this.mx+this.x+"px";
+	this.style.top=e.pageY-this.my+this.y+"px";
+	
+}
+ele.ondragend=function(e){
+		this.style.left=e.pageX-this.mx+this.x+"px";
+	this.style.top=e.pageY-this.my+this.y+"px";
+}
+
+</script>
