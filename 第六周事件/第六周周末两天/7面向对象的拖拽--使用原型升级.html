@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:white; cursor:move; -webkit-user-select:none;}
+</style>
+<div id="div1"><img src="主要看气质.jpg" width="100" height="100"></div>
+<div id="div2" style="background:red; left:300px;"></div>
+<div id="div3" style="background:green; left:200px; "></div>
+<div id="div4" style="left:400px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+
+//两个设计原则：
+//一、Drag可以让用户自已扩展功能，可以让用户在不改动Drag的代码的情况，实现功能扩展。需要给用户留好接口，方便用户扩展
+//二、给Drag留足了升级的余地：现在是1.0版，以后可以有2，3，4，……。原来的功能保持不变，并且向下兼容
+
+//不会飞，fly，drop，increaseIndex.需要实现在拖拽的不同阶段都暴露一个接口（公布或发布事件）
+function EventEmitter(){}
+EventEmitter.prototype.on=function(type,fn){
+	if(!this["emitter"+type]){
+		this["emitter"+type]=[];	
+	}
+	var a=this["emitter"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return this;//为了实现链式写法
+	}
+	a.push(fn);
+	
+	return this;//为了实现链式写法
+}
+EventEmitter.prototype.fire=function(type,e){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+					a[i].call(this,e);
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+EventEmitter.prototype.off=function(type,fn){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;
+				return this;//为了实现链式写法
+			}
+		}
+	}	
+	return this;//为了实现链式写法
+}
+
+function Drag(ele){//被拖拽的元素
+	//this就不再是被拖拽的元素了，是当前类的实例
+	this.x=null;
+	this.y=null;
+	this.mx=null;
+	this.my=null;
+	this.ele=ele;
+	
+	
+	this.DOWN=processThis(this.down,this);
+	this.MOVE=processThis(this.move,this);
+	this.UP=processThis(this.up,this);
+	on(this.ele,"mousedown",this.DOWN);
+	//一定要注意：this.down，是通过this找到down方法，这和执行的时候没有关系，只是找到了一个方法定义的一个地址
+}
+Drag.prototype=new EventEmitter;
+//Drag.prototype.__proto__=EventEmitter.prototype;
+Drag.prototype.down=function(e){
+	this.x=this.ele.offsetLeft;
+	this.y=this.ele.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.ele.setCapture){
+		this.ele.setCapture();
+		on(this.ele,"mousemove",this.MOVE);
+		on(this.ele,"mouseup",this.UP);
+	}else{
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);	
+	}
+	e.preventDefault();
+	
+	//Drag.prototype.fire();
+	//new Drag.fire();
+	this.fire("dragstart",e);//写这一行代码的人，是生产者。
+	//"dragstart"它不是DOM元素的事件，而是自定义的Drag类的事件，所以这个事件类型不存在和DOM元素事件冲突的可能
+	//但是:写obj.on("dragstart",clearEffect);使用者
+}
+Drag.prototype.move=function(e){
+	this.ele.style.left=e.pageX-this.mx+this.x+"px";
+	this.ele.style.top=e.pageY-this.my+this.y+"px";
+	
+	this.fire("dragging",e);
+	
+}
+Drag.prototype.up=function(e){
+	if(this.ele.releaseCapture){
+		this.ele.releaseCapture();
+		off(this.ele,"mousemove",this.MOVE);
+		off(this.ele,"mouseup",this.UP);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+	
+	this.fire("dragend",e);
+}
+
+Drag.prototype.addRange=function(obj){//这个方法是让用户使用的，用户传进一个参数，这个参数是拖拽的范围
+	this.oRange=obj;//把这个范围保存到实例的属性oRange上，便于range方法判断计算
+	//var obj={left:0,right:0,top:0,bottom:1000};
+	//什么时候计算被拖拽元素的位置：move方法计算，但是不能修改move方法，需要用事件接口实现重新计算拖拽的位置.
+	//我们现在可以在不修改原来版本的前提下，实现对产品的升级，借助设计和原型方法来实现的
+	this.on("dragging",this.range);//在move的时候执行this.range，这样可以在不修改move的代码的前提下，扩展完善move的功能
+	
+}
+Drag.prototype.range=function(e){
+	if(this.ele.offsetLeft<=this.oRange.left){
+		this.ele.style.left=this.oRange.left+"px";	
+	}else if(this.ele.offsetLeft>=this.oRange.right){
+		this.ele.style.left=this.oRange.right+"px";
+	}
+	
+	if(this.ele.offsetTop<=this.oRange.top){
+		this.ele.style.top=this.oRange.top+"px";	
+	}else if(this.ele.offsetTop>=this.oRange.bottom){
+		this.ele.style.top=this.oRange.bottom+"px";	
+	}
+}
+
+Drag.prototype.border=function(){
+	this.on("dragstart",this.addBorder);
+	this.on("dragend",this.removeBorder);
+}
+Drag.prototype.addBorder=function(){
+	this.ele.style.border="3px dashed blue";	
+}
+Drag.prototype.removeBorder=function(){
+	this.ele.style.border="none";
+}
+
+
+/*Drag.prototype=new EventEmitter;
+Drag.prototype.__proto__=EventEmitter.prototype;*/
+/*
+	Drag产品使用说明书
+1、基本方法：Drag.prototype.down、move、up;
+2、常用公开的属性：this.ele表示被拖拽的元素,this.x原始位置，this.mx鼠标的原始位置
+3、常用事件类型："dragstart"，"dragging","dragend"
+4、扩展接口（绑定事件）的方法:on(附上如何用，再给个示例)，off(用法和示例)
+
+		没有这个说明书，用户无法实现功能扩展，这个说明书由开发者提供。使用者根据此说明书实现扩展的功能
+
+*/
+
+var zIndex=0;
+var range={left:0,right:500,top:0,bottom:600};
+function increaseIndex(){this.ele.style.zIndex=++zIndex;}
+var eles=document.getElementsByTagName("div");
+for(var i=0;i<eles.length;i++){
+	var obj=new Drag(eles[i]);
+	if(i==0){
+		obj.addRange(range);//
+		obj.border();
+	}
+}
+
+
+</script>

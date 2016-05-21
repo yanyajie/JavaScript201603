@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:blue; cursor:move; -webkit-user-select:none;}
+</style>
+<div id="div1"><img src="主要看气质.jpg" width="100" height="100"></div>
+<div id="div2" style="background:red; left:300px;"></div>
+<div id="div3" style="background:green; left:200px; "></div>
+<div id="div4" style="left:400px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+
+//JS中构造函数有两个作用：1、类的作用，实例识别。2、初始化实例的作用
+function Drag(ele){//被拖拽的元素
+	//this就不再是被拖拽的元素了，是当前类的实例
+	this.x=null;
+	this.y=null;
+	this.mx=null;
+	this.my=null;
+	this.ele=ele;
+	
+	
+	this.DOWN=processThis(this.down,this);
+	this.MOVE=processThis(this.move,this);
+	this.UP=processThis(this.up,this);
+	on(this.ele,"mousedown",this.DOWN);
+	//一定要注意：this.down，是通过this找到down方法，这和执行的时候没有关系，只是找到了一个方法定义的一个地址
+	
+	
+	
+}
+
+Drag.prototype.down=function(e){
+	this.x=this.ele.offsetLeft;
+	this.y=this.ele.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.ele.setCapture){
+		this.ele.setCapture();
+		on(this.ele,"mousemove",this.MOVE);
+		on(this.ele,"mouseup",this.UP);
+	}else{
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);	
+	}
+	e.preventDefault();
+	
+}
+Drag.prototype.move=function(e){
+	this.ele.style.left=e.pageX-this.mx+this.x+"px";
+	this.ele.style.top=e.pageY-this.my+this.y+"px";
+	
+}
+Drag.prototype.up=function(e){
+	if(this.ele.releaseCapture){
+		this.ele.releaseCapture();
+		off(this.ele,"mousemove",this.MOVE);
+		off(this.ele,"mouseup",this.UP);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+}
+var eles=document.getElementsByTagName("div");
+for(var i=0;i<eles.length;i++){
+	new Drag(eles[i]);
+}
+
+</script>

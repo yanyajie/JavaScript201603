@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<style type="text/css">
+div{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:blue; cursor:move; -webkit-user-select:none;}
+</style>
+<div id="div1"><img src="主要看气质.jpg" width="100" height="100"></div>
+<div id="div2" style="background:red; left:300px;"></div>
+<div id="div3" style="background:green; left:200px; "></div>
+<div id="div4" style="left:400px; background:purple;"></div>
+</body>
+</html>
+<script src="event1.js"></script>
+<script>
+
+//两个设计原则：
+//一、Drag可以让用户自已扩展功能，可以让用户在不改动Drag的代码的情况，实现功能扩展。需要给用户留好接口，方便用户扩展
+//二、给Drag留足了升级的余地：现在是1.0版，以后可以有2，3，4，……。原来的功能保持不变，并且向下兼容
+
+//不会飞，fly，drop，increaseIndex.需要实现在拖拽的不同阶段都暴露一个接口（公布或发布事件）
+function EventEmitter(){}
+EventEmitter.prototype.on=function(type,fn){
+	if(!this["emitter"+type]){
+		this["emitter"+type]=[];	
+	}
+	var a=this["emitter"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return this;//为了实现链式写法
+	}
+	a.push(fn);
+	
+	return this;//为了实现链式写法
+}
+EventEmitter.prototype.fire=function(type,e){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+					a[i].call(this,e);
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+EventEmitter.prototype.off=function(type,fn){
+	var a=this["emitter"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;
+				return this;//为了实现链式写法
+			}
+		}
+	}	
+	return this;//为了实现链式写法
+}
+
+function Drag(ele){//被拖拽的元素
+	//this就不再是被拖拽的元素了，是当前类的实例
+	this.x=null;
+	this.y=null;
+	this.mx=null;
+	this.my=null;
+	this.ele=ele;
+	
+	
+	this.DOWN=processThis(this.down,this);
+	this.MOVE=processThis(this.move,this);
+	this.UP=processThis(this.up,this);
+	on(this.ele,"mousedown",this.DOWN);
+	//一定要注意：this.down，是通过this找到down方法，这和执行的时候没有关系，只是找到了一个方法定义的一个地址
+}
+Drag.prototype=new EventEmitter;
+//Drag.prototype.__proto__=EventEmitter.prototype;
+Drag.prototype.down=function(e){
+	this.x=this.ele.offsetLeft;
+	this.y=this.ele.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	if(this.ele.setCapture){
+		this.ele.setCapture();
+		on(this.ele,"mousemove",this.MOVE);
+		on(this.ele,"mouseup",this.UP);
+	}else{
+		on(document,"mousemove",this.MOVE);
+		on(document,"mouseup",this.UP);	
+	}
+	e.preventDefault();
+	
+	//Drag.prototype.fire();
+	//new Drag.fire();
+	this.fire("dragstart",e);//写这一行代码的人，是生产者。
+	//"dragstart"它不是DOM元素的事件，而是自定义的Drag类的事件，所以这个事件类型不存在和DOM元素事件冲突的可能
+	//但是:写obj.on("dragstart",clearEffect);使用者
+}
+Drag.prototype.move=function(e){
+	this.ele.style.left=e.pageX-this.mx+this.x+"px";
+	this.ele.style.top=e.pageY-this.my+this.y+"px";
+	
+	this.fire("dragging",e);
+	
+}
+Drag.prototype.up=function(e){
+	if(this.ele.releaseCapture){
+		this.ele.releaseCapture();
+		off(this.ele,"mousemove",this.MOVE);
+		off(this.ele,"mouseup",this.UP);
+	}else{
+		off(document,"mousemove",this.MOVE);
+		off(document,"mouseup",this.UP);
+	}
+	
+	this.fire("dragend",e);
+}
+
+/*Drag.prototype=new EventEmitter;
+Drag.prototype.__proto__=EventEmitter.prototype;*/
+/*
+	Drag产品使用说明书
+1、基本方法：Drag.prototype.down、move、up;
+2、常用公开的属性：this.ele表示被拖拽的元素,this.x原始位置，this.mx鼠标的原始位置
+3、常用事件类型："dragstart"，"dragging","dragend"
+4、扩展接口（绑定事件）的方法:on(附上如何用，再给个示例)，off(用法和示例)
+
+		没有这个说明书，用户无法实现功能扩展，这个说明书由开发者提供。使用者根据此说明书实现扩展的功能
+
+*/
+
+var zIndex=0;
+function increaseIndex(){this.ele.style.zIndex=++zIndex;}
+var eles=document.getElementsByTagName("div");
+for(var i=0;i<eles.length;i++){
+	//var obj=new Drag(eles[i]);
+	//obj.on("dragstart",increaseIndex);//
+	new Drag(eles[i]).on("dragstart",increaseIndex).on("dragstart",clearEffect).on("dragging",getSpeed).on("dragend",fly).on("dragend",drop);
+}
+
+
+//把原来实现过的drop，fly这两个效果，扩展给现在的Drag类。需要明确的是：按着说明书来写
+function clearEffect(){
+	clearTimeout(this.flyTimer);
+	clearTimeout(this.dropTimer);
+}
+
+function getSpeed(e){
+	if(this.prevPosi){
+		this.flySpeed=e.pageX-this.prevPosi;
+		this.prevPosi=e.pageX;	
+	}else{
+		this.prevPosi=e.pageX;	
+	}
+}
+
+function fly(){
+	this.flySpeed*=.97;
+	var val=this.ele.offsetLeft+this.flySpeed;
+	var maxRight=(document.documentElement.clientWidth||document.body.clientWidth)-this.ele.offsetWidth;
+	if(val<=0){
+		this.ele.style.left=0;
+		this.flySpeed*=-1;
+	}else if(val>=maxRight){
+		this.ele.style.left=maxRight+"px";
+		this.flySpeed*=-1;	
+	}else{
+		this.ele.style.left=val+"px";	
+	}
+	if(Math.abs(this.flySpeed)>=0.5){
+		this.flyTimer=setTimeout(processThis(fly,this),20);	
+	}
+}
+
+function drop(){
+	if(this.dropSpeed){
+		this.dropSpeed+=9.8;	
+	}else{
+		this.dropSpeed=9.8;
+	}
+	this.dropSpeed*=.98;
+	var val=this.ele.offsetTop+this.dropSpeed;
+	var maxBottom=(document.documentElement.clientHeight||document.body.clientHeight)-this.ele.offsetHeight;
+	if(val>=maxBottom){
+		this.ele.style.top=maxBottom+"px";
+		this.dropSpeed*=-1;
+		this.flag++;	
+	}else{
+		this.ele.style.top=val+"px";
+		this.flag=0;	
+	}
+	
+	if(this.flag<2){
+		this.dropTimer=setTimeout(processThis(drop,this),20);	
+	}
+}
+</script>

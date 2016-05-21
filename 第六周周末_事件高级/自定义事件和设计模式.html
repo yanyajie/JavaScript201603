@@ -34,9 +34,8 @@ function down(e){//准备拖拽
 		on(this,"mouseup",up);
 	}else{
 		
-		/*function processThis(fn,obj){
-			return function(e){fn.call(obj,e);this}	
-		}*/
+		
+		
 		this.MOVE=processThis(move,this);
 		this.UP=up.bind(this);
 		
@@ -45,21 +44,22 @@ function down(e){//准备拖拽
 	}
 	
 	e.preventDefault();
+	//run.call(ele,"selfdragstart",e);//e是系统的事件对象
 	
-	clearTimeout(this.flyTimer);//在准备拖拽的时候，把正在执行的动画要清掉，以免有影响干扰
+	//function run(type,e){
+		var a=this["aSelf"+type];
+		if(a){
+			for(var i=0;i<a.length;i++){
+				a[i].call(this,e);	
+			}
+		}
+			
+	//}
 }
 function move(e){
 	this.style.left=this.x+e.pageX-this.mx+"px";
 	this.style.top=this.y+e.pageY-this.my+"px";
-	this.flySpeed;//以两次mousemove事件发生的间隔时间做单位时间，以这两次mousemove事件之间鼠标鼠标的距离为速度，得到一个this.flySpeed,需要move方法里计算出来
-	if(this.prevPosi){
-		this.flySpeed=e.pageX-this.prevPosi
-		this.prevPosi=e.pageX;
-		//计算到最后一次的时候，以最后一次得到的速度为准（up执行之前的那一次）
-	}else{//表示没有所谓的上一次的速度
-		this.prevPosi=e.pageX;//如果没有上一次鼠标的位置，则把当次鼠标的位置赋值给它，这样到了第二次的时候，this.prePosi就是上一次的位置了。也就是说所谓的“上一次的位置”是个相关的概念
-		
-	}
+	run.call(this,"selfdragging",e);
 }
 function up(e){
 	if(this.releaseCapture){
@@ -70,16 +70,36 @@ function up(e){
 		off(document,"mousemove",this.MOVE);
 		off(document,"mouseup",this.UP);
 	}
-	
-	fly.call(this);
-	drop.call(this);
+	run.call(this,"selfdragend",e);
 }
 for(var i=0;i<eles.length;i++){
 	on(eles[i],"mousedown",down);
+	on(eles[i],"selfdragstart",clearEffect);
+	on(eles[i],"selfdragging",getSpeed);
+	on(eles[i],"selfdragend",fly);
+	on(eles[i],"selfdragend",drop);
+
 }
-//fly和drop里的this都是做运动的那个元素，也就是被拖拽的元素
+
+function clearEffect(){
+		
+	clearTimeout(this.flyTimer);//在准备拖拽的时候，把正在执行的动画要清掉，以免有影响干扰
+	clearTimeout(this.dropTimer);	
+}
+
+function getSpeed(){
+	 
+	if(this.prevPosi){
+		this.flySpeed=e.pageX-this.prevPosi
+		this.prevPosi=e.pageX;
+	}else{
+		this.prevPosi=e.pageX;
+		
+	}	
+}
+
 function fly(){
-	this.flySpeed;//以两次mousemove事件发生的间隔时间做单位时间，以这两次mousemove事件之间鼠标鼠标的距离为速度，得到一个this.flySpeed,需要move方法里计算出来
+	
 	this.flySpeed*=.98;
 	var maxRight=(document.documentElement.clientWidth||document.body.clientWidth)-this.offsetWidth;
 	var current=this.offsetLeft+this.flySpeed//当前的位置
