@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>无标题文档</title>
+<style type="text/css">
+#outer{ width:75%; height:150px; margin:0 auto; overflow:hidden;}
+#inner{ width:500%; height:100%; ; transition-duration:0.6s }
+#inner>div{ width:20%; height:100%; background:red; text-align:center; font-size:72px; color:white; line-height:150px; float:left; }
+
+</style>
+
+</head>
+
+<body>
+<div id="outer">
+	<div id="inner">
+    	<div>一</div>
+        <div style="background-color:blue;">二</div>
+        <!--停在第2停上 偏移多少呢？-当前这个div的-offsetWidth(负数) -->
+        <div style="background-color:black;">三</div>
+        <!--停在第3停上 偏移多少呢？：-2*this.offsetWidth(负数) -->
+        <div style="background-color:yellow">四</div>
+        <div style="background-color:purple;">五</div>
+    </div>
+
+</div>
+</body>
+</html>
+<script>
+var oInner=document.getElementById("inner");
+oInner.onclick=function(){
+	oInner.children[0].style.transform="translate(-200px,0)";
+	//transform:translate(-100px,0)
+}
+function start(e){
+	this.mx=e.changedTouches[0].pageX;//第一个手指的x轴坐标
+	this.x=-this.i*this.offsetWidth;//是盒子的起点。this.i是当前div的索引号
+}
+
+function move(e){
+	var value=this.x+e.changedTouches[0].pageX-this.mx;
+	this.parentNode.style.transform="translate("+value+"px,0)";
+	
+	
+}
+
+function end(e){
+	//完成移动一整帧，在完成此动作之前，先要判断是向左还是向右移动这一整帧
+	//比如当前是在第二张div上呢，如果是往左滑，就应该滑动到第三张上；如果是往右滑，则应该滑动到第一张上
+	//问题是：如何判断是往左滑还是滑还是往右滑
+	this.mx;//起点的值，
+	var current=e.changedTouches[0].pageX;//end时候的值
+	if(current>this.mx){//走到更小的张数上去,往右走。比如是从2到1
+		var next=this.i-1;
+		if(next<=0)next=0;//防止过界
+		
+	}else if(current<this.mx){//否则走到更大的张数上去，往左走
+		var next=this.i+1;	
+		if(next>=eles.length-1)next=eles.length-1;//防止过界
+	}
+	
+	var value=-next*this.offsetWidth;//每一整张的终点，是它的索引值乘上它自己的宽度
+	this.parentNode.style.transform="translate("+value+"px,0)";	
+}
+var eles=document.getElementById("inner").getElementsByTagName("div");
+
+[].forEach.call(eles,function(ele,i){
+	console.log(ele,i);
+	ele.i=i;//把索引值保存到元素的自定义属性i上
+	ele.addEventListener("touchstart",start,false);
+	ele.addEventListener("touchmove",move,false);
+	ele.addEventListener("touchend",end,false);
+});
+</script>

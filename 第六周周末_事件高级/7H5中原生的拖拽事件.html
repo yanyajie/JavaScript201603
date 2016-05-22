@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+#div1{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:red; cursor:move; -webkit-user-select:none;}
+</style>
+</head>
+
+<body>
+<div id="div1" draggable="true">原生拖拽</div>
+</body>
+</html>
+<script>
+var ele=document.getElementById("div1");
+//原生的事件，只是把事件发布了，具体的逻辑，它一点都没有实现
+ele.ondragstart;//相当于down阶段
+ele.ondrag;//相当于move阶段
+ele.ondragend;//up这个阶段
+ele.addEventListener("dragstart",start,false);
+ele.addEventListener("drag",drag,false);
+ele.addEventListener("dragend",end,false);
+
+function start(e){
+	this.x=this.offsetLeft;
+	this.y=this.offsetTop;
+	this.mx=e.pageX;
+	this.my=e.pageY;
+	
+	console.log(e.type);
+}
+function drag(e){
+	this.style.left=this.x+e.pageX-this.mx+"px";
+	this.style.top=this.y+e.pageY-this.my+"px";
+	console.log(e.type);
+}
+function end(e){
+	this.style.left=this.x+e.pageX-this.mx+"px";
+	this.style.top=this.y+e.pageY-this.my+8+"px";
+	console.log(e.type);
+	
+}
+
+
+</script>

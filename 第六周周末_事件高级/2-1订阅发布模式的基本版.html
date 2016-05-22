@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+</body>
+</html>
+<script>
+//订阅发布模式的基本版（面向对象的）
+//主要理解设计模式，还要理解继承的应用
+
+/*
+	场景
+	1、烧水--（大约100分钟，当水烧开的时候，会有回调机制--会通知已经约定好水开这件事的任务来执行）--->泡方便面、喝水、洗漱
+	水壶负责烧水-->水壶上有烧水的方法
+	回调功能，或叫通知功能，或报警器的功能，它们是水壶的第三方功能，也就是说这是个可选的功能，有了这个功能它增强水壶的功能
+	2、打扫卫生、打电话、休息一会、
+	3、充电
+	
+	以上这几个事，异步的，就是没有安排同一个执行队列中的。就是烧水和打扫卫生、打电话、休息可以时进行，再加上一个充电，现在就是同时有三个任务队列
+	
+	
+*/
+function EventEmitter(){};//原理等同于EventTarget类
+EventEmitter.prototype.on=function(type,fn){//约定、订阅
+	if(!this["aEvent"+type]){
+		this["aEvent"+type]=[]	
+	}
+	var a=this["aEvent"+type];
+	for(var i=0;i<a.length;i++){
+		if(a[i]==fn)return;	
+	}
+	a.push(fn);
+	
+}
+EventEmitter.prototype.run=function(e,systemEvent){//通知、回调
+	//e={type:"boiling",message:"boiling"} e这个参数是类似于这样的一个对象。这是第一个参数
+	//第二个参数是指浏览器的事件对象，如有必要，还可以把浏览器的事件对象传进来
+	var a=this["aEvent"+e.type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(typeof a[i]=="function"){
+				a[i].call(this,e,systemEvent);
+			}else{
+				a.splice(i,1);
+				i--;	
+			}
+		}
+	}
+}
+EventEmitter.prototype.off=function(type,fn){//解除约定、解除订阅
+	var a=this["aEvent"+type];
+	if(a){
+		for(var i=0;i<a.length;i++){
+			if(a[i]==fn){
+				a[i]=null;
+				return;	
+			}
+		}
+	}
+}
+function Kettle(){};
+Kettle.prototype=new EventEmitter;//会覆盖原来的Kettle类默认的原型对象，并且这种继承方法只能写在定义原型方法之前。
+//Kettle.prototype.__proto__=EventEmitter.prototype;//有兼容问题，但是更安全，并且此行表达式的位置不限
+Kettle.prototype.boiling=function(){
+	var e={type:"boiling",message:"kettle-boiling"}
+	var that=this;
+	window.setTimeout(function(){
+		console.log("水开了！");
+		that.run(e);//现在升级为传一个事件对象了
+		//that.run("boiling");//原来只传一个事件类型
+	},6000);
+}
+
+var kettle1=new Kettle;
+kettle1.on("boiling",noodles);
+kettle1.on("boiling",drink);
+kettle1.on("boiling",bath);
+
+kettle1.boiling( );
+
+//设计模式：生产型的，行为型
+function noodles(e){
+	console.log("煮面条","此时此刻的煮面条是由"+e.message+"触发的");	
+}
+
+function drink(){
+	console.log("喝水");
+}
+
+function bath(){
+	console.log("洗澡");
+}
+
+</script>
