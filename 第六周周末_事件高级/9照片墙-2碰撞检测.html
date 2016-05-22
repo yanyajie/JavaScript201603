@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+ul,li{ padding:0; margin:0; list-style:none;}
+ul{ width:480px; height:640px; padding:5px; background:#0FF; margin:100px auto; position:relative;  }
+li{ width:150px; height:150px; margin:5px; background:#FC6; float:left; overflow:hidden; cursor:move; -webkit-user-select:none; }
+img{ width:150px; height:150px; overflow:hidden; }
+</style>
+</head>
+
+<body>
+<ul>
+	<li><img src="img/1.png"></li>
+    <li><img src="img/2.png"></li>
+    <li><img src="img/3.png"></li>
+    <li><img src="img/4.png"></li>
+    <li><img src="img/5.png"></li>
+    <li><img src="img/6.png"></li>
+    <li><img src="img/7.png"></li>
+    <li><img src="img/8.png"></li>
+    <li><img src="img/9.png"></li>
+    <li><img src="img/10.png"></li>
+    <li><img src="img/11.png"></li>
+    <li><img src="img/12.png"></li>
+</ul>
+</body>
+</html>
+<script src="event1.js"></script>
+<script src="drag_oop.js"></script>
+<script src="tween.js"></script>
+<script>
+var oLis=document.getElementsByTagName("li");
+
+var zIndex=0;
+function increaseIndex(){this.ele.style.zIndex=++zIndex}
+function goHome(){animate(this.ele,{left:this.ele.l,top:this.ele.t},600,4);}
+for(var i=oLis.length-1;i>=0;i--){//把浮动布局改成绝对定位布局
+	var oLi=oLis.item(i);
+	with(oLi.style){
+		top=(oLi.t=oLi.offsetTop)+"px";
+		left=(oLi.l=oLi.offsetLeft)+"px";
+		position="absolute";
+		margin=0;
+	}
+	new Drag(oLi).on("dragstart",increaseIndex).on("dragend",changePosition).on("dragging",test);
+}
+
+//两两检测
+function hitedTest(ele1,ele2){//碰撞检测的方法，如果两个元素撞上了，则返回true，否则返回false;
+	if(ele1.offsetLeft+ele1.offsetWidth<ele2.offsetLeft||ele1.offsetTop+ele1.offsetHeight<ele2.offsetTop||ele1.offsetLeft>ele2.offsetLeft+ele2.offsetWidth||ele1.offsetTop>ele2.offsetTop+ele2.offsetHeight){return false;
+	}else{	return true;}	
+}
+
+function test(){//负责进行检测
+	//一共有12li，当拖拽进行时候，动一次，则进行一次全面的检测，把和当前被拖拽的元素撞上的另外一个元素设为绿背景，并且将其保存
+	this.aHited=[];
+	for(var i=0;i<oLis.length;i++){
+		var oLi=oLis[i];
+		if(this.ele==oLi)continue;//自己不和自己检测
+		oLi.style.background="";
+		if(hitedTest(this.ele,oLi)){//判断是否撞上了
+			oLi.style.background="green";//把撞上的设为绿背景
+			this.aHited.push(oLi);//并且将其保存
+		}
+	}
+	
+}
+
+
+function changePosition(){
+	var a=this.aHited;
+	if(a&&a.length){//不能只判断a是否存在，因为a是空数组也是true，但是就报错了，因为a[0]是undefined，把undefined传给animate就会报错
+		//计算this.ele和a里各个元素的距离
+		for(var i=0;i<a.length;i++){
+			//把计算出来的距离保存到各个元素的自定义属性distance中
+			a[i].distance=Math.pow(this.ele.offsetTop-a[i].offsetTop,2)+Math.pow(this.ele.offsetLeft-a[i].offsetLeft,2);
+				
+		}
+		a.sort(function(a,b){return a.distance-b.distance});
+		var shortestEle=a[0];//排序完成之后，第0项就是距离最短的
+		//shortestEle和this.ele交换位置
+		
+		animate(shortestEle,{left:this.ele.l,top:this.ele.t},700,3);
+		animate(this.ele,{left:shortestEle.l,top:shortestEle.t},700,4);
+		//更新（交换）各自的保存自己位置的属性
+		var tempL=this.ele.l;
+		var tempT=this.ele.t;
+		this.ele.l=shortestEle.l;
+		this.ele.t=shortestEle.t;
+		shortestEle.l=tempL;
+		shortestEle.t=tempT;	
+		this.aHited=null;//完成当前的交换之后把这个数组设为空
+	}else{
+		animate(this.ele,{left:this.ele.l,top:this.ele.t},600,4)	
+	}
+	
+}
+</script>
