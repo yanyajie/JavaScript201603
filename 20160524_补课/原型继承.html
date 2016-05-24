@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    function A() {
+        this.x = 100;
+    }
+    A.prototype.getX = function () {
+        console.log(this.x);
+    };
+
+    function B() {
+        this.x = 1;
+    }
+    B.prototype = new A;//->原型继承 子类B继承了父类A
+
+    var b1 = new B;
+</script>
+</body>
+</html>

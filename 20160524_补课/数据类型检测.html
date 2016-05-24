@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-数据类型检测</title>
+</head>
+<body>
+<script type="text/javascript">
+    //->JS中检测数据类型的方式:typeof instanceof constructor Object.prototype.toString.call()
+
+    //1、typeof
+    //->通过typeof value检测数据类型返回的结果首先是一个字符串,然后在字符串中包含了对应的数据类型
+    //->typeof 数组/正则/对象 返回的结果都是"object",所以不能用其区分是数组还是正则
+    //->typeof null =>"object"  空对象指针
+    //->typeof typeof typeof [] ->"string"
+
+    //->在真实的项目中,其实我们最常应用的是typeof,比如你想检测是否为数字、布尔、字符串、函数、undefined,我们其实用typeof就非常好用了
+
+    //2、instanceof:检测当前的实例是否属于这个类 ->在真实项目中,我们经常使用instanceof检测是数组还是正则还是其他的某一个对象数据类型值 ->如果我们的项目源码采用的是面向对象编程思想开发的(我们创建了类和实例),我们也会经常用instanceof检测某个实例是否属于某个类
+    //    var a = [];
+    //    console.log(a instanceof Array);//->true
+    //    console.log(a instanceof RegExp);//->false
+
+    //->instanceof的不足:
+    //1)常规的基本数据类型值,不能使用instanceof进行检测
+    //->字面量方式:不是严谨的实例,只不过由于JS的松散性导致了可以使用对应类原型上的方法
+    //    var num = 3.141592653;
+    //    var str = "珠峰培训";
+    //    console.log(num instanceof Number);//->false
+    //    console.log(str instanceof String);//->false
+    //    console.log(typeof num, typeof str);//->"number"、"string"
+
+    //->实例创建的方式:标准的面向对象创建,这样创建出来的才是严谨的实例
+    //    var num2 = new Number(3.141592653);
+    //    var str2 = new String("珠峰培训");
+    //    console.log(num2 instanceof Number);//->true
+    //    console.log(str2 instanceof String);//->true
+    //    console.log(typeof num2, typeof str2);//->"object"、"object"
+
+    //2)只要这个类在当前实例的原型链上可以找到,那么用instanceof检测出来的结果永远为true
+    //[] ->Array.prototype ->Object.prototype
+    //    console.log([] instanceof Array);//->true
+    //    console.log([] instanceof Object);//->true
+
+    //    function Fn() {
+    //
+    //    }
+    //    Fn.prototype = new Array;
+    //    var f = new Fn;
+    //    //f是数组的吗?->不是,因为数组需要有索引有length
+    //    console.log(f instanceof Array);//->true
+
+    //3、constructor和instanceof非常的类似:但是我们的constructor是可以自己随意修改的,这样的话很容易出现检测出来的结果是不准确的,所以项目中基本上不用constructor来检测
+    //    var b = /^$/;
+    //    console.log(b.constructor === Array);//->false
+    //    console.log(b.constructor === RegExp);//->true
+    //    RegExp.prototype.constructor = Object;
+    //    console.log(b.constructor === RegExp);//->false
+
+    //4、toString
+    //->Null、Undefined这个两个特殊类型的类是存在的,在其原型上依然有toString的方法,只不过浏览器屏蔽了我们的主动调用,但是我们可以隐性调用
+    //console.log("珠峰培训" + null + undefined);//->"珠峰培训nullundefined"
+
+    //->Object.prototype.toString() 返回当前对象所属类的详细信息->"[object Object]":中括号是固定的,第一个object也是固定的,第二个Object代表当前的对象是Object这个类的实例
+    //var obj={name:"珠峰"};
+    //obj.toString() ->"[object Object]"
+    //->深入解析:
+    //-->obj.toString===Object.prototype.toString
+    //-->obj.toString() !== Object.prototype.toString() 因为第一种执行的时候,toString方法中的this是谁obj;第二种toString中的this是Object.prototype;
+    //-->Object.prototype.toString.call(obj) ->我们只需要让Object原型上的toString方法执行,在执行的时候,让里面的this变为一个值,那么返回的结果就是这个值所属类的详细信息
+    //    var ary = [];
+    //    console.log(Object.prototype.toString.call(ary) === "[object Array]");//->true
+    //    console.log(({}).toString.call(ary) === "[object Array]");
+
+    //->检测数据类型的方法
+    ~function () {
+        var numObj = {
+            isNum: "Number",
+            isStr: "String",
+            isBoo: "Boolean",
+            isNul: "Null",
+            isUnd: "Undefined",
+            isObj: "Object",
+            isAry: "Array",
+            isFun: "Function",
+            isReg: "RegExp",
+            isDate: "Date"
+        }, isType = function () {
+            var outerArg = arguments[0];
+            return function () {
+                var innerArg = arguments[0], reg = new RegExp("^\\[object " + outerArg + "\\]$", "i");
+                return reg.test(Object.prototype.toString.call(innerArg));
+            }
+        };
+        var check = {};
+        for (var key in numObj) {
+            if (numObj.hasOwnProperty(key)) {
+                check[key] = isType(numObj[key]);
+            }
+        }
+        window.$t = window.check = check;
+    }();
+
+    console.log($t.isAry([]));
+    console.log($t.isAry(/^$/));
+</script>
+</body>
+</html>
