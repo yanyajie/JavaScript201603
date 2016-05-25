@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>关于回调函数中的THIS</title>
+</head>
+<body>
+<script type="text/javascript">
+    //    function A(callback) {
+    //        console.log("A");
+    //        callback && callback();
+    //    }
+    //    function B() {
+    //        console.log(this);
+    //    }
+    //    var obj = {A: A};
+    //    obj.A(B);//A中的THIS是obj B中的THIS是window “callback && callback()” callback就是我们的B,此时执行的时候,方法名前面并没有“.”,所以THIS是window
+
+    //    var ary = [12, 2];
+    //    ary.sort(function (a, b) {
+    //        console.log(this);
+    //    });//->sort:this->ary  回调匿名函数中的额this是window
+
+    //    var obj = {name: "珠峰", fn: fn};
+    //    function fn() {
+    //        //fn中的this->obj
+    //        var _this = this;
+    //
+    ////        var ary = [12, 2];
+    ////        ary.sort(function (a, b) {
+    ////            //console.log(this.name);
+    ////            //console.log(_this.name); ->珠峰
+    ////        });//->sort方法中的this->ary  匿名函数中的this->window
+    //
+    ////        var ary = [12, 2];
+    ////        ary.sort(function (a, b) {
+    ////            console.log(this.name);
+    ////        }.bind(this));//.bind(obj)
+    //    }
+    //    obj.fn();
+
+    //    var str = "珠峰培训";
+    //    str.replace(/./g, function () {
+    //        console.log(this);//->window
+    //    });
+
+    var obj = {};
+    //    window.setTimeout(function () {
+    //        console.log(this);//->window
+    //    }, 1000);
+
+    //    window.setTimeout(function () {
+    //        console.log(this);//->obj
+    //    }.bind(obj), 1000);
+
+    //    window.setTimeout(function () {
+    //        console.log(this);//->obj
+    //    }.call(obj), 1000);//->这样的话是立马把我们的匿名函数执行了,而把函数执行的返回结果undefined设置给了定时器
+
+    var ary = [12, 23, 34];
+    //forEach:用来遍历数组中的每一项的,数组中有几项我们就遍历几次,每一次遍历都会把传递进来的匿名回调函数执行一次,但是每一次执行都给这个回调函数传递了三个参数值
+    //    ary.forEach(function (item, index, input) {
+    //        //console.log(item, index, input);//->当前遍历的这一项、当前这一项的索引、原来的数组
+    //        console.log(this);//this->window
+    //    });
+    ary.forEach(function (item, index, input) {
+        console.log(this);//this->obj
+    }, obj);//->第二个参数的意思:把匿名回调函数中的THIS改变为obj,不传第二个参数默认的this是window
+</script>
+</body>
+</html>

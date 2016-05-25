@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //->函数在JS中存在多种角色:普通的函数、普通对象(name->函数名、length->形参的个数、__proto__->指向函数所属类Function.prototype、prototype->它自己本身的原型)、还可以作为一个类,通过new Fn创造出它的实例
+
+    function Fn() {
+        //this->f
+        this.x = 100;
+        this.getX = function () {
+            console.log(this.x);
+        }
+    }
+    Fn.prototype.getX = function () {
+        console.log(this.x);
+    };
+    var f = new Fn;
+    f.getX();
+    f.__proto__.getX();
+    Fn.prototype.getX();
+</script>
+</body>
+</html>

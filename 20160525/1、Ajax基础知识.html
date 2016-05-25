@@ -9,7 +9,7 @@
     //xhr->XMLHttpRequest->XMLHttpRequestEventTarget->EventTarget->Object
     var xhr = new XMLHttpRequest;
     //->HTTP METHOD、HTTP URL、ASYNC(默认是TRUE代表异步请求,FALSE同步请求)、USER NAME、USER PASS
-    xhr.open("get", "data.txt?_=" + Math.random(), true);
+    xhr.open("get", "data.txt?_=" + Math.random(), false);
 
     //->setRequestHeader:设置请求头信息(设置请求首部中的部分信息)
     xhr.setRequestHeader("zhufeng", encodeURIComponent("珠峰"));//->escape/unescape encodeURI/decodeURI encodeURIComponent/decodeURIComponent
@@ -20,6 +20,7 @@
         if (xhr.readyState === 2) {//->此时的响应头已经接收,我们可以获取到响应头中的信息,其中包含了首部中的date:服务器的时间
             //->getResponseHeader:获取响应头中某一个首部的属性值
             var time = xhr.getResponseHeader("date");
+            console.log(time);
             //console.log(typeof time, time);//->"string" "Wed, 25 May 2016 07:35:01 GMT"
             //console.log(new Date(time)); //->把时间字符串转换为标准的时间数据类型(北京时间)
         }
