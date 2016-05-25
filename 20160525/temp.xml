@@ -1,0 +1,17 @@
+<userInfo>
+    <user>
+        <name>张三</name>
+        <age>25</age>
+        <score>98</score>
+    </user>
+    <user>
+        <name>李四</name>
+        <age>25</age>
+        <score>98</score>
+    </user>
+    <user>
+        <name>王五</name>
+        <age>25</age>
+        <score>98</score>
+    </user>
+</userInfo>
