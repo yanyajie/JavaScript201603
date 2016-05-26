@@ -2,7 +2,6 @@ var fs = require("fs");
 
 //->添加客户信息
 function addInfo(temp) {
-    temp = JSON.parse(temp);
     //->先获取之前的,然后和我们的新增加的进行组合,最后把最新的重新的放入到文件中
     var con = fs.readFileSync("./nodeModule/customerInfo.json", "utf8");
     con = (con != "") ? JSON.parse(con) : [];
@@ -15,15 +14,15 @@ function addInfo(temp) {
     con.push(temp);
     fs.writeFileSync("./nodeModule/customerInfo.json", JSON.stringify(con));
 
-    return JSON.stringify({
+    var res = {
         code: 0,
         message: "创建成功~"
-    });
+    };
+    return JSON.stringify(res);
 }
 
 //->修改客户信息
 function updateInfo(temp) {
-    temp = JSON.parse(temp);
     var con = fs.readFileSync("./nodeModule/customerInfo.json", "utf8");
     con = (con != "") ? JSON.parse(con) : [];
     var flag = false;
