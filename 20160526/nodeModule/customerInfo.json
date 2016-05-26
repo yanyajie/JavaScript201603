@@ -1,9 +1,1 @@
-[
-  {
-    "id": 2,
-    "name": "李四",
-    "age": 30,
-    "phone": "13032156789",
-    "address": "北京市昌平区回龙观东大街"
-  }
-]
+[{"name":"王五","age":"62","phone":"1234567890","address":"北京市海淀区","id":"3"},{"name":"麻六","age":"27","phone":"0987654321","address":"北京市密云区","id":4},{"name":"dwad","age":"dawd","phone":"dawd","address":"dawd","id":5}]
