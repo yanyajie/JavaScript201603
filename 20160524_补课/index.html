@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-原型链</title>
+</head>
+<body>
+<div id="div1" class="w1 w2 w3"></div>
+<p id="p1"></p>
+<a id="a1"></a>
+
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+    //oDiv.innerHTML="珠峰培训";
+
+    //Math:不是一个类,它只是一个对象,对象中存储了操作了数学/数字的常用方法
+    //JS中的内置类:
+    //->Number、String、Boolean、(Null、Undefined)、Object、Function、Array、RegExp、Date
+    //->HTMLDivElement(每一个DIV元素对象都是这个类的一个实例,并且每一个HTML元素标签都有一个自己对应的类)、HTMLParagraphElement、HTMLAnchorElement...
+    //->HTMLElement ->Element ->Node ->EventTarget ->Object
+    //->HTMLCollection(元素集合类 getElementsByTagName/getElementsByClassName)、NodeList(节点集合类 getElementsByName、childNodes)
+
+    //1、什么叫做面向对象?
+    //->JS就是基于面向对象的思想开发的,浏览器提供了很多的类,我们还可以自己定义类(构造函数模式),我们平时所用的一般都是某一个类的实例 ->如果想把JS学好,只需要按照面向对象的思想,研究实例和具体的类即可;
+    //->需要我们掌握类的继承、封装、多态
+
+    //2、研究原型的话,只需要记住:prototype、constructor、__proto__
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训THIS复习</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 100px;
+            height: 100px;
+            background: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+
+<script type="text/javascript">
+    //->在JS中我们所研究的THIS指的是函数中的THIS指向 ->函数中的THIS指向执行当前这个函数的主体
+    function fn() {
+        console.log(this);
+    }
+    var obj = {name: "珠峰培训", fn: fn};
+    var oDiv = document.getElementById("div1");
+
+    //oDiv.onclick = fn;//->把fn定义的部分赋值给点击事件,此时fn没有执行,当点击的时候才执行的(但是在下面我们又给点击事件重新的赋值为一个匿名函数,本次绑定被覆盖掉了)
+    //oDiv.onclick = fn();//->首先执行fn(此时fn中的this是window),然后把执行的返回结果undefined赋值给点击事件
+//    oDiv.onclick = function () {
+//        //->匿名函数中的THIS是oDiv
+//        //fn();//fn方法中的this是window
+//        fn.call(this);//fn方法中的this是匿名函数中的THIS,也就是我们的oDiv
+//    };
+
+
+    //    var obj2 = {
+    //        fn: (function () {
+    //            console.log(this);//->window
+    //            return function () {
+    //                console.log(this);//->obj2
+    //            }
+    //        })()
+    //    };
+    //    obj2.fn();
+
+
+</script>
+</body>
+</html>

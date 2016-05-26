@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-Ajax兼容处理</title>
+</head>
+<body>
+<script type="text/javascript">
+    //    var xhr = new XMLHttpRequest;//->创建一个Ajax对象,这样创建在IE5~6浏览器中不兼容
+    //    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    //    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    //    xhr = new ActiveXObject("Msxml3.XMLHTTP");
+
+    //    function getXHR() {
+    //        var xhr = null;
+    //        try {
+    //            if (window.XMLHttpRequest) {
+    //                xhr = new XMLHttpRequest;
+    //            } else if (new ActiveXObject("Microsoft.XMLHTTP")) {
+    //                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    //            } else if (new ActiveXObject("Msxml2.XMLHTTP")) {
+    //                xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    //            } else if (new ActiveXObject("Msxml3.XMLHTTP")) {
+    //                xhr = new ActiveXObject("Msxml3.XMLHTTP");
+    //            } else {
+    //                throw new Error("O MY GOD，你的浏览器太老了~~");
+    //            }
+    //        } catch (e) {
+    //            throw new Error("O MY GOD，你的浏览器太老了~~");
+    //        }
+    //        return xhr;
+    //    }
+    //
+    //    var xhr = getXHR();
+    //    xhr.open("get", "data.txt?_=" + Math.random(), true);
+    //    xhr.onreadystatechange = function () {
+    //        if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)) {
+    //            var val = xhr.responseText;
+    //            callBack && callBack(val);
+    //        }
+    //    };
+    //    xhr.send(null);
+    //
+    //    var xhr=getXHR();
+    //
+    //
+    //
+    //    function callBack(data) {
+    //        console.log(data);
+    //        console.log("ok");
+    //    }
+</script>
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+    sendAJAX({
+        url: "data.txt",
+        success: function (data) {
+            console.log(data);
+        }
+    });
+
+    sendAJAX({
+        url: "data.txt",
+        success: function (data) {
+            console.log(data);
+        }
+    });
+
+
+    sendAJAX({
+        url: "data.txt",
+        success: function (data) {
+            console.log(data);
+        }
+    });
+</script>
+</body>
+</html>

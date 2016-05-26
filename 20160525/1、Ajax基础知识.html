@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-Ajax基础</title>
+</head>
+<body>
+<script type="text/javascript">
+    //xhr->XMLHttpRequest->XMLHttpRequestEventTarget->EventTarget->Object
+    var xhr = new XMLHttpRequest;
+    //->HTTP METHOD、HTTP URL、ASYNC(默认是TRUE代表异步请求,FALSE同步请求)、USER NAME、USER PASS
+    xhr.open("get", "data.txt?_=" + Math.random(), false);
+
+    //->setRequestHeader:设置请求头信息(设置请求首部中的部分信息)
+    xhr.setRequestHeader("zhufeng", encodeURIComponent("珠峰"));//->escape/unescape encodeURI/decodeURI encodeURIComponent/decodeURIComponent
+
+    //->onreadystatechange:请求状态发生改变的事件
+    xhr.onreadystatechange = function () {
+        //->readyState:我们请求过程中的状态值 0->UNSENT:未发送  1->OPENED:已经打开URL地址 2->HEADERS_RECEIVED:响应头已经接收 3->LOADING:响应的内容正在加载中 4->DONE:响应完成我们可以获取到响应的数据了
+        if (xhr.readyState === 2) {//->此时的响应头已经接收,我们可以获取到响应头中的信息,其中包含了首部中的date:服务器的时间
+            //->getResponseHeader:获取响应头中某一个首部的属性值
+            var time = xhr.getResponseHeader("date");
+            console.log(time);
+            //console.log(typeof time, time);//->"string" "Wed, 25 May 2016 07:35:01 GMT"
+            //console.log(new Date(time)); //->把时间字符串转换为标准的时间数据类型(北京时间)
+        }
+
+        //xhr.status:HTTP STATUS HTTP网络请求状态码
+        //->200或者以2开头的都代表成功
+        //->301永久重定向 302临时重定向 304走的是缓存数据
+        //->400传递给服务器端的参数出现错误
+        //->401没有权限访问
+        //->404找不到资源文件(URL地址是错误的,根本不存在)
+        //->500服务器内部的未知错误
+        //->503当前服务器的并发数过多,服务器处理不过来了
+        if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)) {
+            console.log(JSON.parse(xhr.responseText));//->获取的结果是一个字符串格式的数据,服务器一般返回的结果都是JSON格式的字符串
+        }
+    };
+    xhr.send(null);//->在POST请求中,我们需要把传递给服务器的数据都统一放在SEND中发送给服务器,一般都会传递一个JSON格式的字符串
+</script>
+</body>
+</html>
